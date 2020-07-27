@@ -73,21 +73,20 @@ private:
     }
 }
 
-struct VertexBufferObejct
+struct BufferObejct
 {
-    this(const void[] buffer, DataUsage usage) @nogc nothrow
+    this(const void[] buffer, BufferType type, DataUsage usage) @nogc nothrow
     {
         import glad.gl.funcs: glGenBuffers;
         glGenBuffers(1, &id);
-        setData(buffer, usage);
+        setData(buffer, type, usage);
     }
 
-    void setData(const void[] buffer, DataUsage usage) @nogc nothrow
+    void setData(const void[] buffer, BufferType type, DataUsage usage) @nogc nothrow
     {
         import glad.gl.funcs: glBindBuffer, glBufferData;
-        import glad.gl.enums: GL_ARRAY_BUFFER;
-        glBindBuffer(GL_ARRAY_BUFFER, id);
-        glBufferData(GL_ARRAY_BUFFER, buffer.length, buffer.ptr, usage);
+        glBindBuffer(type, id);
+        glBufferData(type, buffer.length, buffer.ptr, usage);
     }
 
     enum DataUsage
@@ -103,6 +102,12 @@ struct VertexBufferObejct
         dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW,
         dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ,
         dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY
+    }
+
+    enum BufferType
+    {
+        arrayBuffer = from!"glad.gl.enums".GL_ARRAY_BUFFER,
+        elementArray = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
     }
 
     private:
