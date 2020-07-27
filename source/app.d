@@ -45,10 +45,7 @@ void main()
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    uint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.length * float.sizeof, vertices.ptr, GL_STATIC_DRAW);
+    auto VBO = VertexBufferObejct(vertices, VertexBufferObejct.DataUsage.staticDraw);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * float.sizeof, null);
     glEnableVertexAttribArray(0);

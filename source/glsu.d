@@ -72,3 +72,39 @@ private:
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
 }
+
+struct VertexBufferObejct
+{
+    this(const void[] buffer, DataUsage usage) @nogc nothrow
+    {
+        import glad.gl.funcs: glGenBuffers;
+        glGenBuffers(1, &id);
+        setData(buffer, usage);
+    }
+
+    void setData(const void[] buffer, DataUsage usage) @nogc nothrow
+    {
+        import glad.gl.funcs: glBindBuffer, glBufferData;
+        import glad.gl.enums: GL_ARRAY_BUFFER;
+        glBindBuffer(GL_ARRAY_BUFFER, id);
+        glBufferData(GL_ARRAY_BUFFER, buffer.length, buffer.ptr, usage);
+    }
+
+    enum DataUsage
+    {
+        streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW,
+        streamRead = from!"glad.gl.enums".GL_STREAM_READ,
+        streamCopy = from!"glad.gl.enums".GL_STREAM_COPY,
+
+        staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW,
+        staticRead = from!"glad.gl.enums".GL_STATIC_READ,
+        staticCopy = from!"glad.gl.enums".GL_STATIC_COPY,
+
+        dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW,
+        dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ,
+        dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY
+    }
+
+    private:
+    uint id;
+}
