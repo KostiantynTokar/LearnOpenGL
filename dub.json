@@ -1,5 +1,9 @@
 {
 	"name": "learn-opengl",
+	"targetType": "executable",
+    "platforms": [
+        "windows"
+    ],
 	"dependencies": {
 		"bindbc-glfw": "~>0.10.0"
 	},
@@ -11,6 +15,6 @@
 	],
 	"libs": [
 		"opengl32",
-		"C:\\Users\\Kostiantyn\\source\\repos\\libs\\glfw-3.3.2\\lib\\lib-vc2017\\glfw3"
+		"E:\\repos\\libs\\glfw-3.3.2\\out\\build\\x64-Debug\\src\\glfw3"
 	]
 }

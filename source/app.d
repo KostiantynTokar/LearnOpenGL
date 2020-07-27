@@ -6,30 +6,6 @@ import glad.gl.loader;
 
 void main()
 {
-    // immutable GLFWSupport ret = loadGLFW(
-    //     "C:\\Users\\Kostiantyn\\source\\repos\\libs\\glfw-3.3.2\\lib\\lib-vc2017\\glfw3.dll");
-    // if (ret != glfwSupport)
-    // {
-
-    //     // Handle error. For most use cases, its reasonable to use the the error handling API in
-    //     // bindbc-loader to retrieve error messages for logging and then abort. If necessary, it's
-    //     // possible to determine the root cause via the return value:
-
-    //     if (ret == GLFWSupport.noLibrary)
-    //     {
-    //         // GLFW shared library failed to load
-    //         writeln("GLFW shared library failed to load");
-    //     }
-    //     else if (GLFWSupport.badLibrary)
-    //     {
-    //         // One or more symbols failed to load. The likely cause is that the
-    //         // shared library is for a lower version than bindbc-glfw was configured
-    //         // to load (via GLFW_31, GLFW_32 etc.)
-    //         writeln("One or more symbols of GLFW failed to load");
-    //     }
-    //     return;
-    // }
-
     glfwInit();
     scope (exit)
         glfwTerminate();
@@ -50,8 +26,6 @@ void main()
         writeln("Failed to initialize GLAD");
         return;
     }
-
-    glViewport(0, 0, 800, 600);
 
     GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int width, int height) nothrow{
         glViewport(0, 0, width, height);
