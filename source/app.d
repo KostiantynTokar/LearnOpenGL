@@ -25,7 +25,7 @@ void main()
         return;
     }
 
-    GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int width, int height) nothrow{
+    GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
