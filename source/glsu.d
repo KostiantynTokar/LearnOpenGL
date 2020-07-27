@@ -1,7 +1,5 @@
 module glsu;
 
-@nogc pure nothrow:
-
 /** 
  * Import as expression
  * Params:
@@ -17,12 +15,12 @@ struct GLFW
     @disable this();
 
 static:
-    bool isActive()
+    bool isActive() @safe @nogc nothrow
     {
         return active;
     }
 
-    bool activate(uint major, uint minor)
+    bool activate(uint major, uint minor) @nogc nothrow
     {
         if (isActive)
         {
@@ -36,7 +34,7 @@ static:
         return true;
     }
 
-    bool deactivate()
+    bool deactivate() @nogc nothrow
     {
         if (!isActive)
         {
@@ -45,10 +43,11 @@ static:
         import bindbc.glfw : glfwTerminate;
 
         glfwTerminate();
+        active = false;
         return true;
     }
 
-    from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label)
+    from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
     {
         import bindbc.glfw : glfwCreateWindow;
         import std.string : toStringz;
@@ -61,7 +60,7 @@ private:
     uint major;
     uint minor;
 
-    void initLib()
+    void initLib() @nogc nothrow
     {
         import bindbc.glfw : glfwInit, glfwWindowHint;
         import bindbc.glfw.types : GLFW_CONTEXT_VERSION_MAJOR,

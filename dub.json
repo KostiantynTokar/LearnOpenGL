@@ -16,5 +16,10 @@
 	"libs": [
 		"opengl32",
 		"E:\\repos\\libs\\glfw-3.3.2\\out\\build\\x64-Debug\\src\\glfw3"
-	]
+	],
+	"toolchainRequirements": {
+		"dmd": "no",
+		"gdc": "no",
+		"ldc": ">=1.22.0"
+	}
 }

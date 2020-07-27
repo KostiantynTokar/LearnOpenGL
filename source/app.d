@@ -3,17 +3,15 @@ import std.string;
 import bindbc.glfw;
 import glad.gl.all;
 import glad.gl.loader;
+import glsu;
 
 void main()
 {
-    glfwInit();
+    GLFW.activate(3, 3);
     scope (exit)
-        glfwTerminate();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        GLFW.deactivate();
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", null, null);
+    GLFWwindow* window = GLFW.createWindow(800, 600, "LearnOpenGL");
     if (window == null)
     {
         writeln("Failed to create GLFW window");
