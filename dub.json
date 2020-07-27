@@ -1,0 +1,16 @@
+{
+	"name": "learn-opengl",
+	"dependencies": {
+		"bindbc-glfw": "~>0.10.0"
+	},
+	"subConfigurations": {
+		"bindbc-glfw": "static"
+	},
+	"dflags": [
+		"-mscrtlib=ucrt"
+	],
+	"libs": [
+		"opengl32",
+		"C:\\Users\\Kostiantyn\\source\\repos\\libs\\glfw-3.3.2\\lib\\lib-vc2017\\glfw3"
+	]
+}
