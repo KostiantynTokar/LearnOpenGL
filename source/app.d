@@ -47,9 +47,7 @@ void main()
 
     auto VBO = BufferObejct(vertices, BufferObejct.BufferType.array, BufferObejct.DataUsage.staticDraw);
     VBO.bind();
-
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * float.sizeof, null);
-    // glEnableVertexAttribArray(0);
+    
     auto attr = AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0);
     attr.enable();
 
