@@ -84,9 +84,24 @@ struct BufferObejct
 
     void setData(const void[] buffer, BufferType type, DataUsage usage) @nogc nothrow
     {
+        this.type = type;
+
         import glad.gl.funcs: glBindBuffer, glBufferData;
         glBindBuffer(type, id);
         glBufferData(type, buffer.length, buffer.ptr, usage);
+        glBindBuffer(type, 0);
+    }
+
+    void bind() @nogc nothrow
+    {
+        import glad.gl.funcs: glBindBuffer;
+        glBindBuffer(type, id);
+    }
+    
+    void unbind() @nogc nothrow
+    {
+        import glad.gl.funcs: glBindBuffer;
+        glBindBuffer(type, 0);
     }
 
     enum DataUsage
@@ -112,6 +127,7 @@ struct BufferObejct
 
     private:
     uint id;
+    BufferType type;
 }
 
 enum GLType

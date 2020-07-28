@@ -46,6 +46,7 @@ void main()
     glBindVertexArray(VAO);
 
     auto VBO = BufferObejct(vertices, BufferObejct.BufferType.array, BufferObejct.DataUsage.staticDraw);
+    VBO.bind();
 
     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * float.sizeof, null);
     // glEnableVertexAttribArray(0);
@@ -53,6 +54,7 @@ void main()
     attr.enable();
 
     auto EBO = BufferObejct(indices, BufferObejct.BufferType.element, BufferObejct.DataUsage.staticDraw);
+    EBO.bind();
 
     int success;
     int infoLogLength;
