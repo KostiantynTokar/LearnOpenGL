@@ -106,10 +106,60 @@ struct BufferObejct
 
     enum BufferType
     {
-        arrayBuffer = from!"glad.gl.enums".GL_ARRAY_BUFFER,
-        elementArray = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
+        array = from!"glad.gl.enums".GL_ARRAY_BUFFER,
+        element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
     }
 
     private:
     uint id;
+}
+
+enum GLType
+{
+    glByte = from!"glad.gl.enums".GL_BYTE,
+    glUByte = from!"glad.gl.enums".GL_UNSIGNED_BYTE,
+    glShort = from!"glad.gl.enums".GL_SHORT,
+    glUShort = from!"glad.gl.enums".GL_UNSIGNED_SHORT,
+    glInt = from!"glad.gl.enums".GL_INT,
+    glUInt = from!"glad.gl.enums".GL_UNSIGNED_INT,
+    glHalfFloat = from!"glad.gl.enums".GL_HALF_FLOAT,
+    glFloat = from!"glad.gl.enums".GL_FLOAT,
+    glDouble = from!"glad.gl.enums".GL_DOUBLE
+}
+
+struct AttribPointer
+{
+    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) @nogc nothrow
+    {
+        this.index = index;
+        this.size = size;
+        this.type = type;
+        this.normalized = normalized;
+        this.stride = stride;
+        this.pointer = pointer;
+
+        import glad.gl.funcs: glVertexAttribPointer;
+        glVertexAttribPointer(index, size, type, normalized, stride, cast(void*) pointer);
+    }
+
+    void enable() @nogc nothrow
+    {
+        import glad.gl.funcs: glEnableVertexAttribArray;
+        glEnableVertexAttribArray(index);
+    }
+
+    void disable() @nogc nothrow
+    {
+        import glad.gl.funcs: glDisableVertexAttribArray;
+        glDisableVertexAttribArray(index);
+    }
+
+    private:
+
+    uint index;
+    int size;
+    GLType type;
+    bool normalized;
+    int stride;
+    ptrdiff_t pointer;
 }

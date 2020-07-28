@@ -45,12 +45,14 @@ void main()
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    auto VBO = BufferObejct(vertices, BufferObejct.BufferType.arrayBuffer, BufferObejct.DataUsage.staticDraw);
+    auto VBO = BufferObejct(vertices, BufferObejct.BufferType.array, BufferObejct.DataUsage.staticDraw);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * float.sizeof, null);
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * float.sizeof, null);
+    // glEnableVertexAttribArray(0);
+    auto attr = AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0);
+    attr.enable();
 
-    auto EBO = BufferObejct(indices, BufferObejct.BufferType.elementArray, BufferObejct.DataUsage.staticDraw);
+    auto EBO = BufferObejct(indices, BufferObejct.BufferType.element, BufferObejct.DataUsage.staticDraw);
 
     int success;
     int infoLogLength;
