@@ -110,9 +110,9 @@ struct BufferObejct(BufferType type)
         {
             import glad.gl.funcs : glBindBuffer, glBufferData;
 
-            glBindBuffer(type, id);
+            bind();
             glBufferData(type, buffer.length, buffer.ptr, usage);
-            glBindBuffer(type, 0);
+            unbind();
         }
     }
     else
@@ -131,9 +131,9 @@ struct BufferObejct(BufferType type)
         {
             import glad.gl.funcs : glBindBuffer, glBufferData;
 
-            glBindBuffer(type, id);
+            bind();
             glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
-            glBindBuffer(type, 0);
+            unbind();
         }
     }
 
@@ -181,7 +181,6 @@ struct AttribPointer
         this.normalized = normalized;
         this.stride = stride;
         this.pointer = pointer;
-
     }
 
     void enable() @nogc nothrow
@@ -214,54 +213,51 @@ struct VertexArrayObject
 {
     this(VertexBufferObject VBO, AttribPointer[] attrs) @nogc nothrow
     {
-        import glad.gl.funcs: glGenVertexArrays, glBindVertexArray;
+        import glad.gl.funcs : glGenVertexArrays;
 
         glGenVertexArrays(1, &id);
-        glBindVertexArray(id);
+        enable();
 
         VBO.bind();
-        foreach (attr; attrs)
+        foreach (ref attr; attrs)
         {
             attr.enable();
         }
 
-        glBindVertexArray(0);
+        disable();
     }
 
     void bindElementBufferArray(ElementBufferArray EBO)
     {
-        import glad.gl.funcs: glBindVertexArray;
-
-        glBindVertexArray(id);
+        enable();
         EBO.bind();
-        glBindVertexArray(0);
+        disable();
     }
 
     void unbindElementBufferArray()
     {
-        import glad.gl.funcs: glBindVertexArray;
         import glad.gl.funcs : glBindBuffer;
 
-        glBindVertexArray(id);
+        enable();
         glBindBuffer(BufferType.element, 0);
-        glBindVertexArray(0);
+        disable();
     }
 
     void enable() @nogc nothrow
     {
-        import glad.gl.funcs: glBindVertexArray;
+        import glad.gl.funcs : glBindVertexArray;
 
         glBindVertexArray(id);
     }
-    
+
     void disable() @nogc nothrow
     {
-        import glad.gl.funcs: glBindVertexArray;
+        import glad.gl.funcs : glBindVertexArray;
 
         glBindVertexArray(0);
     }
 
-    private:
+private:
 
-        uint id;
+    uint id;
 }
