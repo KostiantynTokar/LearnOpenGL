@@ -182,15 +182,14 @@ struct AttribPointer
         this.stride = stride;
         this.pointer = pointer;
 
-        import glad.gl.funcs : glVertexAttribPointer;
-
-        glVertexAttribPointer(index, size, type, normalized, stride, cast(void*) pointer);
     }
 
     void enable() @nogc nothrow
     {
         import glad.gl.funcs : glEnableVertexAttribArray;
+        import glad.gl.funcs : glVertexAttribPointer;
 
+        glVertexAttribPointer(index, size, type, normalized, stride, cast(void*) pointer);
         glEnableVertexAttribArray(index);
     }
 
@@ -209,4 +208,60 @@ private:
     bool normalized;
     int stride;
     ptrdiff_t pointer;
+}
+
+struct VertexArrayObject
+{
+    this(VertexBufferObject VBO, AttribPointer[] attrs) @nogc nothrow
+    {
+        import glad.gl.funcs: glGenVertexArrays, glBindVertexArray;
+
+        glGenVertexArrays(1, &id);
+        glBindVertexArray(id);
+
+        VBO.bind();
+        foreach (attr; attrs)
+        {
+            attr.enable();
+        }
+
+        glBindVertexArray(0);
+    }
+
+    void bindElementBufferArray(ElementBufferArray EBO)
+    {
+        import glad.gl.funcs: glBindVertexArray;
+
+        glBindVertexArray(id);
+        EBO.bind();
+        glBindVertexArray(0);
+    }
+
+    void unbindElementBufferArray()
+    {
+        import glad.gl.funcs: glBindVertexArray;
+        import glad.gl.funcs : glBindBuffer;
+
+        glBindVertexArray(id);
+        glBindBuffer(BufferType.element, 0);
+        glBindVertexArray(0);
+    }
+
+    void enable() @nogc nothrow
+    {
+        import glad.gl.funcs: glBindVertexArray;
+
+        glBindVertexArray(id);
+    }
+    
+    void disable() @nogc nothrow
+    {
+        import glad.gl.funcs: glBindVertexArray;
+
+        glBindVertexArray(0);
+    }
+
+    private:
+
+        uint id;
 }

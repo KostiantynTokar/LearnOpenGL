@@ -41,18 +41,14 @@ void main()
         1, 2, 3
     ];
 
-    uint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
     auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
-    VBO.bind();
     
     auto attr = AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0);
-    attr.enable();
 
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
-    EBO.bind();
+
+    auto VAO = VertexArrayObject(VBO, [attr]);
+    VAO.bindElementBufferArray(EBO);
 
     int success;
     int infoLogLength;
@@ -112,13 +108,14 @@ void main()
         processInput(window);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
+        VAO.enable();
         scope(exit)
         {
-            glBindVertexArray(0);
+            VAO.disable();
         }
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, cast(int) indices.length, GL_UNSIGNED_INT, null);
 
         glfwSwapBuffers(window);
