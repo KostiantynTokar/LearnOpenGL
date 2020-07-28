@@ -73,62 +73,90 @@ private:
     }
 }
 
-struct BufferObejct
+enum BufferType
 {
-    this(const void[] buffer, BufferType type, DataUsage usage) @nogc nothrow
+    array = from!"glad.gl.enums".GL_ARRAY_BUFFER,
+    element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
+}
+
+enum DataUsage
+{
+    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW,
+    streamRead = from!"glad.gl.enums".GL_STREAM_READ,
+    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY,
+
+    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW,
+    staticRead = from!"glad.gl.enums".GL_STATIC_READ,
+    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY,
+
+    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW,
+    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ,
+    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY
+}
+
+struct BufferObejct(BufferType type)
+{
+    static if (type == BufferType.array)
     {
-        import glad.gl.funcs: glGenBuffers;
-        glGenBuffers(1, &id);
-        setData(buffer, type, usage);
+        this(const void[] buffer, DataUsage usage) @nogc nothrow
+        {
+            import glad.gl.funcs : glGenBuffers;
+
+            glGenBuffers(1, &id);
+            setData(buffer, usage);
+        }
+
+        void setData(const void[] buffer, DataUsage usage) @nogc nothrow
+        {
+            import glad.gl.funcs : glBindBuffer, glBufferData;
+
+            glBindBuffer(type, id);
+            glBufferData(type, buffer.length, buffer.ptr, usage);
+            glBindBuffer(type, 0);
+        }
     }
-
-    void setData(const void[] buffer, BufferType type, DataUsage usage) @nogc nothrow
+    else
     {
-        this.type = type;
+        this(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
+                if (is(T == ubyte) || is(T == ushort) || is(T == uint))
+        {
+            import glad.gl.funcs : glGenBuffers;
 
-        import glad.gl.funcs: glBindBuffer, glBufferData;
-        glBindBuffer(type, id);
-        glBufferData(type, buffer.length, buffer.ptr, usage);
-        glBindBuffer(type, 0);
+            glGenBuffers(1, &id);
+            setData(buffer, usage);
+        }
+
+        void setData(T)(const T[] buffer, DataUsage usage)
+                if (is(T == ubyte) || is(T == ushort) || is(T == uint))
+        {
+            import glad.gl.funcs : glBindBuffer, glBufferData;
+
+            glBindBuffer(type, id);
+            glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
+            glBindBuffer(type, 0);
+        }
     }
 
     void bind() @nogc nothrow
     {
-        import glad.gl.funcs: glBindBuffer;
+        import glad.gl.funcs : glBindBuffer;
+
         glBindBuffer(type, id);
     }
-    
+
     void unbind() @nogc nothrow
     {
-        import glad.gl.funcs: glBindBuffer;
+        import glad.gl.funcs : glBindBuffer;
+
         glBindBuffer(type, 0);
     }
 
-    enum DataUsage
-    {
-        streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW,
-        streamRead = from!"glad.gl.enums".GL_STREAM_READ,
-        streamCopy = from!"glad.gl.enums".GL_STREAM_COPY,
-
-        staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW,
-        staticRead = from!"glad.gl.enums".GL_STATIC_READ,
-        staticCopy = from!"glad.gl.enums".GL_STATIC_COPY,
-
-        dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW,
-        dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ,
-        dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY
-    }
-
-    enum BufferType
-    {
-        array = from!"glad.gl.enums".GL_ARRAY_BUFFER,
-        element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
-    }
-
-    private:
+private:
     uint id;
-    BufferType type;
 }
+
+alias VertexBufferObject = BufferObejct!(BufferType.array);
+alias ElementBufferArray = BufferObejct!(BufferType.element);
 
 enum GLType
 {
@@ -154,23 +182,26 @@ struct AttribPointer
         this.stride = stride;
         this.pointer = pointer;
 
-        import glad.gl.funcs: glVertexAttribPointer;
+        import glad.gl.funcs : glVertexAttribPointer;
+
         glVertexAttribPointer(index, size, type, normalized, stride, cast(void*) pointer);
     }
 
     void enable() @nogc nothrow
     {
-        import glad.gl.funcs: glEnableVertexAttribArray;
+        import glad.gl.funcs : glEnableVertexAttribArray;
+
         glEnableVertexAttribArray(index);
     }
 
     void disable() @nogc nothrow
     {
-        import glad.gl.funcs: glDisableVertexAttribArray;
+        import glad.gl.funcs : glDisableVertexAttribArray;
+
         glDisableVertexAttribArray(index);
     }
 
-    private:
+private:
 
     uint index;
     int size;
