@@ -30,6 +30,7 @@ void main()
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
+    //dfmt off
     float[] vertices = [
         0.5f, 0.5f, 0.0f, 
         0.5f, -0.5f, 0.0f, 
@@ -40,9 +41,10 @@ void main()
         0, 1, 3,
         1, 2, 3
     ];
+    //dfmt on
 
     auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
-    
+
     auto attr = AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0);
 
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
@@ -109,7 +111,7 @@ void main()
 
         glUseProgram(shaderProgram);
         VAO.enable();
-        scope(exit)
+        scope (exit)
         {
             VAO.disable();
         }
