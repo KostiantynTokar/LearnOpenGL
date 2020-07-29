@@ -10,6 +10,18 @@ template from(string moduleName)
     mixin("import from = " ~ moduleName ~ ";");
 }
 
+struct UDA
+{
+}
+
+@UDA struct VertexAttrib
+{
+    uint index;
+    int size;
+    GLType type;
+    bool normalized;
+}
+
 struct GLFW
 {
     @disable this();
@@ -128,7 +140,7 @@ struct BufferObejct(BufferType type)
         setData(buffer, usage);
     }
 
-    void setData(T)(const T[] buffer, DataUsage usage) @nogc nothrow
+    void setData(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
         import glad.gl.funcs : glBindBuffer, glBufferData;
@@ -223,6 +235,45 @@ struct VertexArrayObject
         {
             attr.enable();
         }
+    }
+
+    this(T)(const T[] buffer, DataUsage usage) nothrow
+    {
+        auto VBO = VertexBufferObject(buffer, usage);
+
+        import glad.gl.enums : GL_MAX_VERTEX_ATTRIBS;
+        import std.traits : getSymbolsByUDA, getUDAs;
+        import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+
+        alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
+        static assert(attrSymbols.length < GL_MAX_VERTEX_ATTRIBS, "too many attributes");
+
+        alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
+        static assert(attrs.length == NoDuplicates!attrs.length, "indices should be unique");
+
+        enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
+        alias sortedAttrs = staticSort!(Comp, attrs);
+        bool isStepByOne(VertexAttrib[] attrs...) @safe @nogc pure nothrow
+        {
+            foreach (i, attr; attrs)
+            {
+                if (attr.index != i)
+                    return false;
+            }
+            return true;
+        }
+
+        //why sortedAttrs.expand.only.enumarate.all!"a[0] == a[1].index" doesn't work? Expand?
+        static assert(isStepByOne(sortedAttrs), "indices should ascend from 0 by 1");
+
+        AttribPointer[attrs.length] attrPointers;
+        static foreach (i; 0 .. attrSymbols.length)
+        {
+            attrPointers[i] = AttribPointer(attrs[i].index, attrs[i].size,
+                    attrs[i].type, attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);
+        }
+
+        this(VBO, attrPointers[]);
     }
 
     void bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow

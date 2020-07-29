@@ -30,12 +30,18 @@ void main()
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
+    struct Vertex
+    {
+        @VertexAttrib(0, 3, GLType.glFloat, false)
+        float[3] pos;
+    }
+
     //dfmt off
-    float[] vertices = [
-        0.5f, 0.5f, 0.0f, 
-        0.5f, -0.5f, 0.0f, 
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f
+    Vertex[] newVertices = [
+        Vertex([0.5f, 0.5f, 0.0f]),
+        Vertex([0.5f, -0.5f, 0.0f]),
+        Vertex([-0.5f, -0.5f, 0.0f]),
+        Vertex([-0.5f, 0.5f, 0.0f])
     ];
     uint[] indices = [
         0, 1, 3,
@@ -43,13 +49,9 @@ void main()
     ];
     //dfmt on
 
-    auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
-
-    auto attr = AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0);
-
+    // auto VAO = VertexArrayObject(VBO, [attr]);
+    auto VAO = VertexArrayObject(newVertices, DataUsage.staticDraw);
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
-
-    auto VAO = VertexArrayObject(VBO, [attr]);
     VAO.bindElementBufferArray(EBO);
 
     int success;
