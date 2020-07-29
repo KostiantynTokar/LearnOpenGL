@@ -119,43 +119,22 @@ enum DataUsage
 
 struct BufferObejct(BufferType type)
 {
-    static if (type == BufferType.array)
+    this(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
+            if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
-        this(const void[] buffer, DataUsage usage) @nogc nothrow
-        {
-            import glad.gl.funcs : glGenBuffers;
+        import glad.gl.funcs : glGenBuffers;
 
-            glGenBuffers(1, &id);
-            setData(buffer, usage);
-        }
-
-        void setData(const void[] buffer, DataUsage usage) @nogc nothrow
-        {
-            import glad.gl.funcs : glBindBuffer, glBufferData;
-
-            auto b = binder(&this);
-            glBufferData(type, buffer.length, buffer.ptr, usage);
-        }
+        glGenBuffers(1, &id);
+        setData(buffer, usage);
     }
-    else
+
+    void setData(T)(const T[] buffer, DataUsage usage)
+            if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
-        this(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
-                if (is(T == ubyte) || is(T == ushort) || is(T == uint))
-        {
-            import glad.gl.funcs : glGenBuffers;
+        import glad.gl.funcs : glBindBuffer, glBufferData;
 
-            glGenBuffers(1, &id);
-            setData(buffer, usage);
-        }
-
-        void setData(T)(const T[] buffer, DataUsage usage)
-                if (is(T == ubyte) || is(T == ushort) || is(T == uint))
-        {
-            import glad.gl.funcs : glBindBuffer, glBufferData;
-
-            auto b = binder(&this);
-            glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
-        }
+        auto b = binder(&this);
+        glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
     }
 
     void bind() @nogc nothrow
