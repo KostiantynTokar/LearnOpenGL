@@ -216,7 +216,7 @@ struct VertexArrayObject
         import glad.gl.funcs : glGenVertexArrays;
 
         glGenVertexArrays(1, &id);
-        enable();
+        bind();
 
         VBO.bind();
         foreach (ref attr; attrs)
@@ -224,33 +224,33 @@ struct VertexArrayObject
             attr.enable();
         }
 
-        disable();
+        unbind();
     }
 
     void bindElementBufferArray(ElementBufferArray EBO)
     {
-        enable();
+        bind();
         EBO.bind();
-        disable();
+        unbind();
     }
 
     void unbindElementBufferArray()
     {
         import glad.gl.funcs : glBindBuffer;
 
-        enable();
+        bind();
         glBindBuffer(BufferType.element, 0);
-        disable();
+        unbind();
     }
 
-    void enable() @nogc nothrow
+    void bind() @nogc nothrow
     {
         import glad.gl.funcs : glBindVertexArray;
 
         glBindVertexArray(id);
     }
 
-    void disable() @nogc nothrow
+    void unbind() @nogc nothrow
     {
         import glad.gl.funcs : glBindVertexArray;
 
