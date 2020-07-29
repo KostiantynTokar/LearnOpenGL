@@ -128,7 +128,7 @@ struct BufferObejct(BufferType type)
         setData(buffer, usage);
     }
 
-    void setData(T)(const T[] buffer, DataUsage usage)
+    void setData(T)(const T[] buffer, DataUsage usage) @nogc nothrow
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
         import glad.gl.funcs : glBindBuffer, glBufferData;
@@ -225,13 +225,13 @@ struct VertexArrayObject
         }
     }
 
-    void bindElementBufferArray(ElementBufferArray EBO)
+    void bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
     {
         auto b = binder(&this);
         EBO.bind();
     }
 
-    void unbindElementBufferArray()
+    void unbindElementBufferArray() @nogc nothrow
     {
         import glad.gl.funcs : glBindBuffer;
 
