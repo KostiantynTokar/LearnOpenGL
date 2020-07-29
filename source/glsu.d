@@ -73,6 +73,29 @@ private:
     }
 }
 
+struct Binder(T)
+{
+    this(scope T* obj)
+    {
+        this.obj = obj;
+        this.obj.bind();
+    }
+
+    ~this()
+    {
+        obj.unbind();
+    }
+
+private:
+
+    T* obj;
+}
+
+auto binder(T)(return scope T* obj)
+{
+    return Binder!T(obj);
+}
+
 enum BufferType
 {
     array = from!"glad.gl.enums".GL_ARRAY_BUFFER,
@@ -110,9 +133,8 @@ struct BufferObejct(BufferType type)
         {
             import glad.gl.funcs : glBindBuffer, glBufferData;
 
-            bind();
+            auto b = binder(&this);
             glBufferData(type, buffer.length, buffer.ptr, usage);
-            unbind();
         }
     }
     else
@@ -131,9 +153,8 @@ struct BufferObejct(BufferType type)
         {
             import glad.gl.funcs : glBindBuffer, glBufferData;
 
-            bind();
+            auto b = binder(&this);
             glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
-            unbind();
         }
     }
 
@@ -216,31 +237,27 @@ struct VertexArrayObject
         import glad.gl.funcs : glGenVertexArrays;
 
         glGenVertexArrays(1, &id);
-        bind();
+        auto b = binder(&this);
 
         VBO.bind();
         foreach (ref attr; attrs)
         {
             attr.enable();
         }
-
-        unbind();
     }
 
     void bindElementBufferArray(ElementBufferArray EBO)
     {
-        bind();
+        auto b = binder(&this);
         EBO.bind();
-        unbind();
     }
 
     void unbindElementBufferArray()
     {
         import glad.gl.funcs : glBindBuffer;
 
-        bind();
+        auto b = binder(&this);
         glBindBuffer(BufferType.element, 0);
-        unbind();
     }
 
     void bind() @nogc nothrow
