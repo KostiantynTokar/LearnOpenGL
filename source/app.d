@@ -32,7 +32,7 @@ void main()
 
     struct Vertex
     {
-        @VertexAttrib(0, 3, GLType.glFloat, false)
+        @VertexAttrib(0)
         float[3] pos;
     }
 

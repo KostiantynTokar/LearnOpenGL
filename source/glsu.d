@@ -17,9 +17,7 @@ struct UDA
 @UDA struct VertexAttrib
 {
     uint index;
-    int size;
-    GLType type;
-    bool normalized;
+    bool normalized = false;
 }
 
 struct GLFW
@@ -268,12 +266,59 @@ struct VertexArrayObject
 
         AttribPointer[attrs.length] attrPointers;
         static foreach (i; 0 .. attrSymbols.length)
-        {
-            attrPointers[i] = AttribPointer(attrs[i].index, attrs[i].size,
-                    attrs[i].type, attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);
-        }
+        {{
+            static if (is(typeof(attrSymbols[i]) == U[N], U, int N))
+            {
+                static assert(0 < N && N < 5,
+                        "size (dimension of vector) should be in range from 1 to 4");
 
-        this(VBO, attrPointers[]);
+                static if (is(U == byte))
+                {
+                    GLType type = GLType.glByte;
+                }
+                else static if (is(U == ubyte))
+                {
+                    GLType type = GLType.glUByte;
+                }
+                else static if (is(U == short))
+                {
+                    GLType type = GLType.glShort;
+                }
+                else static if (is(U == ushort))
+                {
+                    GLType type = GLType.glUShort;
+                }
+                else static if (is(U == int))
+                {
+                    GLType type = GLType.glInt;
+                }
+                else static if (is(U == uint))
+                {
+                    GLType type = GLType.glUInt;
+                }
+                else static if (is(U == float))
+                {
+                    GLType type = GLType.glFloat;
+                }
+                else static if (is(U == double))
+                {
+                    GLType type = GLType.glDouble;
+                }
+                else
+                {
+                    static assert(0, "vertex attribute is an array of wrong type");
+                }
+
+                attrPointers[i] = AttribPointer(attrs[i].index, N, type,
+                        attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);
+            }
+            else
+            {
+                static assert(0, "vertex attribute should be an array");
+            }
+        }}
+
+        this(VBO, attrPointers);
     }
 
     void bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
