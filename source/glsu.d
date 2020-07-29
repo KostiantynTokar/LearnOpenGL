@@ -237,7 +237,7 @@ struct VertexArrayObject
         }
     }
 
-    this(T)(const T[] buffer, DataUsage usage) nothrow
+    this(T)(const T[] buffer, DataUsage usage) @nogc nothrow
     {
         auto VBO = VertexBufferObject(buffer, usage);
 
