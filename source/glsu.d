@@ -322,7 +322,7 @@ struct VertexArrayObject
             }
             else
             {
-                static assert(0, "vertex attribute should be an array");
+                static assert(0, "vertex attribute should be a static array or dlib.math.vector.Vector");
             }
         }}
         //dfmt on
