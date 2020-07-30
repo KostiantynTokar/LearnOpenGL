@@ -50,7 +50,6 @@ void main()
     ];
     //dfmt on
 
-    // auto VAO = VertexArrayObject(VBO, [attr]);
     auto VAO = VertexArrayObject(newVertices, DataUsage.staticDraw);
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
     VAO.bindElementBufferArray(EBO);
