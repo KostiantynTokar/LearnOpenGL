@@ -242,6 +242,7 @@ struct VertexArrayObject
         import glad.gl.enums : GL_MAX_VERTEX_ATTRIBS;
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+        import dlib.math.vector : Vector;
 
         alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
         static assert(attrSymbols.length < GL_MAX_VERTEX_ATTRIBS, "too many attributes");
@@ -265,9 +266,11 @@ struct VertexArrayObject
         static assert(isStepByOne(sortedAttrs), "indices should ascend from 0 by 1");
 
         AttribPointer[attrs.length] attrPointers;
+        //dfmt off
         static foreach (i; 0 .. attrSymbols.length)
         {{
-            static if (is(typeof(attrSymbols[i]) == U[N], U, int N))
+            static if (is(typeof(attrSymbols[i]) == Vector!(U, N), U, int N) ||
+                       is(typeof(attrSymbols[i]) == U[N], U, int N))
             {
                 static assert(0 < N && N < 5,
                         "size (dimension of vector) should be in range from 1 to 4");
@@ -317,6 +320,7 @@ struct VertexArrayObject
                 static assert(0, "vertex attribute should be an array");
             }
         }}
+        //dfmt on
 
         this(VBO, attrPointers);
     }

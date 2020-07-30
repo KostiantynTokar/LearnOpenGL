@@ -5,6 +5,7 @@
         "windows"
     ],
 	"dependencies": {
+		"dlib": "~>0.19.1",
 		"bindbc-glfw": "~>0.10.0"
 	},
 	"subConfigurations": {

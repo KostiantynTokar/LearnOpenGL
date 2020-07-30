@@ -4,6 +4,7 @@ import bindbc.glfw;
 import glad.gl.all;
 import glad.gl.loader;
 import glsu;
+import dlib;
 
 void main()
 {
@@ -33,15 +34,15 @@ void main()
     struct Vertex
     {
         @VertexAttrib(0)
-        float[3] pos;
+        vec3 pos;
     }
 
     //dfmt off
     Vertex[] newVertices = [
-        Vertex([0.5f, 0.5f, 0.0f]),
-        Vertex([0.5f, -0.5f, 0.0f]),
-        Vertex([-0.5f, -0.5f, 0.0f]),
-        Vertex([-0.5f, 0.5f, 0.0f])
+        Vertex(vec3( 0.5f,  0.5f, 0.0f)),
+        Vertex(vec3( 0.5f, -0.5f, 0.0f)),
+        Vertex(vec3(-0.5f, -0.5f, 0.0f)),
+        Vertex(vec3(-0.5f,  0.5f, 0.0f))
     ];
     uint[] indices = [
         0, 1, 3,
