@@ -1,5 +1,6 @@
 import std.stdio;
 import std.string;
+import std.math;
 import bindbc.glfw;
 import glad.gl.all;
 import glad.gl.loader;
@@ -107,14 +108,20 @@ void main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "myColor");
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
 
-        glUseProgram(shaderProgram);
-        auto bindedVAO = binder(&VAO);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProgram);
+        auto bindedVAO = binder(&VAO);
+        float timeValue = glfwGetTime();
+        float greenValue = (sin(2 * timeValue) / 2.0f) + 0.5f;
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         // glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, cast(int) indices.length, GL_UNSIGNED_INT, null);
 
