@@ -53,7 +53,7 @@ void main()
 
     auto VAO = VertexArrayObject(newVertices, DataUsage.staticDraw);
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
-    VAO.bindElementBufferArray(EBO);
+    auto VAOInd = VAO.bindElementBufferArray(EBO);
 
     int success;
     int infoLogLength;
@@ -122,9 +122,8 @@ void main()
         float timeValue = glfwGetTime();
         float greenValue = (sin(2 * timeValue) / 2.0f) + 0.5f;
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-        VAO.draw(RenderMode.triangles, 0, 3);
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-        // glDrawElements(GL_TRIANGLES, cast(int) indices.length, GL_UNSIGNED_INT, null);
+        // VAOInd.draw(RenderMode.triangles, 0, 3);
+        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

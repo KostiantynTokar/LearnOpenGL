@@ -145,6 +145,11 @@ struct BufferObejct(BufferType type)
 
         auto b = binder(&this);
         glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
+
+        static if(type == BufferType.element)
+        {
+            _indexType = valueofGLType!T;
+        }
     }
 
     void bind() @nogc nothrow
@@ -161,8 +166,21 @@ struct BufferObejct(BufferType type)
         glBindBuffer(type, 0);
     }
 
+    static if(type == BufferType.element)
+    {
+        GLType indexType() const @nogc nothrow
+        {
+            return _indexType;
+        }
+    }
+
 private:
     uint id;
+
+    static if(type == BufferType.element)
+    {
+        GLType _indexType;
+    }
 }
 
 alias VertexBufferObject = BufferObejct!(BufferType.array);
@@ -343,18 +361,9 @@ struct VertexArrayObject
         this(VBO, attrPointers);
     }
 
-    void bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
+    VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
     {
-        auto b = binder(&this);
-        EBO.bind();
-    }
-
-    void unbindElementBufferArray() @nogc nothrow
-    {
-        import glad.gl.funcs : glBindBuffer;
-
-        auto b = binder(&this);
-        glBindBuffer(BufferType.element, 0);
+        return VertexArrayObjectIndexed(this, EBO);
     }
 
     void draw(RenderMode mode, int first, int count) @nogc nothrow
@@ -382,4 +391,30 @@ struct VertexArrayObject
 private:
 
     uint id;
+}
+
+struct VertexArrayObjectIndexed
+{
+    VertexArrayObject VAO;
+
+    alias VAO this;
+
+    this(VertexArrayObject VAO, ElementBufferArray EBO) @nogc nothrow
+    {
+        this.VAO = VAO;
+        indexType = EBO.indexType;
+        auto b = binder(&this);
+        EBO.bind();
+    }
+
+    void drawElements(RenderMode mode, int count)
+    {
+        import glad.gl.funcs : glDrawElements;
+
+        auto b = binder(&this);
+        glDrawElements(mode, count, indexType, null);
+    }
+
+    private:
+        GLType indexType;
 }
