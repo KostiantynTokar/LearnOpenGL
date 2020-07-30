@@ -181,6 +181,46 @@ enum GLType
     glDouble = from!"glad.gl.enums".GL_DOUBLE
 }
 
+template valueofGLType(T)
+{
+    static if (is(T == byte))
+    {
+        enum valueofGLType = GLType.glByte;
+    }
+    else static if (is(T == ubyte))
+    {
+        enum valueofGLType = GLType.glUByte;
+    }
+    else static if (is(T == short))
+    {
+        enum valueofGLType = GLType.glShort;
+    }
+    else static if (is(T == ushort))
+    {
+        enum valueofGLType = GLType.glUShort;
+    }
+    else static if (is(T == int))
+    {
+        enum valueofGLType = GLType.glInt;
+    }
+    else static if (is(T == uint))
+    {
+        enum valueofGLType = GLType.glUInt;
+    }
+    else static if (is(T == float))
+    {
+        enum valueofGLType = GLType.glFloat;
+    }
+    else static if (is(T == double))
+    {
+        enum valueofGLType = GLType.glDouble;
+    }
+    else
+    {
+        static assert(0, "no according GLType");
+    }
+}
+
 struct AttribPointer
 {
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) @nogc nothrow
@@ -275,42 +315,7 @@ struct VertexArrayObject
                 static assert(0 < N && N < 5,
                         "size (dimension of vector) should be in range from 1 to 4");
 
-                static if (is(U == byte))
-                {
-                    GLType type = GLType.glByte;
-                }
-                else static if (is(U == ubyte))
-                {
-                    GLType type = GLType.glUByte;
-                }
-                else static if (is(U == short))
-                {
-                    GLType type = GLType.glShort;
-                }
-                else static if (is(U == ushort))
-                {
-                    GLType type = GLType.glUShort;
-                }
-                else static if (is(U == int))
-                {
-                    GLType type = GLType.glInt;
-                }
-                else static if (is(U == uint))
-                {
-                    GLType type = GLType.glUInt;
-                }
-                else static if (is(U == float))
-                {
-                    GLType type = GLType.glFloat;
-                }
-                else static if (is(U == double))
-                {
-                    GLType type = GLType.glDouble;
-                }
-                else
-                {
-                    static assert(0, "vertex attribute is an array of wrong type");
-                }
+                GLType type = valueofGLType!U;
 
                 attrPointers[i] = AttribPointer(attrs[i].index, N, type,
                         attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);
