@@ -279,13 +279,11 @@ struct VertexArrayObject
     {
         auto VBO = VertexBufferObject(buffer, usage);
 
-        import glad.gl.enums : GL_MAX_VERTEX_ATTRIBS;
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
         import dlib.math.vector : Vector;
 
         alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
-        static assert(attrSymbols.length < GL_MAX_VERTEX_ATTRIBS, "too many attributes");
 
         alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
         static assert(attrs.length == NoDuplicates!attrs.length, "indices should be unique");
