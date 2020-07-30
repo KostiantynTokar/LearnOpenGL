@@ -118,12 +118,13 @@ void main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        auto bindedVAO = binder(&VAO);
+        // auto bindedVAO = binder(&VAO);
         float timeValue = glfwGetTime();
         float greenValue = (sin(2 * timeValue) / 2.0f) + 0.5f;
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        VAO.draw(RenderMode.triangles, 0, 3);
         // glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, cast(int) indices.length, GL_UNSIGNED_INT, null);
+        // glDrawElements(GL_TRIANGLES, cast(int) indices.length, GL_UNSIGNED_INT, null);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

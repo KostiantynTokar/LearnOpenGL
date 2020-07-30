@@ -259,6 +259,21 @@ private:
     ptrdiff_t pointer;
 }
 
+enum RenderMode
+{
+    points = from!"glad.gl.enums".GL_POINTS,
+    lineStrip = from!"glad.gl.enums".GL_LINE_STRIP,
+    lineLoop = from!"glad.gl.enums".GL_LINE_LOOP,
+    lines = from!"glad.gl.enums".GL_LINES,
+    lineStripAdjacency = from!"glad.gl.enums".GL_LINE_STRIP_ADJACENCY,
+    linesAdjacency = from!"glad.gl.enums".GL_LINES_ADJACENCY,
+    triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
+    triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN,
+    triangles = from!"glad.gl.enums".GL_TRIANGLES,
+    triangleStripAdjacency = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
+    trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
+}
+
 struct VertexArrayObject
 {
     this(VertexBufferObject VBO, AttribPointer[] attrs) @nogc nothrow
@@ -340,6 +355,14 @@ struct VertexArrayObject
 
         auto b = binder(&this);
         glBindBuffer(BufferType.element, 0);
+    }
+
+    void draw(RenderMode mode, int first, int count) @nogc nothrow
+    {
+        import glad.gl.funcs : glDrawArrays;
+
+        auto b = binder(&this);
+        glDrawArrays(mode, first, count);
     }
 
     void bind() @nogc nothrow
