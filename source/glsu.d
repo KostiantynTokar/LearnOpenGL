@@ -97,7 +97,6 @@ struct Binder(T)
     }
 
 private:
-
     T* obj;
 }
 
@@ -146,7 +145,7 @@ struct BufferObejct(BufferType type)
         auto b = binder(&this);
         glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
 
-        static if(type == BufferType.element)
+        static if (type == BufferType.element)
         {
             _indexType = valueofGLType!T;
         }
@@ -166,7 +165,7 @@ struct BufferObejct(BufferType type)
         glBindBuffer(type, 0);
     }
 
-    static if(type == BufferType.element)
+    static if (type == BufferType.element)
     {
         GLType indexType() const @nogc nothrow
         {
@@ -177,7 +176,7 @@ struct BufferObejct(BufferType type)
 private:
     uint id;
 
-    static if(type == BufferType.element)
+    static if (type == BufferType.element)
     {
         GLType _indexType;
     }
@@ -268,7 +267,6 @@ struct AttribPointer
     }
 
 private:
-
     uint index;
     int size;
     GLType type;
@@ -284,12 +282,13 @@ enum RenderMode
     lineLoop = from!"glad.gl.enums".GL_LINE_LOOP,
     lines = from!"glad.gl.enums".GL_LINES,
     lineStripAdjacency = from!"glad.gl.enums".GL_LINE_STRIP_ADJACENCY,
-    linesAdjacency = from!"glad.gl.enums".GL_LINES_ADJACENCY,
-    triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
-    triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN,
-    triangles = from!"glad.gl.enums".GL_TRIANGLES,
-    triangleStripAdjacency = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
-    trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
+    linesAdjacency
+        = from!"glad.gl.enums".GL_LINES_ADJACENCY,
+        triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
+        triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN, triangles
+        = from!"glad.gl.enums".GL_TRIANGLES, triangleStripAdjacency
+        = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
+        trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
 }
 
 struct VertexArrayObject
@@ -389,7 +388,6 @@ struct VertexArrayObject
     }
 
 private:
-
     uint id;
 }
 
@@ -407,7 +405,7 @@ struct VertexArrayObjectIndexed
         EBO.bind();
     }
 
-    void drawElements(RenderMode mode, int count)
+    void drawElements(RenderMode mode, int count) @nogc nothrow
     {
         import glad.gl.funcs : glDrawElements;
 
@@ -415,6 +413,6 @@ struct VertexArrayObjectIndexed
         glDrawElements(mode, count, indexType, null);
     }
 
-    private:
-        GLType indexType;
+private:
+    GLType indexType;
 }

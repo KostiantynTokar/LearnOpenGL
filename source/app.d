@@ -118,7 +118,6 @@ void main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        // auto bindedVAO = binder(&VAO);
         float timeValue = glfwGetTime();
         float greenValue = (sin(2 * timeValue) / 2.0f) + 0.5f;
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
