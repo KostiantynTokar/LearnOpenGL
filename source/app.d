@@ -67,6 +67,10 @@ void main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.use();
+        float time = glfwGetTime();
+        float horOffset = sin(time) / 2.0f;
+        shaderProgram.setUniform("horOffset", horOffset);
+        shaderProgram.setUniform("time", time);
         VAO.draw(RenderMode.triangles, 0, 3);
 
         glfwSwapBuffers(window);
