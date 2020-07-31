@@ -416,3 +416,123 @@ struct VertexArrayObjectIndexed
 private:
     GLType indexType;
 }
+
+struct Shader
+{
+    alias ShaderOrError = from!"std.variant".Algebraic!(Shader, string);
+    static ShaderOrError create(string vertexShaderPath, string fragmentShaderPath)() nothrow
+    {
+        import std.variant : Algebraic;
+        import std.string : toStringz;
+        import glad.gl.funcs : glCreateShader, glShaderSource, glCompileShader,
+            glGetShaderiv, glGetShaderInfoLog, glCreateProgram,
+            glAttachShader, glLinkProgram, glGetProgramiv, glGetProgramInfoLog, glDeleteShader;
+        import glad.gl.enums : GL_VERTEX_SHADER, GL_COMPILE_STATUS,
+            GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
+
+        ShaderOrError res;
+
+        int success;
+        int infoLogLength;
+
+        const(char)* vertexShaderSource = import(vertexShaderPath).toStringz;
+        uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &vertexShaderSource, null);
+        glCompileShader(vertexShader);
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLogLength);
+            char[] infoLog = new char[infoLogLength];
+            glGetShaderInfoLog(vertexShader, infoLogLength, null, infoLog.ptr);
+            res = "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+                ~ vertexShaderPath ~ "\n" ~ infoLog.idup;
+            return res;
+        }
+
+        const(char)* fragmentShaderSource = import(fragmentShaderPath).toStringz;
+        uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, null);
+        glCompileShader(fragmentShader);
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLogLength);
+            char[] infoLog = new char[infoLogLength];
+            glGetShaderInfoLog(fragmentShader, infoLogLength, null, infoLog.ptr);
+            res = "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
+                ~ fragmentShaderPath ~ "\n" ~ infoLog.idup;
+            return res;
+        }
+
+        uint shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        if (!success)
+        {
+            glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
+            char[] infoLog = new char[infoLogLength];
+            glGetProgramInfoLog(shaderProgram, infoLogLength, null, infoLog.ptr);
+            res = "ERROR::SHADER::PROGRAM::LINK_FAILED\n" ~ infoLog.idup;
+            return res;
+        }
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+
+        res = Shader(shaderProgram);
+        return res;
+    }
+
+    void use() @nogc nothrow
+    {
+        import glad.gl.funcs : glUseProgram;
+
+        glUseProgram(id);
+    }
+
+    private mixin template genSetUniform(T, uint argCount)
+            if ((is(T == bool) || is(T == int) || is(T == uint) || is(T == float))
+                && 0 < argCount && argCount < 5)
+    {
+        void setUniform(string name, from!"std.meta".Repeat!(argCount, T) values) nothrow
+        {
+            import std.conv : to;
+            import std.string : toStringz;
+            import glad.gl.funcs : glGetUniformLocation;
+
+            immutable location = glGetUniformLocation(id, name.toStringz);
+
+            static if (is(T == bool) || is(T == int))
+            {
+                enum suffix = "i";
+            }
+            else static if (is(T == uint))
+            {
+                enum suffix = "ui";
+            }
+            else static if (is(T == float))
+            {
+                enum suffix = "f";
+            }
+            enum funcName = "glUniform" ~ to!string(argCount) ~ suffix;
+
+            mixin("import glad.gl.funcs : " ~ funcName ~ ";");
+
+            mixin(funcName ~ "(location, values);");
+        }
+    }
+
+    static foreach(T; from!"std.meta".AliasSeq!(bool, int, uint, float))
+    {
+        static foreach(argCount; 1 .. 5)
+        {
+            mixin genSetUniform!(T, argCount);
+        }
+    }
+
+private:
+    uint id;
+}

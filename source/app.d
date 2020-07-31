@@ -35,80 +35,29 @@ void main()
     struct Vertex
     {
         @VertexAttrib(0)
-        vec3 pos;
+        vec2 pos;
+
+        @VertexAttrib(1)
+        vec3 color;
     }
 
     //dfmt off
-    Vertex[] newVertices = [
-        Vertex(vec3( 0.5f,  0.5f, 0.0f)),
-        Vertex(vec3( 0.5f, -0.5f, 0.0f)),
-        Vertex(vec3(-0.5f, -0.5f, 0.0f)),
-        Vertex(vec3(-0.5f,  0.5f, 0.0f))
-    ];
-    uint[] indices = [
-        0, 1, 3,
-        1, 2, 3
+    Vertex[] vertices = [
+        Vertex( vec2( 0.5f, -0.5f), vec3( 1.0f,  0.0f, 0.0f) ),
+        Vertex( vec2(-0.5f, -0.5f), vec3( 0.0f,  1.0f, 0.0f) ),
+        Vertex( vec2( 0.0f,  0.5f), vec3( 0.0f,  0.0f, 1.0f) ),
     ];
     //dfmt on
+    
+    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
 
-    auto VAO = VertexArrayObject(newVertices, DataUsage.staticDraw);
-    auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
-    auto VAOInd = VAO.bindElementBufferArray(EBO);
-
-    int success;
-    int infoLogLength;
-
-    const(char)* vertexShaderSource = import("shader.vert").toStringz;
-    uint vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, null);
-    glCompileShader(vertexShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (!success)
+    auto shaderOrError = Shader.create!("shader.vert", "shader.frag");
+    if (string* error = shaderOrError.peek!string)
     {
-        char[] infoLog = new char[infoLogLength];
-        glGetShaderInfoLog(vertexShader, infoLogLength, null, infoLog.ptr);
-        writeln("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
-        writeln(infoLog);
+        writeln(*error);
         return;
     }
-
-    const(char)* fragmentShaderSource = import("shader.frag").toStringz;
-    uint fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, null);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (!success)
-    {
-        char[] infoLog = new char[infoLogLength];
-        glGetShaderInfoLog(fragmentShader, infoLogLength, null, infoLog.ptr);
-        writeln("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
-        writeln(infoLog);
-        return;
-    }
-
-    uint shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (!success)
-    {
-        char[] infoLog = new char[infoLogLength];
-        glGetProgramInfoLog(shaderProgram, infoLogLength, null, infoLog.ptr);
-        writeln("ERROR::SHADER::PROGRAM::LINK_FAILED");
-        writeln(infoLog);
-        return;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "myColor");
+    Shader shaderProgram = shaderOrError.get!Shader;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -117,12 +66,8 @@ void main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
-        float timeValue = glfwGetTime();
-        float greenValue = (sin(2 * timeValue) / 2.0f) + 0.5f;
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-        // VAOInd.draw(RenderMode.triangles, 0, 3);
-        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+        shaderProgram.use();
+        VAO.draw(RenderMode.triangles, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
