@@ -20,6 +20,28 @@ struct UDA
     bool normalized = false;
 }
 
+T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
+{
+    import core.stdc.stdlib : exit, EXIT_FAILURE;
+    import std.stdio : writeln;
+
+    T res;
+    try
+    {
+        if (string* error = valueOrError.peek!string)
+        {
+            writeln(*error);
+            exit(EXIT_FAILURE);
+        }
+        res = valueOrError.get!T;
+    }
+    catch(Exception e)
+    {
+        exit(EXIT_FAILURE);
+    }
+    return res;
+}
+
 struct GLFW
 {
     @disable this();

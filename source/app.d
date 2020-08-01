@@ -65,34 +65,15 @@ void main()
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
     auto VAOInd = VAO.bindElementBufferArray(EBO);
 
-    auto textureOrError1 = Texture.create("resources\\container.jpg");
-    if (string* error = textureOrError1.peek!string)
-    {
-        writeln(*error);
-        return;
-    }
-    auto textureOrError2 = Texture.create("resources\\awesomeface.png");
-    if (string* error = textureOrError2.peek!string)
-    {
-        writeln(*error);
-        return;
-    }
-
-    auto texture1 = textureOrError1.get!Texture;
-    auto texture2 = textureOrError2.get!Texture;
+    auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
+    auto texture2 = Texture.create("resources\\awesomeface.png").checkError!Texture();
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    auto shaderOrError = Shader.create!("shader.vert", "shader.frag");
-    if (string* error = shaderOrError.peek!string)
-    {
-        writeln(*error);
-        return;
-    }
-    Shader shaderProgram = shaderOrError.get!Shader;
+    auto shaderProgram = Shader.create!("shader.vert", "shader.frag").checkError!Shader();
 
     while (!glfwWindowShouldClose(window))
     {
