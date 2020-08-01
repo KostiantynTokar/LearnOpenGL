@@ -68,10 +68,10 @@ void main()
     auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
     auto texture2 = Texture.create("resources\\awesomeface.png").checkError!Texture();
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    Texture.setWrapMode(Texture.Coord.s, Texture.Wrap.repeat);
+    Texture.setWrapMode(Texture.Coord.t, Texture.Wrap.repeat);
+    Texture.setMinFilter(Texture.Filter.linearMipmapLinear);
+    Texture.setMagFilter(Texture.Filter.linear);
 
     auto shaderProgram = Shader.create!("shader.vert", "shader.frag").checkError!Shader();
 

@@ -35,7 +35,7 @@ T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
         }
         res = valueOrError.get!T;
     }
-    catch(Exception e)
+    catch (Exception e)
     {
         exit(EXIT_FAILURE);
     }
@@ -563,10 +563,9 @@ struct Shader
     }
 
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
-    in(textures.length <= 32, "It's possible to bind only 32 textures")
-    do
+    in(textures.length <= 32, "It's possible to bind only 32 textures")do
     {
-        foreach(i, textureNamePair; textures)
+        foreach (i, textureNamePair; textures)
         {
             textureNamePair[0].bind(cast(uint) i);
             setUniform(textureNamePair[1], cast(int) i);
@@ -640,14 +639,73 @@ struct Texture
         return res;
     }
 
+    enum Coord
+    {
+        s,
+        t
+    }
+
+    enum Wrap
+    {
+        clampToEdge = from!"glad.gl.enums".GL_CLAMP_TO_EDGE,
+        clamptoBorder = from!"glad.gl.enums".GL_CLAMP_TO_BORDER,
+        mirroredRepeat = from!"glad.gl.enums".GL_MIRRORED_REPEAT,
+        repeat = from!"glad.gl.enums".GL_REPEAT
+    }
+
+    static void setWrapMode(Coord coord, Wrap wrap) @nogc nothrow
+    {
+        import glad.gl.funcs : glTexParameteri;
+        import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
+
+        uint glCoord;
+        final switch (coord)
+        {
+        case Coord.s:
+            glCoord = GL_TEXTURE_WRAP_S;
+            break;
+        case Coord.t:
+            glCoord = GL_TEXTURE_WRAP_T;
+            break;
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, glCoord, wrap);
+    }
+
+    enum Filter
+    {
+        nearest = from!"glad.gl.enums".GL_NEAREST,
+        linear = from!"glad.gl.enums".GL_LINEAR,
+        nearestMipmapNearest = from!"glad.gl.enums".GL_NEAREST_MIPMAP_NEAREST,
+        nearestMipmapLinear = from!"glad.gl.enums".GL_NEAREST_MIPMAP_LINEAR,
+        linearMipmapNearest = from!"glad.gl.enums".GL_LINEAR_MIPMAP_NEAREST,
+        linearMipmapLinear = from!"glad.gl.enums".GL_LINEAR_MIPMAP_LINEAR
+
+    }
+
+    static void setMinFilter(Filter filter) @nogc nothrow
+    {
+        import glad.gl.funcs : glTexParameteri;
+        import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    }
+
+    static void setMagFilter(Filter filter) @nogc nothrow
+    {
+        import glad.gl.funcs : glTexParameteri;
+        import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    }
+
     uint id() const @safe pure @nogc nothrow
     {
         return _id;
     }
 
     void bind(uint index) @nogc nothrow
-    in(index <= 32, "It's possible to bind only 32 textures")
-    do
+    in(index <= 32, "It's possible to bind only 32 textures")do
     {
         import glad.gl.funcs : glActiveTexture, glBindTexture;
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
