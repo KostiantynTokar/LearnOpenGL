@@ -107,10 +107,8 @@ void main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         shaderProgram.use();
-        // shaderProgram.setUniform("texture1", cast(int) 0);
-        // shaderProgram.setUniform("texture2", cast(int) 1);
-        glUniform1i(glGetUniformLocation(shaderProgram.id, "texture1"), 0);
-        glUniform1i(glGetUniformLocation(shaderProgram.id, "texture2"), 1);
+        shaderProgram.setUniform("texture1", 0);
+        shaderProgram.setUniform("texture2", 1);
         VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
 
         glfwSwapBuffers(window);

@@ -498,44 +498,36 @@ struct Shader
         glUseProgram(id);
     }
 
-    private mixin template genSetUniform(T, uint argCount)
-            if ((is(T == bool) || is(T == int) || is(T == uint) || is(T == float))
-                && 0 < argCount && argCount < 5)
+    void setUniform(Ts...)(string name, Ts values) nothrow 
+            if (0 < Ts.length && Ts.length < 5
+                && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
+                || is(Ts[0] == int) || is(Ts[0] == uint) || is(Ts[0] == float)))
     {
-        void setUniform(string name, from!"std.meta".Repeat!(argCount, T) values) nothrow
+        import std.conv : to;
+        import std.string : toStringz;
+        import glad.gl.funcs : glGetUniformLocation;
+
+        immutable location = glGetUniformLocation(id, name.toStringz);
+
+        alias T = Ts[0];
+
+        static if (is(T == bool) || is(T == int))
         {
-            import std.conv : to;
-            import std.string : toStringz;
-            import glad.gl.funcs : glGetUniformLocation;
-
-            immutable location = glGetUniformLocation(id, name.toStringz);
-
-            static if (is(T == bool) || is(T == int))
-            {
-                enum suffix = "i";
-            }
-            else static if (is(T == uint))
-            {
-                enum suffix = "ui";
-            }
-            else static if (is(T == float))
-            {
-                enum suffix = "f";
-            }
-            enum funcName = "glUniform" ~ to!string(argCount) ~ suffix;
-
-            mixin("import glad.gl.funcs : " ~ funcName ~ ";");
-
-            mixin(funcName ~ "(location, values);");
+            enum suffix = "i";
         }
-    }
-
-    static foreach(T; from!"std.meta".AliasSeq!(bool, int, uint, float))
-    {
-        static foreach(argCount; 1 .. 5)
+        else static if (is(T == uint))
         {
-            mixin genSetUniform!(T, argCount);
+            enum suffix = "ui";
         }
+        else static if (is(T == float))
+        {
+            enum suffix = "f";
+        }
+        enum funcName = "glUniform" ~ to!string(Ts.length) ~ suffix;
+
+        mixin("import glad.gl.funcs : " ~ funcName ~ ";");
+
+        mixin(funcName ~ "(location, values);");
     }
 
 private:
