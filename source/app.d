@@ -3,6 +3,7 @@ import std.string;
 import std.math;
 import std.range;
 import std.algorithm;
+import std.typecons;
 import bindbc.glfw;
 import glad.gl.all;
 import glad.gl.loader;
@@ -64,22 +65,21 @@ void main()
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
     auto VAOInd = VAO.bindElementBufferArray(EBO);
 
-    set_yaxis_up_on_load(true);
-    auto image = read_image("resources\\container.jpg");
-    uint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, cast(int) GL_RGB, image.w, image.h, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, image.buf8.ptr);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    auto textureOrError1 = Texture.create("resources\\container.jpg");
+    if (string* error = textureOrError1.peek!string)
+    {
+        writeln(*error);
+        return;
+    }
+    auto textureOrError2 = Texture.create("resources\\awesomeface.png");
+    if (string* error = textureOrError2.peek!string)
+    {
+        writeln(*error);
+        return;
+    }
 
-    auto image2 = read_image("resources\\awesomeface.png");
-    uint texture2;
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    glTexImage2D(GL_TEXTURE_2D, 0, cast(int) GL_RGB, image2.w, image2.h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, image2.buf8.ptr);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    auto texture1 = textureOrError1.get!Texture;
+    auto texture2 = textureOrError2.get!Texture;
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -101,14 +101,8 @@ void main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-
         shaderProgram.use();
-        shaderProgram.setUniform("texture1", 0);
-        shaderProgram.setUniform("texture2", 1);
+        shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
         VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
 
         glfwSwapBuffers(window);

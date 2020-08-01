@@ -540,6 +540,100 @@ struct Shader
         mixin(funcName ~ "(location, values);");
     }
 
+    void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
+    in(textures.length <= 32, "It's possible to bind only 32 textures")
+    do
+    {
+        foreach(i, textureNamePair; textures)
+        {
+            textureNamePair[0].bind(cast(uint) i);
+            setUniform(textureNamePair[1], cast(int) i);
+        }
+    }
+
+private:
+    uint _id;
+}
+
+struct Texture
+{
+    alias TextureOrError = from!"std.variant".Algebraic!(Texture, string);
+    static TextureOrError create(string imageFileName) nothrow
+    {
+        import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
+        import glad.gl.enums : GL_RED, GL_RG, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
+            GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
+        import glad.gl.funcs : glGenTextures, glBindTexture, glTexImage2D, glGenerateMipmap;
+
+        TextureOrError res;
+
+        set_yaxis_up_on_load(true);
+        auto image = read_image(imageFileName);
+        if (image.e)
+        {
+            res = "ERROR::TEXTURE::READ_FAILED\n" ~ IF_ERROR[image.e];
+            return res;
+        }
+
+        uint format;
+        switch (image.c)
+        {
+        case 1:
+            format = GL_RED;
+            break;
+        case 2:
+            format = GL_RG;
+            break;
+        case 3:
+            format = GL_RGB;
+            break;
+        case 4:
+            format = GL_RGBA;
+            break;
+        default:
+            assert(0);
+        }
+
+        uint type;
+        switch (image.bpc)
+        {
+        case 8:
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case 16:
+            type = GL_UNSIGNED_SHORT;
+            break;
+        default:
+            assert(0);
+        }
+
+        uint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, cast(int) GL_RGB, image.w, image.h, 0,
+                format, type, image.buf8.ptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        res = Texture(texture);
+        return res;
+    }
+
+    uint id() const @safe pure @nogc nothrow
+    {
+        return _id;
+    }
+
+    void bind(uint index) @nogc nothrow
+    in(index <= 32, "It's possible to bind only 32 textures")
+    do
+    {
+        import glad.gl.funcs : glActiveTexture, glBindTexture;
+        import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
+
+        glActiveTexture(GL_TEXTURE0 + index);
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+
 private:
     uint _id;
 }
