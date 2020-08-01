@@ -133,7 +133,7 @@ struct BufferObejct(BufferType type)
     {
         import glad.gl.funcs : glGenBuffers;
 
-        glGenBuffers(1, &id);
+        glGenBuffers(1, &_id);
         setData(buffer, usage);
     }
 
@@ -149,6 +149,11 @@ struct BufferObejct(BufferType type)
         {
             _indexType = valueofGLType!T;
         }
+    }
+
+    uint id() const @safe pure @nogc nothrow
+    {
+        return _id;
     }
 
     void bind() @nogc nothrow
@@ -174,7 +179,7 @@ struct BufferObejct(BufferType type)
     }
 
 private:
-    uint id;
+    uint _id;
 
     static if (type == BufferType.element)
     {
@@ -297,7 +302,7 @@ struct VertexArrayObject
     {
         import glad.gl.funcs : glGenVertexArrays;
 
-        glGenVertexArrays(1, &id);
+        glGenVertexArrays(1, &_id);
         auto b = binder(&this);
 
         VBO.bind();
@@ -360,6 +365,11 @@ struct VertexArrayObject
         this(VBO, attrPointers);
     }
 
+    uint id() const @safe pure @nogc nothrow
+    {
+        return _id;
+    }
+
     VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
     {
         return VertexArrayObjectIndexed(this, EBO);
@@ -388,7 +398,7 @@ struct VertexArrayObject
     }
 
 private:
-    uint id;
+    uint _id;
 }
 
 struct VertexArrayObjectIndexed
@@ -486,7 +496,7 @@ struct Shader
         return res;
     }
 
-    uint id() @nogc nothrow
+    uint id() const @safe pure @nogc nothrow
     {
         return _id;
     }
