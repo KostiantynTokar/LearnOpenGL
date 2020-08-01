@@ -5,6 +5,7 @@
         "windows"
     ],
 	"dependencies": {
+		"imagefmt": "~>2.1.0",
 		"dlib": "~>0.19.1",
 		"bindbc-glfw": "~>0.10.0"
 	},

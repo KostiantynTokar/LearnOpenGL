@@ -1,17 +1,15 @@
 #version 330 core
 
-layout (location = 0) in vec2 pos;
-layout (location = 1) in vec3 color;
+layout (location = 0) in vec2 vPos;
+layout (location = 1) in vec3 vColor;
+layout (location = 2) in vec2 vTexCoord;
 
-out vec3 myColor;
-
-uniform float horOffset;
-uniform float time;
+out vec3 fColor;
+out vec2 fTexCoord;
 
 void main()
 {
-    vec2 rotated = vec2(cos(time) * pos.x - sin(time) * pos.y, sin(time) * pos.x + cos(time) * pos.y);
-    vec2 translated = vec2(rotated.x + horOffset, rotated.y);
-    gl_Position = vec4(translated, 0.0f, 1.0f);
-    myColor = vec3(translated, 0.0f);
+    gl_Position = vec4(vPos, 0.0f, 1.0f);
+    fColor = vColor;
+    fTexCoord = vTexCoord;
 }

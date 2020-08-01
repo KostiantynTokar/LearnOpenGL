@@ -486,6 +486,11 @@ struct Shader
         return res;
     }
 
+    uint id() @nogc nothrow
+    {
+        return _id;
+    }
+
     void use() @nogc nothrow
     {
         import glad.gl.funcs : glUseProgram;
@@ -534,5 +539,5 @@ struct Shader
     }
 
 private:
-    uint id;
+    uint _id;
 }
