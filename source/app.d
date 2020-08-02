@@ -1,5 +1,6 @@
 import std.stdio;
 import std.string;
+import std.conv;
 import std.math;
 import std.range;
 import std.algorithm;
@@ -13,6 +14,17 @@ import imagefmt;
 
 int width = 800;
 int height = 600;
+
+float yaw = -90.0f;
+float pitch = 0.0f;
+bool firstMouse = true;
+float mouseLastX;
+float mouseLastY;
+float FoV = 45.0f;
+
+auto cameraPos = vec3f(0.0f, 0.0f, 3.0f);
+auto cameraFront = vec3f(0.0f, 0.0f, -1.0f);
+auto cameraUp = vec3f(0.0f, 1.0f, 0.0f);
 
 void main()
 {
@@ -33,6 +45,8 @@ void main()
         writeln("Failed to initialize GLAD");
         return;
     }
+    
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
 
     GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int newWidth,
             int newHeight) {
@@ -41,6 +55,37 @@ void main()
         glViewport(0, 0, newWidth, newHeight);
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+
+    GLFWcursorposfun cursorPosCallback = (GLFWwindow* window, double x, double y)
+    {
+        if (firstMouse)
+        {
+            mouseLastX = x;
+            mouseLastY = y;
+            firstMouse = false;
+        }
+
+        float xoffset = x - mouseLastX;
+        float yoffset = mouseLastY - y; // reversed since y-coordinates go from bottom to top
+        mouseLastX = x;
+        mouseLastY = y;
+
+        float sensitivity = 0.25f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        yaw += xoffset;
+        pitch += yoffset;
+
+        pitch = std.algorithm.comparison.clamp(pitch, -89.0f, 89.0f);
+
+        vec3f front;
+        front.x = cos(radians(yaw)) * cos(radians(pitch));
+        front.y = sin(radians(pitch));
+        front.z = sin(radians(yaw)) * cos(radians(pitch));
+        cameraFront = front.normalized;
+    };
+    glfwSetCursorPosCallback(window, cursorPosCallback);
 
     struct Vertex
     {
@@ -135,8 +180,8 @@ void main()
     shaderProgram.use();
     shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
 
-    float FoV = radians(45.0f);
-    float aspectRatioFactor = 1.0f;
+    float deltaTime = 0.0f;
+    float lastFrameTime = 0.0f;
 
     void processInput(GLFWwindow* window)
     {
@@ -144,21 +189,23 @@ void main()
         {
             glfwSetWindowShouldClose(window, true);
         }
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+
+        immutable float cameraSpeed = 2.5f * deltaTime;
+        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            aspectRatioFactor = max(0.05, aspectRatioFactor - 0.05f);
+            cameraPos += cameraSpeed * cameraFront;
         }
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            aspectRatioFactor += 0.05f;
+            cameraPos -= cameraSpeed * cameraFront;
         }
-        if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            FoV += radians(1.0f);
+            cameraPos -= cameraSpeed * cross(cameraFront, cameraUp).normalized;
         }
-        if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            FoV = max(radians(10.0f), FoV - radians(1.0f));
+            cameraPos += cameraSpeed * cross(cameraFront, cameraUp).normalized;
         }
     }
 
@@ -166,6 +213,10 @@ void main()
 
     while (!glfwWindowShouldClose(window))
     {
+        float currentFrameTime = glfwGetTime();
+        deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -173,17 +224,16 @@ void main()
 
         shaderProgram.use();
 
-        auto view = mat4f.translation(vec3f(0.0f, 0.0f, -3.0f));
-        auto projection = mat4f.perspective(FoV, (aspectRatioFactor * width) / height, 0.1f, 100.0f);
+        auto view = mat4f.lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        auto projection = mat4f.perspective(FoV, to!float(width) / height, 0.1f, 100.0f);
 
         shaderProgram.setUniform("view", view);
         shaderProgram.setUniform("projection", projection);
 
-        foreach(i, pos; cubePositions)
+        foreach (i, pos; cubePositions)
         {
-            auto time = glfwGetTime();
             auto model = mat4f.translation(pos);
-            model *= mat4f.rotation(time * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
+            model *= mat4f.rotation(currentFrameTime * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
             shaderProgram.setUniform("model", model);
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
