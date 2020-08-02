@@ -340,7 +340,7 @@ struct VertexArrayObject
 
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
-        import dlib.math.vector : Vector;
+        import gfm.math.vector : Vector;
 
         alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
 
@@ -379,7 +379,7 @@ struct VertexArrayObject
             }
             else
             {
-                static assert(0, "vertex attribute should be a static array or dlib.math.vector.Vector");
+                static assert(0, "vertex attribute should be a static array or gfm.math.vector.Vector");
             }
         }}
         //dfmt on

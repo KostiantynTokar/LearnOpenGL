@@ -8,7 +8,7 @@ import bindbc.glfw;
 import glad.gl.all;
 import glad.gl.loader;
 import glsu;
-import dlib;
+import gfm.math;
 import imagefmt;
 
 void main()
@@ -39,21 +39,21 @@ void main()
     struct Vertex
     {
         @VertexAttrib(0)
-        vec2 pos;
+        vec2f pos;
 
         @VertexAttrib(1)
-        vec3 color;
+        vec3f color;
 
         @VertexAttrib(2)
-        vec2 texCoord;
+        vec2f texCoord;
     }
 
     //dfmt off
     Vertex[] vertices = [
-        Vertex( vec2( 0.5f,  0.5f), vec3( 1.0f,  0.0f, 0.0f), vec2(1.0f, 1.0f) ),
-        Vertex( vec2( 0.5f, -0.5f), vec3( 0.0f,  1.0f, 0.0f), vec2(1.0f, 0.0f) ),
-        Vertex( vec2(-0.5f, -0.5f), vec3( 0.0f,  0.0f, 1.0f), vec2(0.0f, 0.0f) ),
-        Vertex( vec2(-0.5f,  0.5f), vec3( 1.0f,  1.0f, 0.0f), vec2(0.0f, 1.0f) ),
+        Vertex( vec2f( 0.5f,  0.5f), vec3f( 1.0f,  0.0f, 0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec2f( 0.5f, -0.5f), vec3f( 0.0f,  1.0f, 0.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec2f(-0.5f, -0.5f), vec3f( 0.0f,  0.0f, 1.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec2f(-0.5f,  0.5f), vec3f( 1.0f,  1.0f, 0.0f), vec2f(0.0f, 1.0f) ),
     ];
     uint[] indices = [  
         0, 1, 3, // first triangle
