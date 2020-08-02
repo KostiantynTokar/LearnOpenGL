@@ -530,16 +530,22 @@ struct Shader
         glUseProgram(id);
     }
 
+    int getUniformLocation(string name) const nothrow
+    {
+        import std.string : toStringz;
+        import glad.gl.funcs : glGetUniformLocation;
+
+        return glGetUniformLocation(id, name.toStringz);
+    }
+
     void setUniform(Ts...)(string name, Ts values) nothrow 
             if (0 < Ts.length && Ts.length < 5
                 && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
                 || is(Ts[0] == int) || is(Ts[0] == uint) || is(Ts[0] == float)))
     {
         import std.conv : to;
-        import std.string : toStringz;
-        import glad.gl.funcs : glGetUniformLocation;
 
-        immutable location = glGetUniformLocation(id, name.toStringz);
+        immutable location = getUniformLocation(name);
 
         alias T = Ts[0];
 
@@ -560,6 +566,31 @@ struct Shader
         mixin("import glad.gl.funcs : " ~ funcName ~ ";");
 
         mixin(funcName ~ "(location, values);");
+    }
+
+    import gfm.math.matrix : Matrix;
+
+    void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
+            if (2 <= R && R <= 4 && 2 <= C && C <= 4)
+    {
+        import std.conv : to;
+        import glad.gl.enums : GL_TRUE;
+
+        immutable location = getUniformLocation(name);
+
+        static if (R == C)
+        {
+            enum suffix = to!string(R);
+        }
+        else
+        {
+            enum suffix = to!string(C) ~ "x" ~ to!string(R);
+        }
+        enum funcName = "glUniformMatrix" ~ suffix ~ "fv";
+
+        mixin("import glad.gl.funcs : " ~ funcName ~ ";");
+
+        mixin(funcName ~ "(location, cast(int) values.length, GL_TRUE, values[0].ptr);");
     }
 
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow

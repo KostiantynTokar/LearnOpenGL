@@ -109,7 +109,24 @@ void main()
 
         shaderProgram.use();
         shaderProgram.setUniform("mixParam", mixParam);
+
+        auto time = glfwGetTime();
+        auto trans = mat4f.translation(vec3f(0.5f, -0.5f, 0.0f));
+        trans *= mat4f.rotation(time, vec3f(0.0f, 0.0f, 1.0f));
+        shaderProgram.setUniform("transform", trans);
         VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+
+        trans = mat4f.translation(vec3f(0.0f, 0.5f, 0.0f));
+        auto factor = sin(time);
+        trans.scale(vec3f(factor, factor, factor));
+        shaderProgram.setUniform("transform", trans);
+        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+
+        auto offset = 0.5 * abs(factor);
+        trans = mat4f.translation(vec3f(-offset, -offset, 0.0f));
+        shaderProgram.setUniform("transform", trans);
+        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
