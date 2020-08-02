@@ -11,6 +11,9 @@ import glsu;
 import gfm.math;
 import imagefmt;
 
+int width = 800;
+int height = 600;
+
 void main()
 {
     GLFW.activate(3, 3);
@@ -31,39 +34,88 @@ void main()
         return;
     }
 
-    GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int width, int height) {
-        glViewport(0, 0, width, height);
+    GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int newWidth,
+            int newHeight) {
+        width = newWidth;
+        height = newHeight;
+        glViewport(0, 0, newWidth, newHeight);
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
     struct Vertex
     {
         @VertexAttrib(0)
-        vec2f pos;
+        vec3f pos;
 
         @VertexAttrib(1)
-        vec3f color;
-
-        @VertexAttrib(2)
         vec2f texCoord;
     }
 
     //dfmt off
+    // Vertex[] vertices = [
+    //     Vertex( vec2f( 0.5f,  0.5f), vec3f( 1.0f,  0.0f, 0.0f), vec2f(1.0f, 1.0f) ),
+    //     Vertex( vec2f( 0.5f, -0.5f), vec3f( 0.0f,  1.0f, 0.0f), vec2f(1.0f, 0.0f) ),
+    //     Vertex( vec2f(-0.5f, -0.5f), vec3f( 0.0f,  0.0f, 1.0f), vec2f(0.0f, 0.0f) ),
+    //     Vertex( vec2f(-0.5f,  0.5f), vec3f( 1.0f,  1.0f, 0.0f), vec2f(0.0f, 1.0f) ),
+    // ];
     Vertex[] vertices = [
-        Vertex( vec2f( 0.5f,  0.5f), vec3f( 1.0f,  0.0f, 0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec2f( 0.5f, -0.5f), vec3f( 0.0f,  1.0f, 0.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec2f(-0.5f, -0.5f), vec3f( 0.0f,  0.0f, 1.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec2f(-0.5f,  0.5f), vec3f( 1.0f,  1.0f, 0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) )
     ];
-    uint[] indices = [  
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
+    vec3f[] cubePositions = [
+        vec3f( 0.0f,  0.0f,  0.0f), 
+        vec3f( 2.0f,  5.0f, -15.0f), 
+        vec3f(-1.5f, -2.2f, -2.5f),  
+        vec3f(-3.8f, -2.0f, -12.3f),  
+        vec3f( 2.4f, -0.4f, -3.5f),  
+        vec3f(-1.7f,  3.0f, -7.5f),  
+        vec3f( 1.3f, -2.0f, -2.5f),  
+        vec3f( 1.5f,  2.0f, -2.5f), 
+        vec3f( 1.5f,  0.2f, -1.5f), 
+        vec3f(-1.3f,  1.0f, -1.5f)
     ];
     //dfmt on
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
-    auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
-    auto VAOInd = VAO.bindElementBufferArray(EBO);
 
     auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
     texture1.setWrapMode(Texture.Coord.s, Texture.Wrap.clamptoBorder);
@@ -77,12 +129,14 @@ void main()
     texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture2.setMagFilter(Texture.Filter.linear);
 
-    auto shaderProgram = Shader.create!("shader.vert", "shader.frag").checkError!Shader();
+    auto shaderProgram = Shader.create!("shader.vert", "shader.frag")
+        .checkError!Shader();
 
     shaderProgram.use();
     shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
 
-    float mixParam = 0.5f;
+    float FoV = radians(45.0f);
+    float aspectRatioFactor = 1.0f;
 
     void processInput(GLFWwindow* window)
     {
@@ -92,46 +146,50 @@ void main()
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         {
-           mixParam -= 0.05; 
+            aspectRatioFactor = max(0.05, aspectRatioFactor - 0.05f);
         }
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         {
-           mixParam += 0.05; 
+            aspectRatioFactor += 0.05f;
+        }
+        if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        {
+            FoV += radians(1.0f);
+        }
+        if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        {
+            FoV = max(radians(10.0f), FoV - radians(1.0f));
         }
     }
+
+    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderProgram.use();
-        shaderProgram.setUniform("mixParam", mixParam);
 
-        auto time = glfwGetTime();
-        auto trans = mat4f.translation(vec3f(0.5f, -0.5f, 0.0f));
-        trans *= mat4f.rotation(time, vec3f(0.0f, 0.0f, 1.0f));
-        shaderProgram.setUniform("transform", trans);
-        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+        auto view = mat4f.translation(vec3f(0.0f, 0.0f, -3.0f));
+        auto projection = mat4f.perspective(FoV, (aspectRatioFactor * width) / height, 0.1f, 100.0f);
 
-        trans = mat4f.translation(vec3f(0.0f, 0.5f, 0.0f));
-        auto factor = sin(time);
-        trans.scale(vec3f(factor, factor, factor));
-        shaderProgram.setUniform("transform", trans);
-        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
+        shaderProgram.setUniform("view", view);
+        shaderProgram.setUniform("projection", projection);
 
-        auto offset = 0.5 * abs(factor);
-        trans = mat4f.translation(vec3f(-offset, -offset, 0.0f));
-        shaderProgram.setUniform("transform", trans);
-        VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
-
+        foreach(i, pos; cubePositions)
+        {
+            auto time = glfwGetTime();
+            auto model = mat4f.translation(pos);
+            model *= mat4f.rotation(time * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
+            shaderProgram.setUniform("model", model);
+            VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
 }
-
-
