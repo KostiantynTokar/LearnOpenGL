@@ -653,7 +653,7 @@ struct Texture
         repeat = from!"glad.gl.enums".GL_REPEAT
     }
 
-    static void setWrapMode(Coord coord, Wrap wrap) @nogc nothrow
+    void setWrapMode(Coord coord, Wrap wrap) @nogc nothrow
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
@@ -669,6 +669,7 @@ struct Texture
             break;
         }
 
+        bind();
         glTexParameteri(GL_TEXTURE_2D, glCoord, wrap);
     }
 
@@ -683,19 +684,21 @@ struct Texture
 
     }
 
-    static void setMinFilter(Filter filter) @nogc nothrow
+    void setMinFilter(Filter filter) @nogc nothrow
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
 
+        bind();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     }
 
-    static void setMagFilter(Filter filter) @nogc nothrow
+    void setMagFilter(Filter filter) @nogc nothrow
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
 
+        bind();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     }
 
@@ -704,7 +707,7 @@ struct Texture
         return _id;
     }
 
-    void bind(uint index) @nogc nothrow
+    void bind(uint index = 0) @nogc nothrow
     in(index <= 32, "It's possible to bind only 32 textures")do
     {
         import glad.gl.funcs : glActiveTexture, glBindTexture;

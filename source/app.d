@@ -66,14 +66,39 @@ void main()
     auto VAOInd = VAO.bindElementBufferArray(EBO);
 
     auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
-    auto texture2 = Texture.create("resources\\awesomeface.png").checkError!Texture();
+    texture1.setWrapMode(Texture.Coord.s, Texture.Wrap.clamptoBorder);
+    texture1.setWrapMode(Texture.Coord.t, Texture.Wrap.clamptoBorder);
+    texture1.setMinFilter(Texture.Filter.linearMipmapLinear);
+    texture1.setMagFilter(Texture.Filter.linear);
 
-    Texture.setWrapMode(Texture.Coord.s, Texture.Wrap.repeat);
-    Texture.setWrapMode(Texture.Coord.t, Texture.Wrap.repeat);
-    Texture.setMinFilter(Texture.Filter.linearMipmapLinear);
-    Texture.setMagFilter(Texture.Filter.linear);
+    auto texture2 = Texture.create("resources\\awesomeface.png").checkError!Texture();
+    texture2.setWrapMode(Texture.Coord.s, Texture.Wrap.repeat);
+    texture2.setWrapMode(Texture.Coord.t, Texture.Wrap.repeat);
+    texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
+    texture2.setMagFilter(Texture.Filter.linear);
 
     auto shaderProgram = Shader.create!("shader.vert", "shader.frag").checkError!Shader();
+
+    shaderProgram.use();
+    shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
+
+    float mixParam = 0.5f;
+
+    void processInput(GLFWwindow* window)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(window, true);
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+           mixParam -= 0.05; 
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+           mixParam += 0.05; 
+        }
+    }
 
     while (!glfwWindowShouldClose(window))
     {
@@ -83,7 +108,7 @@ void main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.use();
-        shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
+        shaderProgram.setUniform("mixParam", mixParam);
         VAOInd.drawElements(RenderMode.triangles, cast(int) indices.length);
 
         glfwSwapBuffers(window);
@@ -92,10 +117,4 @@ void main()
 
 }
 
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, true);
-    }
-}
+
