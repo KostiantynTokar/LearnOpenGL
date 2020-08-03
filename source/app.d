@@ -87,6 +87,13 @@ void main()
     };
     glfwSetCursorPosCallback(window, cursorPosCallback);
 
+    GLFWscrollfun scrollCallback = (GLFWwindow* window, double xoffset, double yoffset)
+    {
+        float sensitivity = 2f;
+        FoV = std.algorithm.comparison.clamp(FoV - yoffset * sensitivity, 1.0f, 90.0f);
+    };
+    glfwSetScrollCallback(window, scrollCallback);
+
     struct Vertex
     {
         @VertexAttrib(0)
@@ -225,7 +232,7 @@ void main()
         shaderProgram.use();
 
         auto view = mat4f.lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        auto projection = mat4f.perspective(FoV, to!float(width) / height, 0.1f, 100.0f);
+        auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
 
         shaderProgram.setUniform("view", view);
         shaderProgram.setUniform("projection", projection);
