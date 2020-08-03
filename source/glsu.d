@@ -751,3 +751,112 @@ struct Texture
 private:
     uint _id;
 }
+
+struct Camera
+{
+    import gfm.math.vector : vec3f;
+    import gfm.math.matrix : mat4f;
+    import std.math : PI, PI_2;
+
+    this(vec3f position, float yaw = -PI_2, float pitch = 0.0f,
+            vec3f worldUp = vec3f(0.0f, 1.0f, 0.0f)) @safe @nogc nothrow
+    {
+        _position = position;
+        _worldUp = worldUp;
+        updateAngles(yaw, pitch);
+        updateVectors();
+    }
+
+    vec3f position() const @safe pure @nogc nothrow
+    {
+        return _position;
+    }
+    vec3f front() const @safe pure @nogc nothrow
+    {
+        return _front;
+    }
+    vec3f right() const @safe pure @nogc nothrow
+    {
+        return _right;
+    }
+    vec3f up() const @safe pure @nogc nothrow
+    {
+        return _up;
+    }
+    vec3f worldUp() const @safe pure @nogc nothrow
+    {
+        return _worldUp;
+    }
+    float yaw() const @safe pure @nogc nothrow
+    {
+        return _yaw;
+    }
+    float pitch() const @safe pure @nogc nothrow
+    {
+        return _pitch;
+    }
+
+    mat4f getView() const @safe pure @nogc nothrow
+    {
+        return mat4f.lookAt(position, position + front, up);
+    }
+
+    void move(vec3f offset) @safe pure @nogc nothrow
+    {
+        _position += offset;
+    }
+
+    void moveFront(float offset) @safe pure @nogc nothrow
+    {
+        _position += offset * front;
+    }
+
+    void moveRight(float offset) @safe pure @nogc nothrow
+    {
+        _position += offset * right;
+    }
+    void moveUp(float offset) @safe pure @nogc nothrow
+    {
+        _position += offset * up;
+    }
+
+    void rotate(float yawOffset, float pitchOffset) @safe @nogc nothrow
+    {
+        updateAngles(yaw + yawOffset, pitch + pitchOffset);
+        updateVectors();
+    }
+
+private:
+    vec3f _position;
+    vec3f _front;
+    vec3f _up;
+    vec3f _right;
+    vec3f _worldUp;
+    float _yaw;
+    float _pitch;
+
+    void updateAngles(float newYaw, float newPitch) @safe @nogc nothrow
+    {
+        import std.math : fmod;
+        import gfm.math.funcs : radians;
+
+        _yaw = fmod(newYaw, PI);
+        _pitch = fmod(newPitch, radians(89.0f));
+    }
+
+    void updateVectors() @safe pure @nogc nothrow
+    {
+        import std.math : sin, cos;
+        import gfm.math.vector : cross;
+
+        immutable sp = sin(pitch);
+        immutable cp = cos(pitch);
+
+        immutable sy = sin(yaw);
+        immutable cy = cos(yaw);
+
+        _front = vec3f(cy * cp, sp, sy * cp).normalized;
+        _right = cross(_front, _worldUp).normalized;
+        _up = cross(_right, _front).normalized;
+    }
+}

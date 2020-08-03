@@ -15,16 +15,17 @@ import imagefmt;
 int width = 800;
 int height = 600;
 
-float yaw = -90.0f;
-float pitch = 0.0f;
 bool firstMouse = true;
 float mouseLastX;
 float mouseLastY;
 float FoV = 45.0f;
 
-auto cameraPos = vec3f(0.0f, 0.0f, 3.0f);
-auto cameraFront = vec3f(0.0f, 0.0f, -1.0f);
-auto cameraUp = vec3f(0.0f, 1.0f, 0.0f);
+Camera camera;
+
+static this()
+{
+    camera = Camera(vec3f(0.0f, 0.0f, 3.0f));
+}
 
 void main()
 {
@@ -45,8 +46,8 @@ void main()
         writeln("Failed to initialize GLAD");
         return;
     }
-    
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int newWidth,
             int newHeight) {
@@ -56,8 +57,7 @@ void main()
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-    GLFWcursorposfun cursorPosCallback = (GLFWwindow* window, double x, double y)
-    {
+    GLFWcursorposfun cursorPosCallback = (GLFWwindow* window, double x, double y) {
         if (firstMouse)
         {
             mouseLastX = x;
@@ -74,21 +74,11 @@ void main()
         xoffset *= sensitivity;
         yoffset *= sensitivity;
 
-        yaw += xoffset;
-        pitch += yoffset;
-
-        pitch = std.algorithm.comparison.clamp(pitch, -89.0f, 89.0f);
-
-        vec3f front;
-        front.x = cos(radians(yaw)) * cos(radians(pitch));
-        front.y = sin(radians(pitch));
-        front.z = sin(radians(yaw)) * cos(radians(pitch));
-        cameraFront = front.normalized;
+        camera.rotate(radians(xoffset), radians(yoffset));
     };
     glfwSetCursorPosCallback(window, cursorPosCallback);
 
-    GLFWscrollfun scrollCallback = (GLFWwindow* window, double xoffset, double yoffset)
-    {
+    GLFWscrollfun scrollCallback = (GLFWwindow* window, double xoffset, double yoffset) {
         float sensitivity = 2f;
         FoV = std.algorithm.comparison.clamp(FoV - yoffset * sensitivity, 1.0f, 90.0f);
     };
@@ -104,12 +94,6 @@ void main()
     }
 
     //dfmt off
-    // Vertex[] vertices = [
-    //     Vertex( vec2f( 0.5f,  0.5f), vec3f( 1.0f,  0.0f, 0.0f), vec2f(1.0f, 1.0f) ),
-    //     Vertex( vec2f( 0.5f, -0.5f), vec3f( 0.0f,  1.0f, 0.0f), vec2f(1.0f, 0.0f) ),
-    //     Vertex( vec2f(-0.5f, -0.5f), vec3f( 0.0f,  0.0f, 1.0f), vec2f(0.0f, 0.0f) ),
-    //     Vertex( vec2f(-0.5f,  0.5f), vec3f( 1.0f,  1.0f, 0.0f), vec2f(0.0f, 1.0f) ),
-    // ];
     Vertex[] vertices = [
         Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
         Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 0.0f) ),
@@ -198,21 +182,21 @@ void main()
         }
 
         immutable float cameraSpeed = 2.5f * deltaTime;
-        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            cameraPos += cameraSpeed * cameraFront;
+            camera.moveFront(cameraSpeed);
         }
-        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            cameraPos -= cameraSpeed * cameraFront;
+            camera.moveFront(-cameraSpeed);
         }
-        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            cameraPos -= cameraSpeed * cross(cameraFront, cameraUp).normalized;
+            camera.moveRight(-cameraSpeed);
         }
-        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            cameraPos += cameraSpeed * cross(cameraFront, cameraUp).normalized;
+            camera.moveRight(cameraSpeed);
         }
     }
 
@@ -231,7 +215,7 @@ void main()
 
         shaderProgram.use();
 
-        auto view = mat4f.lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        auto view = camera.getView();
         auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
 
         shaderProgram.setUniform("view", view);
