@@ -184,11 +184,15 @@ void main()
         immutable float cameraSpeed = 2.5f * deltaTime;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            camera.moveFront(cameraSpeed);
+            // camera.moveFront(cameraSpeed);
+            auto front = camera.front;
+            camera.move(cameraSpeed * vec3f(front.x, 0.0f, front.z).normalized);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            camera.moveFront(-cameraSpeed);
+            // camera.moveFront(-cameraSpeed);
+            auto front = camera.front;
+            camera.move(-cameraSpeed * vec3f(front.x, 0.0f, front.z).normalized);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
