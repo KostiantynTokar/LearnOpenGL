@@ -105,27 +105,8 @@ private:
     }
 }
 
-struct Binder(T)
-{
-    this(scope T* obj)
-    {
-        this.obj = obj;
-        this.obj.bind();
-    }
-
-    ~this()
-    {
-        obj.unbind();
-    }
-
-private:
-    T* obj;
-}
-
-auto binder(T)(return scope T* obj)
-{
-    return Binder!T(obj);
-}
+enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
+    ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";
 
 enum BufferType
 {
@@ -164,7 +145,7 @@ struct BufferObejct(BufferType type)
     {
         import glad.gl.funcs : glBindBuffer, glBufferData;
 
-        auto b = binder(&this);
+        mixin(ScopedBind!this);
         glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
 
         static if (type == BufferType.element)
@@ -325,7 +306,7 @@ struct VertexArrayObject
         import glad.gl.funcs : glGenVertexArrays;
 
         glGenVertexArrays(1, &_id);
-        auto b = binder(&this);
+        mixin(ScopedBind!this);
 
         VBO.bind();
         foreach (ref attr; attrs)
@@ -401,7 +382,7 @@ struct VertexArrayObject
     {
         import glad.gl.funcs : glDrawArrays;
 
-        auto b = binder(&this);
+        mixin(ScopedBind!this);
         glDrawArrays(mode, first, count);
     }
 
@@ -433,7 +414,7 @@ struct VertexArrayObjectIndexed
     {
         this.VAO = VAO;
         indexType = EBO.indexType;
-        auto b = binder(&this);
+        mixin(ScopedBind!this);
         EBO.bind();
     }
 
@@ -441,7 +422,7 @@ struct VertexArrayObjectIndexed
     {
         import glad.gl.funcs : glDrawElements;
 
-        auto b = binder(&this);
+        mixin(ScopedBind!this);
         glDrawElements(mode, count, indexType, null);
     }
 
@@ -771,26 +752,32 @@ struct Camera
     {
         return _position;
     }
+
     vec3f front() const @safe pure @nogc nothrow
     {
         return _front;
     }
+
     vec3f right() const @safe pure @nogc nothrow
     {
         return _right;
     }
+
     vec3f up() const @safe pure @nogc nothrow
     {
         return _up;
     }
+
     vec3f worldUp() const @safe pure @nogc nothrow
     {
         return _worldUp;
     }
+
     float yaw() const @safe pure @nogc nothrow
     {
         return _yaw;
     }
+
     float pitch() const @safe pure @nogc nothrow
     {
         return _pitch;
@@ -815,6 +802,7 @@ struct Camera
     {
         _position += offset * right;
     }
+
     void moveUp(float offset) @safe pure @nogc nothrow
     {
         _position += offset * up;
