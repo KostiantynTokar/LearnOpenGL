@@ -49,19 +49,19 @@ struct GLFW
 static:
     bool isActive() @safe @nogc nothrow
     {
-        return active;
+        return _active;
     }
 
     bool activate(uint major, uint minor) @nogc nothrow
     {
         if (isActive)
         {
-            return GLFW.major == major && GLFW.minor;
+            return GLFW._major == major && GLFW._minor == minor;
         }
 
-        GLFW.major = major;
-        GLFW.minor = minor;
-        active = true;
+        GLFW._major = major;
+        GLFW._minor = minor;
+        _active = true;
         initLib();
         return true;
     }
@@ -75,7 +75,7 @@ static:
         import bindbc.glfw : glfwTerminate;
 
         glfwTerminate();
-        active = false;
+        _active = false;
         return true;
     }
 
@@ -88,9 +88,9 @@ static:
     }
 
 private:
-    bool active = false;
-    uint major;
-    uint minor;
+    bool _active = false;
+    uint _major;
+    uint _minor;
 
     void initLib() @nogc nothrow
     {
@@ -99,8 +99,8 @@ private:
             GLFW_CONTEXT_VERSION_MINOR, GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE;
 
         glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, _major);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, _minor);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
 }
@@ -250,12 +250,12 @@ struct AttribPointer
 {
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) @nogc nothrow
     {
-        this.index = index;
-        this.size = size;
-        this.type = type;
-        this.normalized = normalized;
-        this.stride = stride;
-        this.pointer = pointer;
+        this._index = index;
+        this._size = size;
+        this._type = type;
+        this._normalized = normalized;
+        this._stride = stride;
+        this._pointer = pointer;
     }
 
     void enable() @nogc nothrow
@@ -263,26 +263,27 @@ struct AttribPointer
         import glad.gl.funcs : glEnableVertexAttribArray;
         import glad.gl.funcs : glVertexAttribPointer;
 
-        glVertexAttribPointer(index, size, type, normalized, stride, cast(void*) pointer);
-        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(void*) _pointer);
+        glEnableVertexAttribArray(_index);
     }
 
     void disable() @nogc nothrow
     {
         import glad.gl.funcs : glDisableVertexAttribArray;
 
-        glDisableVertexAttribArray(index);
+        glDisableVertexAttribArray(_index);
     }
 
 private:
-    uint index;
-    int size;
-    GLType type;
-    bool normalized;
-    int stride;
-    ptrdiff_t pointer;
+    uint _index;
+    int _size;
+    GLType _type;
+    bool _normalized;
+    int _stride;
+    ptrdiff_t _pointer;
 }
 
+// dfmt off
 enum RenderMode
 {
     points = from!"glad.gl.enums".GL_POINTS,
@@ -290,14 +291,14 @@ enum RenderMode
     lineLoop = from!"glad.gl.enums".GL_LINE_LOOP,
     lines = from!"glad.gl.enums".GL_LINES,
     lineStripAdjacency = from!"glad.gl.enums".GL_LINE_STRIP_ADJACENCY,
-    linesAdjacency
-        = from!"glad.gl.enums".GL_LINES_ADJACENCY,
-        triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
-        triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN, triangles
-        = from!"glad.gl.enums".GL_TRIANGLES, triangleStripAdjacency
-        = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
-        trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
+    linesAdjacency = from!"glad.gl.enums".GL_LINES_ADJACENCY,
+    triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
+    triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN,
+    triangles = from!"glad.gl.enums".GL_TRIANGLES,
+    triangleStripAdjacency = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
+    trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
 }
+// dfmt on
 
 struct VertexArrayObject
 {
@@ -413,7 +414,7 @@ struct VertexArrayObjectIndexed
     this(VertexArrayObject VAO, ElementBufferArray EBO) @nogc nothrow
     {
         this.VAO = VAO;
-        indexType = EBO.indexType;
+        _indexType = EBO.indexType;
         mixin(ScopedBind!this);
         EBO.bind();
     }
@@ -423,62 +424,76 @@ struct VertexArrayObjectIndexed
         import glad.gl.funcs : glDrawElements;
 
         mixin(ScopedBind!this);
-        glDrawElements(mode, count, indexType, null);
+        glDrawElements(mode, count, _indexType, null);
     }
 
 private:
-    GLType indexType;
+    GLType _indexType;
 }
 
-struct Shader
+struct ShaderProgram
 {
-    alias ShaderOrError = from!"std.variant".Algebraic!(Shader, string);
-    static ShaderOrError create(string vertexShaderPath, string fragmentShaderPath)() nothrow
+    enum Type
     {
-        import std.variant : Algebraic;
-        import std.string : toStringz;
-        import glad.gl.funcs : glCreateShader, glShaderSource, glCompileShader,
-            glGetShaderiv, glGetShaderInfoLog, glCreateProgram,
-            glAttachShader, glLinkProgram, glGetProgramiv, glGetProgramInfoLog, glDeleteShader;
-        import glad.gl.enums : GL_VERTEX_SHADER, GL_COMPILE_STATUS,
-            GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
+        vertex = from!"glad.gl.enums".GL_VERTEX_SHADER,
+        fragment = from!"glad.gl.enums".GL_FRAGMENT_SHADER,
+    }
 
-        ShaderOrError res;
+    alias ShaderProgramOrError = from!"std.variant".Algebraic!(ShaderProgram, string);
+    static ShaderProgramOrError create(string vertexShaderPath, string fragmentShaderPath)()
+    {
+        import glad.gl.funcs : glCreateProgram, glAttachShader, glLinkProgram,
+            glGetProgramiv, glGetProgramInfoLog, glDeleteShader;
+        import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
+
+        ShaderProgramOrError res;
+
+        alias ShaderOrError = from!"std.variant".Algebraic!(uint, string);
+
+        ShaderOrError compileShader(string shaderPath)(Type type)
+        {
+            import std.string : toStringz;
+            import std.uni : toUpper;
+
+            import glad.gl.funcs : glCreateShader, glShaderSource,
+                glCompileShader, glGetShaderiv, glGetShaderInfoLog;
+            import glad.gl.enums : GL_COMPILE_STATUS;
+
+            ShaderOrError res;
+
+            int success;
+            int infoLogLength;
+
+            const(char)* shaderSource = import(shaderPath).toStringz;
+            uint shader = glCreateShader(type);
+            glShaderSource(shader, 1, &shaderSource, null);
+            glCompileShader(shader);
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+            if (!success)
+            {
+                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+                char[] infoLog = new char[infoLogLength];
+                glGetShaderInfoLog(shader, infoLogLength, null, infoLog.ptr);
+                res = "ERROR::SHADER::" ~ type.stringof.toUpper
+                    ~ "::COMPILATION_FAILED\n" ~ shaderPath ~ "\n" ~ infoLog.idup;
+                glDeleteShader(shader);
+                return res;
+            }
+
+            res = shader;
+            return res;
+        }
+
+        ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
+        immutable vertexShader = checkError!uint(vertexShaderOrError);
+
+        ShaderOrError fragmentShaderOrError = compileShader!fragmentShaderPath(Type.fragment);
+        immutable fragmentShader = checkError!uint(fragmentShaderOrError);
 
         int success;
         int infoLogLength;
 
-        const(char)* vertexShaderSource = import(vertexShaderPath).toStringz;
-        uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, null);
-        glCompileShader(vertexShader);
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-            char[] infoLog = new char[infoLogLength];
-            glGetShaderInfoLog(vertexShader, infoLogLength, null, infoLog.ptr);
-            res = "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                ~ vertexShaderPath ~ "\n" ~ infoLog.idup;
-            return res;
-        }
-
-        const(char)* fragmentShaderSource = import(fragmentShaderPath).toStringz;
-        uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, null);
-        glCompileShader(fragmentShader);
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-            char[] infoLog = new char[infoLogLength];
-            glGetShaderInfoLog(fragmentShader, infoLogLength, null, infoLog.ptr);
-            res = "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                ~ fragmentShaderPath ~ "\n" ~ infoLog.idup;
-            return res;
-        }
-
-        uint shaderProgram = glCreateProgram();
+        immutable shaderProgram = glCreateProgram();
         glAttachShader(shaderProgram, vertexShader);
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
@@ -495,7 +510,7 @@ struct Shader
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
-        res = Shader(shaderProgram);
+        res = ShaderProgram(shaderProgram);
         return res;
     }
 

@@ -165,8 +165,8 @@ void main()
     texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture2.setMagFilter(Texture.Filter.linear);
 
-    auto shaderProgram = Shader.create!("shader.vert", "shader.frag")
-        .checkError!Shader();
+    auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag")
+        .checkError!ShaderProgram();
 
     shaderProgram.use();
     shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
