@@ -23,14 +23,14 @@ struct UDA
 T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
 {
     import core.stdc.stdlib : exit, EXIT_FAILURE;
-    import std.stdio : writeln;
+    import std.stdio : stderr, writeln;
 
     T res;
     try
     {
         if (string* error = valueOrError.peek!string)
         {
-            writeln(*error);
+            stderr.writeln(*error);
             exit(EXIT_FAILURE);
         }
         res = valueOrError.get!T;
