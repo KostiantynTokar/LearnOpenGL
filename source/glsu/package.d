@@ -181,6 +181,14 @@ struct BufferObejct(BufferType type)
         }
     }
 
+    void destroy() @nogc nothrow
+    {
+        import glad.gl.funcs : glDeleteBuffers;
+
+        glDeleteBuffers(1, &_id);
+        _id = 0;
+    }
+
 private:
     uint _id;
 
@@ -401,6 +409,14 @@ struct VertexArrayObject
         glBindVertexArray(0);
     }
 
+    void destroy() @nogc nothrow
+    {
+        import glad.gl.funcs : glDeleteVertexArrays;
+        
+        glDeleteVertexArrays(1, &_id);
+        _id = 0;
+    }
+
 private:
     uint _id;
 }
@@ -486,9 +502,11 @@ struct ShaderProgram
 
         ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
         immutable vertexShader = checkError!uint(vertexShaderOrError);
+        scope(exit) glDeleteShader(vertexShader);
 
         ShaderOrError fragmentShaderOrError = compileShader!fragmentShaderPath(Type.fragment);
         immutable fragmentShader = checkError!uint(fragmentShaderOrError);
+        scope(exit) glDeleteShader(fragmentShader);
 
         int success;
         int infoLogLength;
@@ -597,6 +615,14 @@ struct ShaderProgram
             textureNamePair[0].bind(cast(uint) i);
             setUniform(textureNamePair[1], cast(int) i);
         }
+    }
+
+    void destroy() @nogc nothrow
+    {
+        import glad.gl.funcs : glDeleteProgram;
+
+        glDeleteProgram(id);
+        _id = 0;
     }
 
 private:
@@ -742,6 +768,14 @@ struct Texture
 
         glActiveTexture(GL_TEXTURE0 + index);
         glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    void destroy() @nogc nothrow
+    {
+        import glad.gl.funcs : glDeleteTextures;
+
+        glDeleteTextures(1, &_id);
+        _id = 0;
     }
 
 private:

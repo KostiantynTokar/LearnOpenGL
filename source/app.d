@@ -152,21 +152,25 @@ void main()
     //dfmt on
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    scope(exit) VAO.destroy();
 
     auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
     texture1.setWrapMode(Texture.Coord.s, Texture.Wrap.clamptoBorder);
     texture1.setWrapMode(Texture.Coord.t, Texture.Wrap.clamptoBorder);
     texture1.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture1.setMagFilter(Texture.Filter.linear);
+    scope(exit) texture1.destroy();
 
     auto texture2 = Texture.create("resources\\awesomeface.png").checkError!Texture();
     texture2.setWrapMode(Texture.Coord.s, Texture.Wrap.repeat);
     texture2.setWrapMode(Texture.Coord.t, Texture.Wrap.repeat);
     texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture2.setMagFilter(Texture.Filter.linear);
+    scope(exit) texture2.destroy();
 
     auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag")
         .checkError!ShaderProgram();
+    scope(exit) shaderProgram.destroy();
 
     shaderProgram.use();
     shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
@@ -216,8 +220,6 @@ void main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        shaderProgram.use();
 
         auto view = camera.getView();
         auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
