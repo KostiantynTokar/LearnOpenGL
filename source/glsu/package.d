@@ -189,6 +189,7 @@ struct BufferObejct(BufferType type)
 
     void setData(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
+    in(isValid)do
     {
         import glad.gl.funcs : glBindBuffer, glBufferData;
 
@@ -202,11 +203,13 @@ struct BufferObejct(BufferType type)
     }
 
     uint id() const @safe pure @nogc nothrow
+    in(_id != 0)do
     {
         return _id;
     }
 
     void bind() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glBindBuffer;
 
@@ -214,6 +217,7 @@ struct BufferObejct(BufferType type)
     }
 
     void unbind() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glBindBuffer;
 
@@ -229,11 +233,17 @@ struct BufferObejct(BufferType type)
     }
 
     void destroy() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDeleteBuffers;
 
         glDeleteBuffers(1, &_id);
         _id = 0;
+    }
+
+    bool isValid() const @safe pure @nogc nothrow
+    {
+        return id != 0;
     }
 
 private:
@@ -425,16 +435,19 @@ struct VertexArrayObject
     }
 
     uint id() const @safe pure @nogc nothrow
+    in(_id != 0)do
     {
         return _id;
     }
 
     VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
+    in(isValid)do
     {
         return VertexArrayObjectIndexed(this, EBO);
     }
 
     void draw(RenderMode mode, int first, int count) @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDrawArrays;
 
@@ -443,6 +456,7 @@ struct VertexArrayObject
     }
 
     void bind() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glBindVertexArray;
 
@@ -450,6 +464,7 @@ struct VertexArrayObject
     }
 
     void unbind() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glBindVertexArray;
 
@@ -457,11 +472,17 @@ struct VertexArrayObject
     }
 
     void destroy() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDeleteVertexArrays;
 
         glDeleteVertexArrays(1, &_id);
         _id = 0;
+    }
+
+    bool isValid() const @safe pure @nogc nothrow
+    {
+        return id != 0;
     }
 
 private:
@@ -483,6 +504,7 @@ struct VertexArrayObjectIndexed
     }
 
     void drawElements(RenderMode mode, int count) @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDrawElements;
 
@@ -582,11 +604,13 @@ struct ShaderProgram
     }
 
     uint id() const @safe pure @nogc nothrow
+    in(_id != 0)do
     {
         return _id;
     }
 
     void use() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glUseProgram;
 
@@ -594,6 +618,7 @@ struct ShaderProgram
     }
 
     int getUniformLocation(string name) const nothrow
+    in(isValid)do
     {
         import std.string : toStringz;
         import glad.gl.funcs : glGetUniformLocation;
@@ -605,6 +630,7 @@ struct ShaderProgram
             if (0 < Ts.length && Ts.length < 5
                 && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
                 || is(Ts[0] == int) || is(Ts[0] == uint) || is(Ts[0] == float)))
+    in(isValid)do
     {
         import std.conv : to;
 
@@ -635,6 +661,7 @@ struct ShaderProgram
 
     void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
             if (2 <= R && R <= 4 && 2 <= C && C <= 4)
+    in(isValid)do
     {
         import std.conv : to;
         import glad.gl.enums : GL_TRUE;
@@ -657,7 +684,8 @@ struct ShaderProgram
     }
 
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
-    in(textures.length <= 32, "It's possible to bind only 32 textures")do
+    in(textures.length <= 32, "It's possible to bind only 32 textures")
+    in(isValid)do
     {
         foreach (i, textureNamePair; textures)
         {
@@ -667,11 +695,17 @@ struct ShaderProgram
     }
 
     void destroy() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDeleteProgram;
 
         glDeleteProgram(id);
         _id = 0;
+    }
+
+    bool isValid() const @safe pure @nogc nothrow
+    {
+        return id != 0;
     }
 
 private:
@@ -756,6 +790,7 @@ struct Texture
     }
 
     void setWrapMode(Coord coord, Wrap wrap) @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
@@ -787,6 +822,7 @@ struct Texture
     }
 
     void setMinFilter(Filter filter) @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
@@ -796,6 +832,7 @@ struct Texture
     }
 
     void setMagFilter(Filter filter) @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
@@ -805,12 +842,14 @@ struct Texture
     }
 
     uint id() const @safe pure @nogc nothrow
+    in(_id != 0)do
     {
         return _id;
     }
 
     void bind(uint index = 0) @nogc nothrow
-    in(index <= 32, "It's possible to bind only 32 textures")do
+    in(index <= 32, "It's possible to bind only 32 textures")
+    in(isValid)do
     {
         import glad.gl.funcs : glActiveTexture, glBindTexture;
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
@@ -820,11 +859,17 @@ struct Texture
     }
 
     void destroy() @nogc nothrow
+    in(isValid)do
     {
         import glad.gl.funcs : glDeleteTextures;
 
         glDeleteTextures(1, &_id);
         _id = 0;
+    }
+
+    bool isValid() const @safe pure @nogc nothrow
+    {
+        return id != 0;
     }
 
 private:
