@@ -1,7 +1,7 @@
 module glsu;
 
 /** 
- * Import as expression
+ * Import as expression.
  * Params:
  *   moduleName = name of a module to import from
  */
@@ -10,16 +10,36 @@ template from(string moduleName)
     mixin("import from = " ~ moduleName ~ ";");
 }
 
+/** 
+ * UDA for UDAs.
+ * All UDAs are attributed by this type.
+ */
 struct UDA
 {
 }
 
+/** 
+ * UDA for fields of a struct that are to used as vertex in VertexBufferArray.
+ */
 @UDA struct VertexAttrib
 {
+    /// layout position of the attribute in a shader
     uint index;
+
+    /** 
+     * specifies whether fixed-point data values should be normalized or converted
+     * directly as fixed-point values when they are accessed
+     */
     bool normalized = false;
 }
 
+/** 
+ * If valueOrError holds string, then stderr it and exit program;
+ * else returns first component of Algebraic valueOrError.
+ * Params:
+ *   valueOrError = argument to check
+ * Returns: value (i.e. first component of Algebraic) if valueOrError doesn't hold string.
+ */
 T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
 {
     import core.stdc.stdlib : exit, EXIT_FAILURE;
@@ -42,16 +62,28 @@ T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
     return res;
 }
 
+/// Wraps some functionality of GLFW
 struct GLFW
 {
     @disable this();
 
 static:
+    /** 
+    * Checks if GLFW is active.
+    * Returns: whether GLFW is active.
+    */
     bool isActive() @safe @nogc nothrow
     {
         return _active;
     }
 
+    /** 
+     * Activate GLFW. GLFW should be activated before use.
+     * Params:
+     *   major = major version of OpenGL to use
+     *   minor = minor version of OpenGL to use
+     * Returns: whether GLFW is activated with specified version of OpenGL
+     */
     bool activate(uint major, uint minor) @nogc nothrow
     {
         if (isActive)
@@ -66,6 +98,10 @@ static:
         return true;
     }
 
+    /** 
+     * Deactivate GLFW.
+     * Returns: whether GLFW was active before.
+     */
     bool deactivate() @nogc nothrow
     {
         if (!isActive)
@@ -79,6 +115,14 @@ static:
         return true;
     }
 
+    /** 
+     * Create Window. GLFW should be active.
+     * Params:
+     *   width = width of the window
+     *   height = height of the window in pixels
+     *   label = label of the window
+     * Returns: Handle of newly created window or null if window was not created.
+     */
     from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
     {
         import bindbc.glfw : glfwCreateWindow;
@@ -105,28 +149,31 @@ private:
     }
 }
 
+/// mixin to bind obj immediately and unbind at scope(exit) 
 enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
     ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";
 
+/// Type of BufferObject
 enum BufferType
 {
-    array = from!"glad.gl.enums".GL_ARRAY_BUFFER,
-    element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER
+    array = from!"glad.gl.enums".GL_ARRAY_BUFFER, /// buffer for any data
+    element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER /// buffer for indices
 }
 
+/// Hint to the GL implementation as to how a buffer object's data store will be accessed
 enum DataUsage
 {
-    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW,
-    streamRead = from!"glad.gl.enums".GL_STREAM_READ,
-    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY,
+    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW, /// modified once by app, used few times, source for GL
+    streamRead = from!"glad.gl.enums".GL_STREAM_READ, /// modified once by GL, used few times, source for app
+    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY, /// modified once by GL, used few times, source for GL
 
-    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW,
-    staticRead = from!"glad.gl.enums".GL_STATIC_READ,
-    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY,
+    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW, /// modified once by app, used many times, source for GL
+    staticRead = from!"glad.gl.enums".GL_STATIC_READ, /// modified once by GL, used many times, source for app
+    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY, /// modified once by GL, used many times, source for GL
 
-    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW,
-    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ,
-    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY
+    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW, /// modified repeatedly by app, used many times, source for GL
+    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ, /// modified repeatedly by GL, used many times, source for app
+    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY /// modified repeatedly by GL, used many times, source for GL
 }
 
 struct BufferObejct(BufferType type)
@@ -412,7 +459,7 @@ struct VertexArrayObject
     void destroy() @nogc nothrow
     {
         import glad.gl.funcs : glDeleteVertexArrays;
-        
+
         glDeleteVertexArrays(1, &_id);
         _id = 0;
     }
@@ -502,11 +549,13 @@ struct ShaderProgram
 
         ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
         immutable vertexShader = checkError!uint(vertexShaderOrError);
-        scope(exit) glDeleteShader(vertexShader);
+        scope (exit)
+            glDeleteShader(vertexShader);
 
         ShaderOrError fragmentShaderOrError = compileShader!fragmentShaderPath(Type.fragment);
         immutable fragmentShader = checkError!uint(fragmentShaderOrError);
-        scope(exit) glDeleteShader(fragmentShader);
+        scope (exit)
+            glDeleteShader(fragmentShader);
 
         int success;
         int infoLogLength;

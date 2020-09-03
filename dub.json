@@ -1,6 +1,5 @@
 {
 	"name": "learn-opengl",
-	"targetType": "executable",
     "platforms": [
         "windows"
     ],
@@ -44,6 +43,10 @@
 		"release": {
 			"buildOptions": ["releaseMode", "optimize", "inline"],
 			"libs": ["dependencies\\x64-Release\\glfw3"]
+		},
+		"docs": {
+			"buildOptions": ["syntaxOnly"],
+			"dflags": ["-c", "-Dddocs", "-op"]
 		}
 	}
 }
