@@ -72,7 +72,7 @@ static:
     * Checks if GLFW is active.
     * Returns: whether GLFW is active.
     */
-    bool isActive() @safe @nogc nothrow
+    bool isActive() nothrow @nogc @safe
     {
         return _active;
     }
@@ -84,7 +84,7 @@ static:
      *   minor = minor version of OpenGL to use
      * Returns: whether GLFW is activated with specified version of OpenGL
      */
-    bool activate(uint major, uint minor) @nogc nothrow
+    bool activate(uint major, uint minor) nothrow @nogc
     {
         if (isActive)
         {
@@ -102,7 +102,7 @@ static:
      * Deactivate GLFW.
      * Returns: whether GLFW was active before.
      */
-    bool deactivate() @nogc nothrow
+    bool deactivate() nothrow @nogc
     {
         if (!isActive)
         {
@@ -136,7 +136,7 @@ private:
     uint _major;
     uint _minor;
 
-    void initLib() @nogc nothrow
+    void initLib() nothrow @nogc
     {
         import bindbc.glfw : glfwInit, glfwWindowHint;
         import bindbc.glfw.types : GLFW_CONTEXT_VERSION_MAJOR,
@@ -178,7 +178,7 @@ enum DataUsage
 
 struct BufferObejct(BufferType type)
 {
-    this(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
+    this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
         import glad.gl.funcs : glGenBuffers;
@@ -187,7 +187,7 @@ struct BufferObejct(BufferType type)
         setData(buffer, usage);
     }
 
-    void setData(T)(const T[] buffer, DataUsage usage) @nogc nothrow 
+    void setData(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     in(isValid)do
     {
@@ -202,13 +202,13 @@ struct BufferObejct(BufferType type)
         }
     }
 
-    uint id() const @safe pure @nogc nothrow
+    uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
-    void bind() @nogc nothrow
+    void bind() const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glBindBuffer;
@@ -216,7 +216,7 @@ struct BufferObejct(BufferType type)
         glBindBuffer(type, id);
     }
 
-    void unbind() @nogc nothrow
+    void unbind() const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glBindBuffer;
@@ -226,13 +226,13 @@ struct BufferObejct(BufferType type)
 
     static if (type == BufferType.element)
     {
-        GLType indexType() const @nogc nothrow
+        GLType indexType() const nothrow @nogc
         {
             return _indexType;
         }
     }
 
-    void destroy() @nogc nothrow
+    void destroy() nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDeleteBuffers;
@@ -241,7 +241,7 @@ struct BufferObejct(BufferType type)
         _id = 0;
     }
 
-    bool isValid() const @safe pure @nogc nothrow
+    bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
     }
@@ -313,7 +313,7 @@ template valueofGLType(T)
 
 struct AttribPointer
 {
-    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) @nogc nothrow
+    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) nothrow @nogc
     {
         this._index = index;
         this._size = size;
@@ -323,7 +323,7 @@ struct AttribPointer
         this._pointer = pointer;
     }
 
-    void enable() @nogc nothrow
+    void enable() nothrow @nogc
     {
         import glad.gl.funcs : glEnableVertexAttribArray;
         import glad.gl.funcs : glVertexAttribPointer;
@@ -332,7 +332,7 @@ struct AttribPointer
         glEnableVertexAttribArray(_index);
     }
 
-    void disable() @nogc nothrow
+    void disable() nothrow @nogc
     {
         import glad.gl.funcs : glDisableVertexAttribArray;
 
@@ -367,7 +367,7 @@ enum RenderMode
 
 struct VertexArrayObject
 {
-    this(VertexBufferObject VBO, AttribPointer[] attrs) @nogc nothrow
+    this(VertexBufferObject VBO, AttribPointer[] attrs) nothrow @nogc
     {
         import glad.gl.funcs : glGenVertexArrays;
 
@@ -381,7 +381,7 @@ struct VertexArrayObject
         }
     }
 
-    this(T)(const T[] buffer, DataUsage usage) @nogc nothrow
+    this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
     {
         auto VBO = VertexBufferObject(buffer, usage);
 
@@ -434,19 +434,19 @@ struct VertexArrayObject
         this(VBO, attrPointers);
     }
 
-    uint id() const @safe pure @nogc nothrow
+    uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
-    VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) @nogc nothrow
+    VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) nothrow @nogc
     in(isValid)do
     {
         return VertexArrayObjectIndexed(this, EBO);
     }
 
-    void draw(RenderMode mode, int first, int count) @nogc nothrow
+    void draw(RenderMode mode, int first, int count) const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDrawArrays;
@@ -455,7 +455,7 @@ struct VertexArrayObject
         glDrawArrays(mode, first, count);
     }
 
-    void bind() @nogc nothrow
+    void bind() const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glBindVertexArray;
@@ -463,7 +463,7 @@ struct VertexArrayObject
         glBindVertexArray(id);
     }
 
-    void unbind() @nogc nothrow
+    void unbind() const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glBindVertexArray;
@@ -471,7 +471,7 @@ struct VertexArrayObject
         glBindVertexArray(0);
     }
 
-    void destroy() @nogc nothrow
+    void destroy() nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDeleteVertexArrays;
@@ -480,7 +480,7 @@ struct VertexArrayObject
         _id = 0;
     }
 
-    bool isValid() const @safe pure @nogc nothrow
+    bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
     }
@@ -495,7 +495,7 @@ struct VertexArrayObjectIndexed
 
     alias VAO this;
 
-    this(VertexArrayObject VAO, ElementBufferArray EBO) @nogc nothrow
+    this(VertexArrayObject VAO, ElementBufferArray EBO) nothrow @nogc
     {
         this.VAO = VAO;
         _indexType = EBO.indexType;
@@ -503,7 +503,7 @@ struct VertexArrayObjectIndexed
         EBO.bind();
     }
 
-    void drawElements(RenderMode mode, int count) @nogc nothrow
+    void drawElements(RenderMode mode, int count) const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDrawElements;
@@ -603,13 +603,13 @@ struct ShaderProgram
         return res;
     }
 
-    uint id() const @safe pure @nogc nothrow
+    uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
-    void use() @nogc nothrow
+    void use() const nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glUseProgram;
@@ -694,7 +694,7 @@ struct ShaderProgram
         }
     }
 
-    void destroy() @nogc nothrow
+    void destroy() nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDeleteProgram;
@@ -703,7 +703,7 @@ struct ShaderProgram
         _id = 0;
     }
 
-    bool isValid() const @safe pure @nogc nothrow
+    bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
     }
@@ -789,7 +789,7 @@ struct Texture
         repeat = from!"glad.gl.enums".GL_REPEAT
     }
 
-    void setWrapMode(Coord coord, Wrap wrap) @nogc nothrow
+    void setWrapMode(Coord coord, Wrap wrap) nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
@@ -821,7 +821,7 @@ struct Texture
 
     }
 
-    void setMinFilter(Filter filter) @nogc nothrow
+    void setMinFilter(Filter filter) nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
@@ -831,7 +831,7 @@ struct Texture
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     }
 
-    void setMagFilter(Filter filter) @nogc nothrow
+    void setMagFilter(Filter filter) nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glTexParameteri;
@@ -841,13 +841,13 @@ struct Texture
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     }
 
-    uint id() const @safe pure @nogc nothrow
+    uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
-    void bind(uint index = 0) @nogc nothrow
+    void bind(uint index = 0) const nothrow @nogc
     in(index <= 32, "It's possible to bind only 32 textures")
     in(isValid)do
     {
@@ -858,7 +858,7 @@ struct Texture
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    void destroy() @nogc nothrow
+    void destroy() nothrow @nogc
     in(isValid)do
     {
         import glad.gl.funcs : glDeleteTextures;
@@ -867,7 +867,7 @@ struct Texture
         _id = 0;
     }
 
-    bool isValid() const @safe pure @nogc nothrow
+    bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
     }
@@ -883,7 +883,7 @@ struct Camera
     import std.math : PI, PI_2;
 
     this(vec3f position, float yaw = -PI_2, float pitch = 0.0f,
-            vec3f worldUp = vec3f(0.0f, 1.0f, 0.0f)) @safe @nogc nothrow
+            vec3f worldUp = vec3f(0.0f, 1.0f, 0.0f)) nothrow @nogc @safe
     {
         _position = position;
         _worldUp = worldUp;
@@ -891,67 +891,67 @@ struct Camera
         updateVectors();
     }
 
-    vec3f position() const @safe pure @nogc nothrow
+    vec3f position() const pure nothrow @nogc @safe
     {
         return _position;
     }
 
-    vec3f front() const @safe pure @nogc nothrow
+    vec3f front() const pure nothrow @nogc @safe
     {
         return _front;
     }
 
-    vec3f right() const @safe pure @nogc nothrow
+    vec3f right() const pure nothrow @nogc @safe
     {
         return _right;
     }
 
-    vec3f up() const @safe pure @nogc nothrow
+    vec3f up() const pure nothrow @nogc @safe
     {
         return _up;
     }
 
-    vec3f worldUp() const @safe pure @nogc nothrow
+    vec3f worldUp() const pure nothrow @nogc @safe
     {
         return _worldUp;
     }
 
-    float yaw() const @safe pure @nogc nothrow
+    float yaw() const pure nothrow @nogc @safe
     {
         return _yaw;
     }
 
-    float pitch() const @safe pure @nogc nothrow
+    float pitch() const pure nothrow @nogc @safe
     {
         return _pitch;
     }
 
-    mat4f getView() const @safe pure @nogc nothrow
+    mat4f getView() const pure nothrow @nogc @safe
     {
         return mat4f.lookAt(position, position + front, up);
     }
 
-    void move(vec3f offset) @safe pure @nogc nothrow
+    void move(vec3f offset) pure nothrow @nogc @safe
     {
         _position += offset;
     }
 
-    void moveFront(float offset) @safe pure @nogc nothrow
+    void moveFront(float offset) pure nothrow @nogc @safe
     {
         _position += offset * front;
     }
 
-    void moveRight(float offset) @safe pure @nogc nothrow
+    void moveRight(float offset) pure nothrow @nogc @safe
     {
         _position += offset * right;
     }
 
-    void moveUp(float offset) @safe pure @nogc nothrow
+    void moveUp(float offset) pure nothrow @nogc @safe
     {
         _position += offset * up;
     }
 
-    void rotate(float yawOffset, float pitchOffset) @safe @nogc nothrow
+    void rotate(float yawOffset, float pitchOffset) nothrow @nogc @safe
     {
         updateAngles(yaw + yawOffset, pitch + pitchOffset);
         updateVectors();
@@ -966,7 +966,7 @@ private:
     float _yaw;
     float _pitch;
 
-    void updateAngles(float newYaw, float newPitch) @safe @nogc nothrow
+    void updateAngles(float newYaw, float newPitch) nothrow @nogc @safe
     {
         import std.math : fmod;
         import gfm.math.funcs : radians;
@@ -975,7 +975,7 @@ private:
         _pitch = fmod(newPitch, radians(89.0f));
     }
 
-    void updateVectors() @safe pure @nogc nothrow
+    void updateVectors() pure nothrow @nogc @safe
     {
         import std.math : sin, cos;
         import gfm.math.vector : cross;
