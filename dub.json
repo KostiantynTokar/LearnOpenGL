@@ -16,12 +16,21 @@
 		"-mscrtlib=ucrt"
 	],
 	"libs": [
-		"opengl32",
-		"E:\\repos\\libs\\glfw-3.3.2\\out\\build\\x64-Debug\\src\\glfw3"
+		"opengl32"
 	],
 	"toolchainRequirements": {
 		"dmd": "no",
 		"gdc": "no",
 		"ldc": ">=1.22.0"
+	},
+	"buildTypes": {
+		"debug": {
+			"buildOptions": ["debugMode", "debugInfo"],
+			"libs": ["E:\\repos\\libs\\glfw-3.3.2\\out\\build\\x64-Debug\\src\\glfw3"]
+		},
+		"release": {
+			"buildOptions": ["releaseMode", "optimize", "inline"],
+			"libs": ["E:\\repos\\libs\\glfw-3.3.2\\out\\build\\x64-Release\\src\\glfw3"]
+		}
 	}
 }
