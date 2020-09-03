@@ -36,14 +36,14 @@ void main()
     GLFWwindow* window = GLFW.createWindow(800, 600, "LearnOpenGL");
     if (window == null)
     {
-        writeln("Failed to create GLFW window");
+        stderr.writeln("Failed to create GLFW window");
         return;
     }
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGL())
     {
-        writeln("Failed to initialize GLAD");
+        stderr.writeln("Failed to initialize GLAD");
         return;
     }
 
