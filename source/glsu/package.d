@@ -66,7 +66,9 @@ void clearGLErrors() nothrow @nogc
  *   line = line number of caller
  *   func = string representation of caller function
  */
-void checkGLErrors(string file, size_t line, string func) @nogc
+void checkGLErrors(string file = __FILE_FULL_PATH__,
+                   size_t line = __LINE__,
+                   string func = __PRETTY_FUNCTION__) @nogc
 {
     import core.stdc.stdlib : exit, EXIT_FAILURE;
     import std.stdio : stderr, writeln;
