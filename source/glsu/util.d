@@ -31,7 +31,7 @@ package struct UDA
 * }    
 * ---
 */
-void debugHack(scope void delegate() a) nothrow @nogc @trusted
+void debugHack(scope void delegate() @nogc a) nothrow @nogc @trusted
 {
     auto hack = cast(void delegate() @nogc) a;
     try
