@@ -24,9 +24,9 @@ public import glsu.gl_funcs;
  * else returns first component of `valueOrError` `Algebraic`.
  * Params:
  *   valueOrError = argument to check
- * Returns: value (i.e. first component of Algebraic) if valueOrError doesn't hold string.
+ * Returns: value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
  */
-T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
+T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
 {
     import core.stdc.stdlib : exit, EXIT_FAILURE;
     import std.stdio : stderr, writeln;
@@ -68,7 +68,7 @@ void clearGLErrors() nothrow @nogc
  */
 void checkGLErrors(string file = __FILE_FULL_PATH__,
                    size_t line = __LINE__,
-                   string func = __PRETTY_FUNCTION__) @nogc
+                   string func = __PRETTY_FUNCTION__)
 {
     import core.stdc.stdlib : exit, EXIT_FAILURE;
     import std.stdio : stderr, writeln;
@@ -77,13 +77,13 @@ void checkGLErrors(string file = __FILE_FULL_PATH__,
     auto e = glGetError();
     if(e)
     {
-        debug stderr.writeln("ERROR::GL::CALL");
-        debug stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
+        stderr.writeln("ERROR::GL::CALL");
+        stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
         flag = true;
     }
     for(; e != 0; e = glGetError())
     {
-        debug stderr.writefln!"\tError code: %X"(e);
+        stderr.writefln!"\tError code: %X"(e);
     }
 
     if(flag)
