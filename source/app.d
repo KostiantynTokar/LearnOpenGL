@@ -6,11 +6,11 @@ import std.range;
 import std.algorithm;
 import std.typecons;
 import bindbc.glfw;
-import glad.gl.all;
+import glad.gl.enums;
 import glad.gl.loader;
-import glsu;
 import gfm.math;
 import imagefmt;
+import glsu;
 
 int width = 800;
 int height = 600;

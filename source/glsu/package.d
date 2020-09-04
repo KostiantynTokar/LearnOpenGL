@@ -1,6 +1,7 @@
 module glsu;
 
 public import glsu.util;
+public import glsu.gl_funcs;
 
 /** 
  * UDA for fields of a struct that are to used as vertex in VertexBufferArray.
@@ -165,8 +166,6 @@ struct BufferObejct(BufferType type)
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
-        import glad.gl.funcs : glGenBuffers;
-
         glGenBuffers(1, &_id);
         setData(buffer, usage);
     }
@@ -175,8 +174,6 @@ struct BufferObejct(BufferType type)
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     in(isValid)do
     {
-        import glad.gl.funcs : glBindBuffer, glBufferData;
-
         mixin(ScopedBind!this);
         glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
 
@@ -195,16 +192,12 @@ struct BufferObejct(BufferType type)
     void bind() const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glBindBuffer;
-
         glBindBuffer(type, id);
     }
 
     void unbind() const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glBindBuffer;
-
         glBindBuffer(type, 0);
     }
 
@@ -219,8 +212,6 @@ struct BufferObejct(BufferType type)
     void destroy() nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDeleteBuffers;
-
         glDeleteBuffers(1, &_id);
         _id = 0;
     }
@@ -309,17 +300,12 @@ struct AttribPointer
 
     void enable() nothrow @nogc
     {
-        import glad.gl.funcs : glEnableVertexAttribArray;
-        import glad.gl.funcs : glVertexAttribPointer;
-
         glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(void*) _pointer);
         glEnableVertexAttribArray(_index);
     }
 
     void disable() nothrow @nogc
     {
-        import glad.gl.funcs : glDisableVertexAttribArray;
-
         glDisableVertexAttribArray(_index);
     }
 
@@ -353,8 +339,6 @@ struct VertexArrayObject
 {
     this(VertexBufferObject VBO, AttribPointer[] attrs) nothrow @nogc
     {
-        import glad.gl.funcs : glGenVertexArrays;
-
         glGenVertexArrays(1, &_id);
         mixin(ScopedBind!this);
 
@@ -433,8 +417,6 @@ struct VertexArrayObject
     void draw(RenderMode mode, int first, int count) const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDrawArrays;
-
         mixin(ScopedBind!this);
         glDrawArrays(mode, first, count);
     }
@@ -442,24 +424,18 @@ struct VertexArrayObject
     void bind() const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glBindVertexArray;
-
         glBindVertexArray(id);
     }
 
     void unbind() const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glBindVertexArray;
-
         glBindVertexArray(0);
     }
 
     void destroy() nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDeleteVertexArrays;
-
         glDeleteVertexArrays(1, &_id);
         _id = 0;
     }
@@ -490,8 +466,6 @@ struct VertexArrayObjectIndexed
     void drawElements(RenderMode mode, int count) const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDrawElements;
-
         mixin(ScopedBind!this);
         glDrawElements(mode, count, _indexType, null);
     }
@@ -511,8 +485,6 @@ struct ShaderProgram
     alias ShaderProgramOrError = from!"std.variant".Algebraic!(ShaderProgram, string);
     static ShaderProgramOrError create(string vertexShaderPath, string fragmentShaderPath)()
     {
-        import glad.gl.funcs : glCreateProgram, glAttachShader, glLinkProgram,
-            glGetProgramiv, glGetProgramInfoLog, glDeleteShader;
         import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
 
         ShaderProgramOrError res;
@@ -524,8 +496,6 @@ struct ShaderProgram
             import std.string : toStringz;
             import std.uni : toUpper;
 
-            import glad.gl.funcs : glCreateShader, glShaderSource,
-                glCompileShader, glGetShaderiv, glGetShaderInfoLog;
             import glad.gl.enums : GL_COMPILE_STATUS;
 
             ShaderOrError res;
@@ -596,8 +566,6 @@ struct ShaderProgram
     void use() const nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glUseProgram;
-
         glUseProgram(id);
     }
 
@@ -605,7 +573,6 @@ struct ShaderProgram
     in(isValid)do
     {
         import std.string : toStringz;
-        import glad.gl.funcs : glGetUniformLocation;
 
         return glGetUniformLocation(id, name.toStringz);
     }
@@ -636,8 +603,6 @@ struct ShaderProgram
         }
         enum funcName = "glUniform" ~ to!string(Ts.length) ~ suffix;
 
-        mixin("import glad.gl.funcs : " ~ funcName ~ ";");
-
         mixin(funcName ~ "(location, values);");
     }
 
@@ -662,8 +627,6 @@ struct ShaderProgram
         }
         enum funcName = "glUniformMatrix" ~ suffix ~ "fv";
 
-        mixin("import glad.gl.funcs : " ~ funcName ~ ";");
-
         mixin(funcName ~ "(location, cast(int) values.length, GL_TRUE, values[0].ptr);");
     }
 
@@ -681,8 +644,6 @@ struct ShaderProgram
     void destroy() nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDeleteProgram;
-
         glDeleteProgram(id);
         _id = 0;
     }
@@ -704,7 +665,6 @@ struct Texture
         import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
         import glad.gl.enums : GL_RED, GL_RG, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
             GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
-        import glad.gl.funcs : glGenTextures, glBindTexture, glTexImage2D, glGenerateMipmap;
 
         TextureOrError res;
 
@@ -776,7 +736,6 @@ struct Texture
     void setWrapMode(Coord coord, Wrap wrap) nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
 
         uint glCoord;
@@ -808,7 +767,6 @@ struct Texture
     void setMinFilter(Filter filter) nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
 
         bind();
@@ -818,7 +776,6 @@ struct Texture
     void setMagFilter(Filter filter) nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glTexParameteri;
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
 
         bind();
@@ -835,7 +792,6 @@ struct Texture
     in(index <= 32, "It's possible to bind only 32 textures")
     in(isValid)do
     {
-        import glad.gl.funcs : glActiveTexture, glBindTexture;
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
 
         glActiveTexture(GL_TEXTURE0 + index);
@@ -845,8 +801,6 @@ struct Texture
     void destroy() nothrow @nogc
     in(isValid)do
     {
-        import glad.gl.funcs : glDeleteTextures;
-
         glDeleteTextures(1, &_id);
         _id = 0;
     }
