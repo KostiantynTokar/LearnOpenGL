@@ -612,7 +612,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="debugHack"></span>nothrow @nogc @trusted void <code class="code">debugHack</code>(scope void delegate() @nogc <code class="code">a</code>);
+            <span class="ddoc_anchor" id="debugHack"></span>nothrow @nogc @trusted void <code class="code">debugHack</code>(scope void delegate() <code class="code">a</code>);
 
           </code>
         </p>
@@ -635,7 +635,7 @@
       <tr class="ddoc_param_row">
   <td scope="ddoc_param_id">
   <code class="code">
-    <em class="term">void delegate() @nogc <code class="code">a</code></em>
+    <em class="term">void delegate() <code class="code">a</code></em>
   </code>
 </td>
 <td>
@@ -661,7 +661,7 @@
         <li><code class="code"><span class="keyword">void</span> foo() {}
 @safe <span class="keyword">nothrow</span> @nogc <span class="keyword">pure</span> <span class="keyword">void</span> main()
 {
-    <span class="keyword">debug</span> da({foo();});
+    <span class="keyword">debug</span> <span class="psymbol">debugHack</span>({foo();});
 }
 </code></li>
       </ol>

@@ -26,7 +26,7 @@ private enum isFunctionPointerValue(string name) = !is(symbolOf!name) && isFunct
 private alias allNames = __traits(allMembers, glad.gl.funcs);
 private alias importableNames = Filter!(notIsModuleNorPackage, allNames);
 
-/// Names of funcs to wrap (if debug=glChecks) (except glGetError)
+/// Names of funcs to wrap (if `debug=glChecks`) (except `glGetError`)
 private alias funcNames = Filter!(isFunctionPointerValue, importableNames);
 /// Names to import unconditionally
 private alias anotherNames = Filter!(templateNot!isFunctionPointerValue, importableNames);
@@ -55,7 +55,10 @@ debug(glChecks)
 
     /** 
      * Generates parameter list without enclosing parentheses with parameter names of form `argn`, n = 0 .. typeNames.length.
-     * Examples: `genParamList!(int, long) == "int arg0, long arg1`"
+     * Examples:
+     * ---
+     * static assert(genParamList!(int, long) == "int arg0, long arg1");
+     * ---
      */
     private auto genParamList(Ts...)()
         if(allSatisfy!(isNotVoid, Ts))
@@ -73,7 +76,7 @@ debug(glChecks)
             return "";
         }
     }
-
+    
     /** 
      * Generates argument list without enclosing parentheses with argument names of form `argn`, n = 0 .. typeNames.length.
      * Params:

@@ -8,12 +8,12 @@ public import glsu.gl_funcs;
  */
 @UDA struct VertexAttrib
 {
-    /// layout position of the attribute in a shader
+    /// Layout position of the attribute in a shader.
     uint index;
 
     /** 
-     * specifies whether fixed-point data values should be normalized or converted
-     * directly as fixed-point values when they are accessed
+     * Specifies whether fixed-point data values should be normalized or converted
+     * directly as fixed-point values when they are accessed.
      */
     bool normalized = false;
 }
@@ -148,7 +148,7 @@ static:
     /** 
      * Create Window. GLFW should be active.
      * Params:
-     *   width = width of the window
+     *   width = width of the window in pixels
      *   height = height of the window in pixels
      *   label = label of the window
      * Returns: Handle of newly created window or null if window was not created.
@@ -179,31 +179,31 @@ private:
     }
 }
 
-/// mixin to bind obj immediately and unbind at scope(exit) 
+/// mixin to `bind` `obj` immediately and `unbind` at `scope(exit)`.
 enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
     ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";
 
-/// Type of BufferObject
+/// Type of `BufferObject`.
 enum BufferType
 {
-    array = from!"glad.gl.enums".GL_ARRAY_BUFFER, /// buffer for any data
-    element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER /// buffer for indices
+    array = from!"glad.gl.enums".GL_ARRAY_BUFFER, /// Buffer for any data.
+    element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER /// Buffer for indices.
 }
 
-/// Hint to the GL implementation as to how a buffer object's data store will be accessed
+/// Hint to the GL implementation as to how a `BufferObject`'s data store will be accessed.
 enum DataUsage
 {
-    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW, /// modified once by app, used few times, source for GL
-    streamRead = from!"glad.gl.enums".GL_STREAM_READ, /// modified once by GL, used few times, source for app
-    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY, /// modified once by GL, used few times, source for GL
+    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW, /// Modified once by app, used few times, source for GL.
+    streamRead = from!"glad.gl.enums".GL_STREAM_READ, /// Modified once by GL, used few times, source for app.
+    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY, /// Modified once by GL, used few times, source for GL.
 
-    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW, /// modified once by app, used many times, source for GL
-    staticRead = from!"glad.gl.enums".GL_STATIC_READ, /// modified once by GL, used many times, source for app
-    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY, /// modified once by GL, used many times, source for GL
+    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW, /// Modified once by app, used many times, source for GL.
+    staticRead = from!"glad.gl.enums".GL_STATIC_READ, /// Modified once by GL, used many times, source for app.
+    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY, /// Modified once by GL, used many times, source for GL.
 
-    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW, /// modified repeatedly by app, used many times, source for GL
-    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ, /// modified repeatedly by GL, used many times, source for app
-    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY /// modified repeatedly by GL, used many times, source for GL
+    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW, /// Modified repeatedly by app, used many times, source for GL.
+    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ, /// Modified repeatedly by GL, used many times, source for app.
+    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY /// Modified repeatedly by GL, used many times, source for GL.
 }
 
 struct BufferObejct(BufferType type)

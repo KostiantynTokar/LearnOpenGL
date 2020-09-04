@@ -27,7 +27,7 @@ package struct UDA
 * void foo() {}
 * @safe nothrow @nogc pure void main()
 * {
-*     debug da({foo();});
+*     debug debugHack({foo();});
 * }    
 * ---
 */
