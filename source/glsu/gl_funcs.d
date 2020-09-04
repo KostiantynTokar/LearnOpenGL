@@ -1,6 +1,6 @@
 module glsu.gl_funcs;
 
-debug
+debug(glChecks)
 {
     public import glad.gl.funcs : glGetError;
     
@@ -76,7 +76,7 @@ debug
     {
         import core.stdc.stdlib : exit, EXIT_FAILURE;
         import std.stdio : stderr, writeln;
-
+        
         bool flag = false;
         auto e = glGetError();
         if(e)

@@ -38,6 +38,8 @@
 	"buildTypes": {
 		"debug": {
 			"buildOptions": ["debugMode", "debugInfo"],
+			"dflags-dmd": ["-debug=glChecks"],
+			"dflags-ldc": ["--d-debug=glChecks"],
 			"libs": ["dependencies\\x64-Debug\\glfw3"]
 		},
 		"release": {
