@@ -3,7 +3,7 @@
  *
  * If debug specifier `glChecks` is active, redefines
  * all functions of `glad.gl.funcs` module (except `glGetError`)
- * and wraps them between `glsu.clearGLErrors` and `glsu.checkGLErrors` calls.
+ * and wraps them between `glsu.util.clearGLErrors` and `glsu.util.checkGLErrors` calls.
  * Each wrapper additionaly take three parameters, that are defaulted
  * to  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
  *
@@ -90,7 +90,7 @@ debug(glChecks)
     /** 
      * Defines a wrapper of a function from module `glad.gl.funcs` with the same name.
      *
-     * Wraps a function with calls to `glsu.clearGLErrors` and `glsu.ckechGLErrors`,
+     * Wraps a function with calls to `glsu.util.clearGLErrors` and `glsu.util.ckechGLErrors`,
      * additionally taking three parameters, that are defaulted to
      *  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
      * Params:
@@ -98,7 +98,7 @@ debug(glChecks)
      */
     private mixin template genCheckedFunc(string name)
     {
-        import glsu : clearGLErrors, checkGLErrors;
+        import glsu.util : clearGLErrors, checkGLErrors;
 
         alias func = __traits(getMember, glad.gl.funcs, name);
         enum fullName = fullyQualifiedName!func;

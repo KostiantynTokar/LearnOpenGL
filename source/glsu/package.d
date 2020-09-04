@@ -2,6 +2,7 @@ module glsu;
 
 public import glsu.util;
 public import glsu.gl_funcs;
+public import glsu.enums;
 
 /** 
  * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
@@ -16,80 +17,6 @@ public import glsu.gl_funcs;
      * directly as fixed-point values when they are accessed.
      */
     bool normalized = false;
-}
-
-/** 
- * If `valueOrError` holds `string`, then `stderr` it and exit program
- * with `EXIT_FAILURE` code;
- * else returns first component of `valueOrError` `Algebraic`.
- * Params:
- *   valueOrError = argument to check
- * Returns: value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
- */
-T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
-{
-    import core.stdc.stdlib : exit, EXIT_FAILURE;
-    import std.stdio : stderr, writeln;
-
-    T res;
-    try
-    {
-        if (string* error = valueOrError.peek!string)
-        {
-            stderr.writeln(*error);
-            exit(EXIT_FAILURE);
-        }
-        res = valueOrError.get!T;
-    }
-    catch (Exception e)
-    {
-        exit(EXIT_FAILURE);
-    }
-    return res;
-}
-
-/** 
- * Repeatedly calls `glGetError`, clearing all GL error flags.
- */
-void clearGLErrors() nothrow @nogc
-{
-    while(glGetError()) {}
-}
-
-/** 
- * Repeatedly checks `glGetError`.
- *
- * If error was discovered, prints error message to `stderr`
- * and exits program with `EXIT_FAILURE` code.
- * Params:
- *   file = file name of caller
- *   line = line number of caller
- *   func = string representation of caller function
- */
-void checkGLErrors(string file = __FILE_FULL_PATH__,
-                   size_t line = __LINE__,
-                   string func = __PRETTY_FUNCTION__)
-{
-    import core.stdc.stdlib : exit, EXIT_FAILURE;
-    import std.stdio : stderr, writeln;
-    
-    bool flag = false;
-    auto e = glGetError();
-    if(e)
-    {
-        stderr.writeln("ERROR::GL::CALL");
-        stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
-        flag = true;
-    }
-    for(; e != 0; e = glGetError())
-    {
-        stderr.writefln!"\tError code: %X"(e);
-    }
-
-    if(flag)
-    {
-        exit(EXIT_FAILURE);
-    }
 }
 
 /// Wraps some functionality of GLFW
@@ -190,22 +117,6 @@ enum BufferType
     element = from!"glad.gl.enums".GL_ELEMENT_ARRAY_BUFFER /// Buffer for indices.
 }
 
-/// Hint to the GL implementation as to how a `BufferObject`'s data store will be accessed.
-enum DataUsage
-{
-    streamDraw = from!"glad.gl.enums".GL_STREAM_DRAW, /// Modified once by app, used few times, source for GL.
-    streamRead = from!"glad.gl.enums".GL_STREAM_READ, /// Modified once by GL, used few times, source for app.
-    streamCopy = from!"glad.gl.enums".GL_STREAM_COPY, /// Modified once by GL, used few times, source for GL.
-
-    staticDraw = from!"glad.gl.enums".GL_STATIC_DRAW, /// Modified once by app, used many times, source for GL.
-    staticRead = from!"glad.gl.enums".GL_STATIC_READ, /// Modified once by GL, used many times, source for app.
-    staticCopy = from!"glad.gl.enums".GL_STATIC_COPY, /// Modified once by GL, used many times, source for GL.
-
-    dynamicDraw = from!"glad.gl.enums".GL_DYNAMIC_DRAW, /// Modified repeatedly by app, used many times, source for GL.
-    dynamicRead = from!"glad.gl.enums".GL_DYNAMIC_READ, /// Modified repeatedly by GL, used many times, source for app.
-    dynamicCopy = from!"glad.gl.enums".GL_DYNAMIC_COPY /// Modified repeatedly by GL, used many times, source for GL.
-}
-
 struct BufferObejct(BufferType type)
 {
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
@@ -278,59 +189,6 @@ private:
 alias VertexBufferObject = BufferObejct!(BufferType.array);
 alias ElementBufferArray = BufferObejct!(BufferType.element);
 
-enum GLType
-{
-    glByte = from!"glad.gl.enums".GL_BYTE,
-    glUByte = from!"glad.gl.enums".GL_UNSIGNED_BYTE,
-    glShort = from!"glad.gl.enums".GL_SHORT,
-    glUShort = from!"glad.gl.enums".GL_UNSIGNED_SHORT,
-    glInt = from!"glad.gl.enums".GL_INT,
-    glUInt = from!"glad.gl.enums".GL_UNSIGNED_INT,
-    glHalfFloat = from!"glad.gl.enums".GL_HALF_FLOAT,
-    glFloat = from!"glad.gl.enums".GL_FLOAT,
-    glDouble = from!"glad.gl.enums".GL_DOUBLE
-}
-
-template valueofGLType(T)
-{
-    static if (is(T == byte))
-    {
-        enum valueofGLType = GLType.glByte;
-    }
-    else static if (is(T == ubyte))
-    {
-        enum valueofGLType = GLType.glUByte;
-    }
-    else static if (is(T == short))
-    {
-        enum valueofGLType = GLType.glShort;
-    }
-    else static if (is(T == ushort))
-    {
-        enum valueofGLType = GLType.glUShort;
-    }
-    else static if (is(T == int))
-    {
-        enum valueofGLType = GLType.glInt;
-    }
-    else static if (is(T == uint))
-    {
-        enum valueofGLType = GLType.glUInt;
-    }
-    else static if (is(T == float))
-    {
-        enum valueofGLType = GLType.glFloat;
-    }
-    else static if (is(T == double))
-    {
-        enum valueofGLType = GLType.glDouble;
-    }
-    else
-    {
-        static assert(0, "no according GLType");
-    }
-}
-
 struct AttribPointer
 {
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) nothrow @nogc
@@ -362,23 +220,6 @@ private:
     int _stride;
     ptrdiff_t _pointer;
 }
-
-// dfmt off
-enum RenderMode
-{
-    points = from!"glad.gl.enums".GL_POINTS,
-    lineStrip = from!"glad.gl.enums".GL_LINE_STRIP,
-    lineLoop = from!"glad.gl.enums".GL_LINE_LOOP,
-    lines = from!"glad.gl.enums".GL_LINES,
-    lineStripAdjacency = from!"glad.gl.enums".GL_LINE_STRIP_ADJACENCY,
-    linesAdjacency = from!"glad.gl.enums".GL_LINES_ADJACENCY,
-    triangleStrip = from!"glad.gl.enums".GL_TRIANGLE_STRIP,
-    triangleFan = from!"glad.gl.enums".GL_TRIANGLE_FAN,
-    triangles = from!"glad.gl.enums".GL_TRIANGLES,
-    triangleStripAdjacency = from!"glad.gl.enums".GL_TRIANGLE_STRIP_ADJACENCY,
-    trianglesAdjacency = from!"glad.gl.enums".GL_TRIANGLES_ADJACENCY
-}
-// dfmt on
 
 struct VertexArrayObject
 {
