@@ -1,5 +1,5 @@
 /**
- * Redefines OpenGL functions.
+ * Redefines OpenGL functions, could be imported instead of glad.gl.funcs.
  *
  * If debug specifier `glChecks` is active, redefines
  * all functions of `glad.gl.funcs` module (except `glGetError`)
@@ -12,6 +12,30 @@
  */
 module glsu.gl_funcs;
 
+import glad.gl.funcs;
+
+import std.traits : isFunctionPointer;
+import std.meta : staticMap, Filter, templateNot;
+
+private alias symbolOf(string name) = __traits(getMember, glad.gl.funcs, name);
+
+private enum notIsModuleNorPackage(string name) = !__traits(isModule, symbolOf!name) &&
+                                                  !__traits(isPackage, symbolOf!name);
+private enum isFunctionPointerValue(string name) = !is(symbolOf!name) && isFunctionPointer!(symbolOf!name);
+
+private alias allNames = __traits(allMembers, glad.gl.funcs);
+private alias importableNames = Filter!(notIsModuleNorPackage, allNames);
+
+/// Names of funcs to wrap (if debug=glChecks) (except glGetError)
+private alias funcNames = Filter!(isFunctionPointerValue, importableNames);
+/// Names to import unconditionally
+private alias anotherNames = Filter!(templateNot!isFunctionPointerValue, importableNames);
+
+static foreach(name; anotherNames)
+{
+    mixin("public import glad.gl.funcs : " ~ name ~ ";");
+}
+
 debug(glChecks)
 {
     public import glad.gl.funcs : glGetError;
@@ -19,11 +43,11 @@ debug(glChecks)
     import glad.gl.types;
     import glad.gl.funcs;
 
-    import std.traits : isFunctionPointer, Parameters, ReturnType, fullyQualifiedName;
+    import std.traits : Parameters, ReturnType, fullyQualifiedName;
     import std.array : join;
     import std.range : iota, only, enumerate;
     import std.algorithm.iteration : map;
-    import std.meta : staticMap, allSatisfy;
+    import std.meta : allSatisfy;
 
     import glsu.util : debugHack;
 
@@ -86,7 +110,7 @@ debug(glChecks)
         enum args = genArgList(Params.length);
         enum ret = Ret.stringof;
 
-        enum signature = "extern(System) " ~ ret ~ " " ~ name ~ "(" ~ extendedParams ~ ") nothrow @nogc";
+        enum signature = "__gshared extern(System) " ~ ret ~ " " ~ name ~ "(" ~ extendedParams ~ ") nothrow @nogc";
         
         enum bodyBegin = "\tclearGLErrors();";
         static if(is(Ret == void))
@@ -108,11 +132,9 @@ debug(glChecks)
         mixin(generatedFunc);
     }
 
-    static foreach (name; __traits(allMembers, glad.gl.funcs))
+    static foreach (name; funcNames)
     {
-        static if (name != "glGetError"
-                   && !is(__traits(getMember, glad.gl.funcs, name))
-                   && isFunctionPointer!(__traits(getMember, glad.gl.funcs, name)))
+        static if (name != "glGetError")
         {
             mixin genCheckedFunc!name;
         }
