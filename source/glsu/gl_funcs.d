@@ -1,3 +1,15 @@
+/**
+ * Redefines OpenGL functions.
+ *
+ * If debug specifier `glChecks` is active, redefines
+ * all functions of `glad.gl.funcs` module (except `glGetError`)
+ * and wraps them between `glsu.clearGLErrors` and `glsu.checkGLErrors` calls.
+ * Each wrapper additionaly take three parameters, that are defaulted
+ * to  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
+ *
+ * If debug specifier `glChecks` is not active, just
+ * public imports `glad.gl.funcs`.
+ */
 module glsu.gl_funcs;
 
 debug(glChecks)
@@ -7,9 +19,9 @@ debug(glChecks)
     import glad.gl.types;
     import glad.gl.funcs;
 
-    import std.traits : isFunctionPointer, Parameters, ReturnType, isSomeString, fullyQualifiedName;
+    import std.traits : isFunctionPointer, Parameters, ReturnType, fullyQualifiedName;
     import std.array : join;
-    import std.range : isInputRange, ElementType, iota, only, enumerate;
+    import std.range : iota, only, enumerate;
     import std.algorithm.iteration : map;
     import std.meta : staticMap, allSatisfy;
 
@@ -18,47 +30,28 @@ debug(glChecks)
     private enum isNotVoid(T) = !is(T == void);
 
     /** 
-     * Generates parameter list without enclosing parentheses with parameter names of form argn, n = 0 .. typeNames.length.
-     * Params:
-     *   typeNames = range of string representations of types
-     * Examples: genParamList(only("int", "long")) == "int arg0, long arg1"
-     */
-    private auto genParamList(R)(R typeNames)
-        if(isInputRange!R && isSomeString!(ElementType!R))
-    {
-        return typeNames.enumerate.map!"a.value ~ \" arg\" ~ to!string(a.index)".join(", ");
-    }
-
-    /** 
-     * Generates parameter list without enclosing parentheses with parameter names of form argn, n = 0 .. typeNames.length.
-     * Params:
-     *   typeNames = string representations of types
-     * Examples: genParamList("int", "long") == "int arg0, long arg1"
-     */
-    private auto genParamList(Ts...)(Ts typeNames)
-        if(allSatisfy!(isSomeString, Ts))
-    {
-        return only(typeNames).genParamList();
-    }
-
-    /** 
-     * Generates parameter list without enclosing parentheses with parameter names of form argn, n = 0 .. typeNames.length.
-     * Examples: genParamList!(int, long) == "int arg0, long arg1"
+     * Generates parameter list without enclosing parentheses with parameter names of form `argn`, n = 0 .. typeNames.length.
+     * Examples: `genParamList!(int, long) == "int arg0, long arg1`"
      */
     private auto genParamList(Ts...)()
-        // if(allSatisfy!(isNotVoid, Ts) && !Ts.length > 0)
+        if(allSatisfy!(isNotVoid, Ts))
     {
         enum typeToString(T) = T.stringof;
-        return genParamList(staticMap!(typeToString, Ts));
-    }
-
-    private auto genParamList()
-    {
-        return "";
+        static if(Ts.length > 0)
+        {
+            return only(staticMap!(typeToString, Ts)).
+                    enumerate.
+                    map!"a.value ~ \" arg\" ~ to!string(a.index)".
+                    join(", ");
+        }
+        else
+        {
+            return "";
+        }
     }
 
     /** 
-     * Generates argument list without enclosing parentheses with argument names of form argn, n = 0 .. typeNames.length.
+     * Generates argument list without enclosing parentheses with argument names of form `argn`, n = 0 .. typeNames.length.
      * Params:
      *   n = number of arguments
      */
@@ -67,37 +60,19 @@ debug(glChecks)
         return iota(0, n).map!"\"arg\" ~ to!string(a)".join(", ");
     }
 
-    private void clearGLErrors() nothrow @nogc
+    /** 
+     * Defines a wrapper of a function from module `glad.gl.funcs` with the same name.
+     *
+     * Wraps a function with calls to `glsu.clearGLErrors` and `glsu.ckechGLErrors`,
+     * additionally taking three parameters, that are defaulted to
+     *  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
+     * Params:
+     *   name = name of function to wrap
+     */
+    private mixin template genCheckedFunc(string name)
     {
-        while(glGetError()) {}
-    }
+        import glsu : clearGLErrors, checkGLErrors;
 
-    private void checkGLErrors(string file, size_t line, string func) @nogc
-    {
-        import core.stdc.stdlib : exit, EXIT_FAILURE;
-        import std.stdio : stderr, writeln;
-        
-        bool flag = false;
-        auto e = glGetError();
-        if(e)
-        {
-            debug stderr.writeln("ERROR::GL::CALL");
-            debug stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
-            flag = true;
-        }
-        for(; e != 0; e = glGetError())
-        {
-            debug stderr.writefln!"\tError code: %X"(e);
-        }
-
-        if(flag)
-        {
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    mixin template genCheckedFunc(string name)
-    {
         alias func = __traits(getMember, glad.gl.funcs, name);
         enum fullName = fullyQualifiedName!func;
 

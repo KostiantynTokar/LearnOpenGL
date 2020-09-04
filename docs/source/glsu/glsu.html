@@ -516,93 +516,6 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#from" id="from"><code class="code">from</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="from"></span>template <code class="code">from</code>(string moduleName)
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Import as expression.
-
-  </p>
-</div>
-<div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">moduleName</em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      name of a module to import <code class="code">from</code>
-    </p>
-  </div>
-</td>
-</tr>
-
-    </tbody>
-  </table>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#UDA" id="UDA"><code class="code">UDA</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="UDA"></span>struct <code class="code">UDA</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    <code class="code">UDA</code> for UDAs.
- All UDAs are attributed by this type.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
   <a href="#VertexAttrib" id="VertexAttrib"><code class="code">VertexAttrib</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -624,7 +537,7 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    UDA for fields of a struct that are to used as vertex in VertexBufferArray.
+    UDA for fields of a struct that are to used as vertex in <code class="code">VertexBufferArray</code>.
   </p>
 </div>
 
@@ -724,8 +637,9 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    If <code class="code">valueOrError</code> holds string, then stderr it and exit program;
- else returns first component of Algebraic <code class="code">valueOrError</code>.
+    If <code class="code"><code class="code">valueOrError</code></code> holds <code class="code">string</code>, then <code class="code">stderr</code> it and exit program
+ with <code class="code">EXIT_FAILURE</code> code;
+ else returns first component of <code class="code"><code class="code">valueOrError</code></code> <code class="code">Algebraic</code>.
 
   </p>
 </div>
@@ -756,6 +670,129 @@
   <p class="para">
     value (i.e. first component of Algebraic) if <code class="code">valueOrError</code> doesn't hold string.
   </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#clearGLErrors" id="clearGLErrors"><code class="code">clearGLErrors</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="clearGLErrors"></span>nothrow @nogc void <code class="code">clearGLErrors</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Repeatedly calls <code class="code">glGetError</code>, clearing all GL error flags.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#checkGLErrors" id="checkGLErrors"><code class="code">checkGLErrors</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="checkGLErrors"></span>@nogc void <code class="code">checkGLErrors</code>(string <code class="code">file</code>, size_t <code class="code">line</code>, string <code class="code">func</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Repeatedly checks <code class="code">glGetError</code>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    If error was discovered, prints error message to <code class="code">stderr</code>
+ and exits program with <code class="code">EXIT_FAILURE</code> code.
+
+  </p>
+</div>
+<div class="ddoc_params">
+  <h4>Parameters</h4>
+  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
+    <tbody>
+      <tr class="ddoc_param_row">
+  <td scope="ddoc_param_id">
+  <code class="code">
+    <em class="term">string <code class="code">file</code></em>
+  </code>
+</td>
+<td>
+  <div class="ddoc_param_desc">
+    <p class="para">
+      <code class="code">file</code> name of caller
+    </p>
+  </div>
+</td>
+</tr>
+<tr class="ddoc_param_row">
+  <td scope="ddoc_param_id">
+  <code class="code">
+    <em class="term">size_t <code class="code">line</code></em>
+  </code>
+</td>
+<td>
+  <div class="ddoc_param_desc">
+    <p class="para">
+      <code class="code">line</code> number of caller
+    </p>
+  </div>
+</td>
+</tr>
+<tr class="ddoc_param_row">
+  <td scope="ddoc_param_id">
+  <code class="code">
+    <em class="term">string <code class="code">func</code></em>
+  </code>
+</td>
+<td>
+  <div class="ddoc_param_desc">
+    <p class="para">
+      string representation of caller function
+    </p>
+  </div>
+</td>
+</tr>
+
+    </tbody>
+  </table>
 </div>
 
 </section>

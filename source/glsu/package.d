@@ -4,7 +4,7 @@ public import glsu.util;
 public import glsu.gl_funcs;
 
 /** 
- * UDA for fields of a struct that are to used as vertex in VertexBufferArray.
+ * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
  */
 @UDA struct VertexAttrib
 {
@@ -19,8 +19,9 @@ public import glsu.gl_funcs;
 }
 
 /** 
- * If valueOrError holds string, then stderr it and exit program;
- * else returns first component of Algebraic valueOrError.
+ * If `valueOrError` holds `string`, then `stderr` it and exit program
+ * with `EXIT_FAILURE` code;
+ * else returns first component of `valueOrError` `Algebraic`.
  * Params:
  *   valueOrError = argument to check
  * Returns: value (i.e. first component of Algebraic) if valueOrError doesn't hold string.
@@ -45,6 +46,48 @@ T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
         exit(EXIT_FAILURE);
     }
     return res;
+}
+
+/** 
+ * Repeatedly calls `glGetError`, clearing all GL error flags.
+ */
+void clearGLErrors() nothrow @nogc
+{
+    while(glGetError()) {}
+}
+
+/** 
+ * Repeatedly checks `glGetError`.
+ *
+ * If error was discovered, prints error message to `stderr`
+ * and exits program with `EXIT_FAILURE` code.
+ * Params:
+ *   file = file name of caller
+ *   line = line number of caller
+ *   func = string representation of caller function
+ */
+void checkGLErrors(string file, size_t line, string func) @nogc
+{
+    import core.stdc.stdlib : exit, EXIT_FAILURE;
+    import std.stdio : stderr, writeln;
+    
+    bool flag = false;
+    auto e = glGetError();
+    if(e)
+    {
+        debug stderr.writeln("ERROR::GL::CALL");
+        debug stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
+        flag = true;
+    }
+    for(; e != 0; e = glGetError())
+    {
+        debug stderr.writefln!"\tError code: %X"(e);
+    }
+
+    if(flag)
+    {
+        exit(EXIT_FAILURE);
+    }
 }
 
 /// Wraps some functionality of GLFW
