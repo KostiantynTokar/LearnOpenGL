@@ -9,6 +9,8 @@
  *
  * If debug specifier `glChecks` is not active, just
  * public imports `glad.gl.funcs`.
+ *
+ * Authors: Kostiantyn Tokar
  */
 module glsu.gl_funcs;
 

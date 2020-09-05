@@ -1,5 +1,7 @@
 /**
  * Enums of the package.
+ *
+ * Authors: Kostiantyn Tokar
  */
 module glsu.enums;
 

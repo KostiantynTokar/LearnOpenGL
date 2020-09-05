@@ -1,5 +1,7 @@
 /**
  * Utility functions and tempaltes.
+ *
+ * Authors: Kostiantyn Tokar
  */
 module glsu.util;
 
@@ -23,7 +25,8 @@ enum valueofGLType(T : double) = GLType.glDouble; /// ditto
  * Import as expression.
  * Params:
  *   moduleName = name of a module to import from
- * See_Also: https://dlang.org/blog/2017/02/13/a-new-import-idiom/
+ * See_Also: $(LINK2 https://dlang.org/blog/2017/02/13/a-new-import-idiom/, A New Import Idiom)
+ * 
  */
 template from(string moduleName)
 {
