@@ -2,6 +2,7 @@ module glsu.enums;
 
 import glad.gl.enums;
 
+/// GL privitive types
 enum GLType
 {
     glByte = GL_BYTE,
@@ -32,6 +33,7 @@ enum DataUsage
 }
 
 // dfmt off
+/// Kind of primitives to render in GL draw functions.
 enum RenderMode
 {
     points = GL_POINTS,

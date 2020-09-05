@@ -2,6 +2,7 @@ module glsu.util;
 
 import glsu.enums : GLType, GLError;
 
+/// Determine GL enum value that corresponds to D type.
 template valueofGLType(T)
 {
     static assert(0, "no according GLType");
