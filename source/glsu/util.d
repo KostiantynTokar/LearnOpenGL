@@ -169,6 +169,108 @@ package struct UDA
 {
 }
 
+/// Wraps some functionality of GLFW
+struct GLFW
+{
+    @disable this();
+
+static:
+    /** 
+    * Checks if GLFW is active.
+    * Returns: whether GLFW is active.
+    */
+    bool isActive() nothrow @nogc @safe
+    {
+        return _active;
+    }
+
+    /** 
+     * Activate GLFW. GLFW should be activated before use.
+     * Params:
+     *   major = major version of OpenGL to use
+     *   minor = minor version of OpenGL to use
+     * Returns: whether GLFW is activated with specified version of OpenGL
+     */
+    bool activate(uint major, uint minor) nothrow @nogc
+    {
+        if (isActive)
+        {
+            return GLFW._major == major && GLFW._minor == minor;
+        }
+
+        GLFW._major = major;
+        GLFW._minor = minor;
+        _active = true;
+        initLib();
+        return true;
+    }
+
+    /** 
+     * Deactivate GLFW.
+     * Returns: whether GLFW was active before.
+     */
+    bool deactivate() nothrow @nogc
+    {
+        if (!isActive)
+        {
+            return false;
+        }
+        import bindbc.glfw : glfwTerminate;
+
+        glfwTerminate();
+        _active = false;
+        return true;
+    }
+
+    /** 
+     * Create Window. GLFW should be active.
+     * Params:
+     *   width = width of the window in pixels
+     *   height = height of the window in pixels
+     *   label = label of the window
+     * Returns: Handle of newly created window or null if window was not created.
+     */
+    from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
+    {
+        import bindbc.glfw : glfwCreateWindow;
+        import std.string : toStringz;
+
+        return glfwCreateWindow(width, height, label.toStringz, null, null);
+    }
+
+private:
+    bool _active = false;
+    uint _major;
+    uint _minor;
+
+    void initLib() nothrow @nogc
+    {
+        import bindbc.glfw : glfwInit, glfwWindowHint;
+        import bindbc.glfw.types : GLFW_CONTEXT_VERSION_MAJOR,
+            GLFW_CONTEXT_VERSION_MINOR, GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE;
+
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, _major);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, _minor);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    }
+}
+
+/** 
+ * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
+ */
+@UDA struct VertexAttrib
+{
+    /// Layout position of the attribute in a shader.
+    uint index;
+
+    /** 
+     * Specifies whether fixed-point data values should be normalized or converted
+     * directly as fixed-point values when they are accessed.
+     */
+    bool normalized = false;
+}
+
 /// mixin to `bind` `obj` immediately and `unbind` at `scope(exit)`.
 enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
     ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";

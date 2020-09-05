@@ -172,9 +172,6 @@ void main()
         .checkError!ShaderProgram();
     scope(exit) shaderProgram.destroy();
 
-    shaderProgram.use();
-    shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
-
     float deltaTime = 0.0f;
     float lastFrameTime = 0.0f;
 
@@ -224,6 +221,8 @@ void main()
         auto view = camera.getView();
         auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
 
+        shaderProgram.use();
+        shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
         shaderProgram.setUniform("view", view);
         shaderProgram.setUniform("projection", projection);
 

@@ -7,6 +7,13 @@ module glsu.enums;
 
 import glad.gl.enums;
 
+/// Type of `BufferObject`.
+enum BufferType
+{
+    array = GL_ARRAY_BUFFER, /// Buffer for any data.
+    element = GL_ELEMENT_ARRAY_BUFFER /// Buffer for indices.
+}
+
 /// GL privitive types
 enum GLType
 {
