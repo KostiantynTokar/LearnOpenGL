@@ -97,11 +97,11 @@ private:
 
     void updateAngles(float newYaw, float newPitch) nothrow @nogc @safe
     {
-        import std.math : fmod;
+        import std.algorithm.comparison : clamp;
         import gfm.math.funcs : radians;
 
-        _yaw = fmod(newYaw, PI);
-        _pitch = fmod(newPitch, radians(89.0f));
+        _yaw = constrainAngle(newYaw);
+        _pitch = clamp(newPitch, -radians(89.0f), radians(89.0f));
     }
 
     void updateVectors() pure nothrow @nogc @safe
@@ -118,5 +118,23 @@ private:
         _front = vec3f(cy * cp, sp, sy * cp).normalized;
         _right = cross(_front, _worldUp).normalized;
         _up = cross(_right, _front).normalized;
+    }
+
+    /** 
+     * Constrain angle in [-PI, PI) by angle wrapping.
+     * Params:
+     *   angle = Value to wrap.
+     * Returns: Value in interval [-PI, PI).
+     */
+    static float constrainAngle(float angle) nothrow @nogc @safe
+    {
+        import std.math : fmod;
+        
+        angle = fmod(angle + PI, 2 * PI);
+        if (angle < 0)
+        {
+            angle += 2 * PI;
+        }
+        return angle - PI;
     }
 }
