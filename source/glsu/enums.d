@@ -36,7 +36,7 @@ enum DataUsage
 }
 
 // dfmt off
-/// Kind of primitives to render in GL draw functions.
+/// Kind of primitives to render in GL draw calls.
 enum RenderMode
 {
     points = GL_POINTS,

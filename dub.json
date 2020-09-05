@@ -46,9 +46,16 @@
 			"buildOptions": ["releaseMode", "optimize", "inline"],
 			"libs": ["dependencies\\x64-Release\\glfw3"]
 		},
+		"unittest": {
+			"buildOptions": ["unittests", "debugMode", "debugInfo"],
+			"dflags-dmd": ["-debug=glChecks"],
+			"dflags-ldc": ["--d-debug=glChecks"],
+			"libs": ["dependencies\\x64-Debug\\glfw3"]
+		},
 		"docs": {
 			"buildOptions": ["syntaxOnly"],
 			"dflags": ["-c", "-Dddocs", "-op"]
 		}
-	}
+	},
+	"-ddoxFilterArgs": ["--min-protection=Private", "--ex=glad"]
 }

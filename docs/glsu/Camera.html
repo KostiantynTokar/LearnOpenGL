@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Struct Camera</title>
+		<link rel="stylesheet" type="text/css" href="../styles/ddox.css"/>
+		<link rel="stylesheet" href="../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../scripts/jquery.js">/**/</script><script type="text/javascript" src="../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package selected">
+						<a href="../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../glsu/util.html">util</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Struct Camera</h1><p></p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="kwd">struct</span> <span class="typ">Camera</span>
+			<span class="pun">;</span>
+					</div>
+				</code>
+			</div>
+			
+			<section><h2>Constructors</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.this.html" class="public">
+								<code>this</code>
+							</a>
+							<span class="tableEntryAnnotation">(position, yaw, pitch, worldUp)</span>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Fields</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._front.html" class="private"><code>_front</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span>!(float,3)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._pitch.html" class="private"><code>_pitch</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">float</span></code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._position.html" class="private"><code>_position</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span>!(float,3)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._right.html" class="private"><code>_right</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span>!(float,3)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._up.html" class="private"><code>_up</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span>!(float,3)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._worldUp.html" class="private"><code>_worldUp</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span>!(float,3)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera._yaw.html" class="private"><code>_yaw</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">float</span></code></td><td></td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Methods</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.front.html" class="public">
+								<code>front</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.getView.html" class="public">
+								<code>getView</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.move.html" class="public">
+								<code>move</code>
+							</a>
+							<span class="tableEntryAnnotation">(offset)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.moveFront.html" class="public">
+								<code>moveFront</code>
+							</a>
+							<span class="tableEntryAnnotation">(offset)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.moveRight.html" class="public">
+								<code>moveRight</code>
+							</a>
+							<span class="tableEntryAnnotation">(offset)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.moveUp.html" class="public">
+								<code>moveUp</code>
+							</a>
+							<span class="tableEntryAnnotation">(offset)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.pitch.html" class="public">
+								<code>pitch</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.position.html" class="public">
+								<code>position</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.right.html" class="public">
+								<code>right</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.rotate.html" class="public">
+								<code>rotate</code>
+							</a>
+							<span class="tableEntryAnnotation">(yawOffset, pitchOffset)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.up.html" class="public">
+								<code>up</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.worldUp.html" class="public">
+								<code>worldUp</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.yaw.html" class="public">
+								<code>yaw</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.updateAngles.html" class="private">
+								<code>updateAngles</code>
+							</a>
+							<span class="tableEntryAnnotation">(newYaw, newPitch)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../glsu/Camera.updateVectors.html" class="private">
+								<code>updateVectors</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
+			
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

@@ -1,5 +1,5 @@
 /**
- * Redefines OpenGL functions, could be imported instead of glad.gl.funcs.
+ * Redefines OpenGL functions, could be imported instead of `glad.gl.funcs`.
  *
  * If debug specifier `glChecks` is active, redefines
  * all functions of `glad.gl.funcs` module (except `glGetError`)
@@ -55,10 +55,6 @@ debug(glChecks)
 
     /** 
      * Generates parameter list without enclosing parentheses with parameter names of form `argk`, k = 0 .. Ts.length.
-     * Examples:
-     * ---
-     * static assert(genParamList!(int, long) == "int arg0, long arg1");
-     * ---
      */
     private auto genParamList(Ts...)()
         if(allSatisfy!(isNotVoid, Ts))
@@ -76,33 +72,46 @@ debug(glChecks)
             return "";
         }
     }
+    ///
+    unittest
+    {
+        assert(genParamList!() == "");
+        assert(genParamList!(int) == "int arg0");
+        assert(genParamList!(int, long) == "int arg0, long arg1");
+    }
     
     /** 
      * Generates argument list without enclosing parentheses with argument names of form `argk`, k = 0 .. typeNames.length.
      * Params:
      *   n = number of arguments
-     * Examples:
-     * ---
-     * assert(genArgList(2) == "arg0, arg1");
-     * ---
      */
     private auto genArgList(uint n)
     {
         return iota(0, n).map!"\"arg\" ~ to!string(a)".join(", ");
+    }
+    ///
+    unittest
+    {
+        assert(genArgList(0) == "");
+        assert(genArgList(1) == "arg0");
+        assert(genArgList(2) == "arg0, arg1");
     }
 
     /** 
      * Generates string for mixin that gives string representations of args from genArgList.
      * Params:
      *   n = number of arguments
-     * Examples:
-     * ---
-     * assert(genArgToStringList(2) == "arg0.to!string() ~ \", \" ~ arg1.to!string()");
-     * ---
      */
     private auto genArgToStringList(uint n)
     {
         return iota(0, n).map!"\"arg\" ~ to!string(a) ~ \".to!string()\"".join(" ~ \", \" ~ ");
+    }
+    ///
+    unittest
+    {
+        assert(genArgToStringList(0) == "");
+        assert(genArgToStringList(1) == "arg0.to!string()");
+        assert(genArgToStringList(2) == "arg0.to!string() ~ \", \" ~ arg1.to!string()");
     }
     
     /** 

@@ -45,7 +45,7 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Module glsu.gl_funcs</h1><p>Redefines OpenGL functions, could be imported instead of glad.gl.funcs.
+			<h1>Module glsu.gl_funcs</h1><p>Redefines OpenGL functions, could be imported instead of <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code>.
 </p><section><p>If debug specifier <code class="lang-d"><span class="pln">glChecks</span></code> is active, redefines
  all functions of <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code> module (except <code class="lang-d"><span class="pln">glGetError</span></code>)
  and wraps them between <code class="lang-d"><a href="../glsu/util/clearGLErrors.html" title="glsu.util.clearGLErrors"><span class="pln">clearGLErrors</span></a></code> and <code class="lang-d"><a href="../glsu/util/checkGLErrors.html" title="glsu.util.checkGLErrors"><span class="pln">checkGLErrors</span></a></code> calls.
@@ -59,6 +59,101 @@ $('#symbolSearchPane').show();</script>
 </section>
 
 			<section></section>
+			<section>
+				<h2>Manifest constants</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a id="isFunctionPointerValue" class="private" href="../glsu/gl_funcs/isFunctionPointerValue.html">
+								<code>isFunctionPointerValue</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="notIsModuleNorPackage" class="private" href="../glsu/gl_funcs/notIsModuleNorPackage.html">
+								<code>notIsModuleNorPackage</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
+			<section>
+				<h2>Aliases</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a id="allNames" class="private" href="../glsu/gl_funcs/allNames.html">
+								<code>allNames</code>
+							</a>
+						</td>
+						<td>
+							<code class="prettyprint lang-d"><span class="kwd">__traits</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln">allMembers</span><span class="pun">, </span><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span><span class="pun">)</span></code>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="anotherNames" class="private" href="../glsu/gl_funcs/anotherNames.html">
+								<code>anotherNames</code>
+							</a>
+						</td>
+						<td>
+							<code class="prettyprint lang-d"><a href="../glsu/Texture.Filter.html"><span class="typ">Texture<wbr/></span><span class="pun">.<wbr/></span><span class="typ">Filter</span></a>!(templateNot!isFunctionPointerValue,importableNames)</code>
+						</td>
+						<td>Names to import unconditionally
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="funcNames" class="private" href="../glsu/gl_funcs/funcNames.html">
+								<code>funcNames</code>
+							</a>
+						</td>
+						<td>
+							<code class="prettyprint lang-d"><a href="../glsu/Texture.Filter.html"><span class="typ">Texture<wbr/></span><span class="pun">.<wbr/></span><span class="typ">Filter</span></a>!(isFunctionPointerValue,importableNames)</code>
+						</td>
+						<td>Names of funcs to wrap (if <code class="lang-d"><span class="kwd">debug</span><span class="pun">=</span><span class="pln">glChecks</span></code>) (except <code class="lang-d"><span class="pln">glGetError</span></code>)
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="importableNames" class="private" href="../glsu/gl_funcs/importableNames.html">
+								<code>importableNames</code>
+							</a>
+						</td>
+						<td>
+							<code class="prettyprint lang-d"><a href="../glsu/Texture.Filter.html"><span class="typ">Texture<wbr/></span><span class="pun">.<wbr/></span><span class="typ">Filter</span></a>!(notIsModuleNorPackage,allNames)</code>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="symbolOf" class="private" href="../glsu/gl_funcs/symbolOf.html">
+								<code>symbolOf</code>
+							</a>
+						</td>
+						<td>
+							<code class="prettyprint lang-d"><span class="kwd">__traits</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln">getMember</span><span class="pun">, </span><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span><span class="pun">, </span><span class="pln">name</span><span class="pun">)</span></code>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
 			<footer>
 				<table class="license-info">
 					<tr>

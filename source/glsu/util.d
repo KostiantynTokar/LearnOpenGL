@@ -30,7 +30,8 @@ template from(string moduleName)
 }
 
 //dfmt off
-string errorMessage(GLError e)
+/// Description of GLError.
+string errorDescription(GLError e)
 {
     final switch(e)
     {
@@ -101,7 +102,7 @@ void checkGLErrors(string message = "",
     }
     for(; e != 0; e = glGetError())
     {
-        stderr.writefln!"\tError 0x%X: %s"(e, errorMessage(cast(GLError) e));
+        stderr.writefln!"\tError 0x%X: %s"(e, errorDescription(cast(GLError) e));
     }
 
     if(flag)
@@ -139,6 +140,14 @@ T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
     }
     return res;
 }
+///
+unittest
+{
+    import std.variant : Algebraic;
+
+    auto a = Algebraic!(int, string)(42);
+    assert(checkError!int(a) == 42);
+}
 
 /** 
  * UDA for UDAs.
@@ -149,18 +158,10 @@ package struct UDA
 }
 
 /** 
-* Hack to use until compiler bug with relaxed nothrow checks in nothrow context is fixed.
-* Params:
-*   a = delegate that is to used in nothrow context
-* Examples:
-* ---
-* void foo() {}
-* @safe nothrow @nogc pure void main()
-* {
-*     debug debugHack({foo();});
-* }    
-* ---
-*/
+ * Hack to use until compiler bug with relaxed nothrow checks in nothrow context is fixed.
+ * Params:
+ *   a = delegate that is to used in nothrow context
+ */
 package void debugHack(scope void delegate() a) nothrow @nogc @trusted
 {
     auto hack = cast(void delegate() @nogc) a;
@@ -168,4 +169,13 @@ package void debugHack(scope void delegate() a) nothrow @nogc @trusted
     hack();
     catch(Exception e)
         assert(0, e.msg);
+}
+///
+unittest
+{
+    void foo() {}
+    @safe nothrow @nogc pure void bar()
+    {
+        debug debugHack({foo();});
+    }
 }
