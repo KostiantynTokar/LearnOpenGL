@@ -106,9 +106,9 @@ void clearGLErrors() nothrow @nogc
  * If error was discovered, prints error message to `stderr`
  * and exits program with `EXIT_FAILURE` code.
  * Params:
- *   message = written to stderr
- *   file = file name of caller
- *   line = line number of caller
+ *   message = Written to stderr.
+ *   file = File name of caller.
+ *   line = Line number of caller.
  */
 void checkGLErrors(string message = "",
                    string file = __FILE__,
@@ -144,8 +144,8 @@ void checkGLErrors(string message = "",
  * with `EXIT_FAILURE` code;
  * else returns first component of `valueOrError` `Algebraic`.
  * Params:
- *   valueOrError = argument to check
- * Returns: value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
+ *   valueOrError = Argument to check.
+ * Returns: Value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
  */
 T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
 {
@@ -203,9 +203,9 @@ static:
     /** 
      * Activate GLFW. GLFW should be activated before use.
      * Params:
-     *   major = major version of OpenGL to use
-     *   minor = minor version of OpenGL to use
-     * Returns: whether GLFW is activated with specified version of OpenGL
+     *   major = Major version of OpenGL to use.
+     *   minor = Minor version of OpenGL to use.
+     * Returns: Whether GLFW is activated with specified version of OpenGL.
      */
     bool activate(uint major, uint minor) nothrow @nogc
     {
@@ -223,7 +223,7 @@ static:
 
     /** 
      * Deactivate GLFW.
-     * Returns: whether GLFW was active before.
+     * Returns: Whether GLFW was active before.
      */
     bool deactivate() nothrow @nogc
     {
@@ -241,9 +241,9 @@ static:
     /** 
      * Create Window. GLFW should be active.
      * Params:
-     *   width = width of the window in pixels
-     *   height = height of the window in pixels
-     *   label = label of the window
+     *   width = Width of the window in pixels.
+     *   height = Height of the window in pixels.
+     *   label = Label of the window.
      * Returns: Handle of newly created window or null if window was not created.
      */
     from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
@@ -294,7 +294,7 @@ enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
 /** 
  * Hack to use until compiler bug with relaxed nothrow checks in nothrow context is fixed.
  * Params:
- *   a = delegate that is to used in nothrow context
+ *   a = Delegate that is to used in nothrow context.
  */
 package void debugHack(scope void delegate() a) nothrow @nogc @trusted
 {

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Enum GLType</title>
+		<title>Struct VertexBufferLayout</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -31,7 +31,7 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/enums.html">enums</a>
 					</div>
 				</li>
@@ -41,7 +41,7 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module ">
+					<div class="module selected">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
@@ -55,68 +55,103 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Enum GLType</h1><p>GL privitive types
-</p>
+			<h1>Struct VertexBufferLayout</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">enum</span> <span class="typ">GLType</span>
-			 <span class="pun">:</span> <span class="typ">uint</span> <span class="pun">{ ... }</span>
+			<span class="kwd">struct</span> <span class="typ">VertexBufferLayout</span>
+			<span class="pun">;</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Enum members</h2>
+			<section><h2>Fields</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.elements.html" class="private"><code>elements</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">container<wbr/></span><span class="pun">.</span><span class="pln">array<wbr/></span><span class="pun">.</span><span class="typ">Array</span>!(glsu.objects.VertexBufferLayout.LayoutElement)</code></td><td></td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Methods</h2>
 				<table>
 					<col class="caption"/>
 					<tr>
 						<th>Name</th><th>Description</th>
 					</tr>
 					<tr>
-						<td id="glByte">
-							<code>glByte</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.disable.html" class="public">
+								<code>disable</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td id="glDouble">
-							<code>glDouble</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.enable.html" class="public">
+								<code>enable</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td id="glFloat">
-							<code>glFloat</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.push.html" class="public">
+								<code>push</code>
+							</a>
+							<span class="tableEntryAnnotation">(size, type, normalized)</span>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td id="glInt">
-							<code>glInt</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.push.html" class="public">
+								<code>push</code>
+							</a>
+							<span class="tableEntryAnnotation">(size, normalized)</span>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td id="glShort">
-							<code>glShort</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.pushUsingPattern.html" class="public">
+								<code>pushUsingPattern</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td id="glUByte">
-							<code>glUByte</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.calcStride.html" class="private">
+								<code>calcStride</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td></td>
 					</tr>
+				</table>
+			</section>
+			<section><h2>Inner structs</h2>
+				<table>
+					<col class="caption"/>
 					<tr>
-						<td id="glUInt">
-							<code>glUInt</code>
-						</td>
-						<td></td>
+						<th>Name</th><th>Description</th>
 					</tr>
 					<tr>
-						<td id="glUShort">
-							<code>glUShort</code>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.LayoutElement.html" class="private">
+								<code>LayoutElement</code>
+							</a>
 						</td>
 						<td></td>
 					</tr>

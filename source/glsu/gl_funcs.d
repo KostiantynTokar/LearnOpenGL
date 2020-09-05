@@ -28,9 +28,9 @@ private enum isFunctionPointerValue(string name) = !is(symbolOf!name) && isFunct
 private alias allNames = __traits(allMembers, glad.gl.funcs);
 private alias importableNames = Filter!(notIsModuleNorPackage, allNames);
 
-/// Names of funcs to wrap (if `debug=glChecks`) (except `glGetError`)
+/// Names of funcs to wrap (if `debug=glChecks`) (except `glGetError`).
 private alias funcNames = Filter!(isFunctionPointerValue, importableNames);
-/// Names to import unconditionally
+/// Names to import unconditionally.
 private alias anotherNames = Filter!(templateNot!isFunctionPointerValue, importableNames);
 
 static foreach(name; anotherNames)
@@ -85,7 +85,7 @@ debug(glChecks)
     /** 
      * Generates argument list without enclosing parentheses with argument names of form `argk`, k = 0 .. typeNames.length.
      * Params:
-     *   n = number of arguments
+     *   n = Number of arguments.
      */
     private auto genArgList(uint n)
     {
@@ -102,7 +102,7 @@ debug(glChecks)
     /** 
      * Generates string for mixin that gives string representations of args from genArgList.
      * Params:
-     *   n = number of arguments
+     *   n = Number of arguments.
      */
     private auto genArgToStringList(uint n)
     {
@@ -123,7 +123,7 @@ debug(glChecks)
      * additionally taking two parameters, that are defaulted to
      *  `__FILE__` and `__LINE__`.
      * Params:
-     *   name = name of function to wrap
+     *   name = Name of function to wrap.
      */
     private mixin template genCheckedFunc(string name)
     {

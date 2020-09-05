@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function checkError</title>
+		<title>Function VertexBufferLayout.calcStride</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -41,12 +41,12 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module ">
+					<div class="module selected">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/util.html">util</a>
 					</div>
 				</li>
@@ -55,36 +55,16 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function checkError</h1><p>If <code class="lang-d"><span class="pln">valueOrError</span></code> holds <code class="lang-d"><span class="typ">string</span></code>, then <code class="lang-d"><span class="pln">stderr</span></code> it and exit program
- with <code class="lang-d"><span class="pln">EXIT_FAILURE</span></code> code;
- else returns first component of <code class="lang-d"><span class="pln">valueOrError</span></code> <code class="lang-d"><span class="typ">Algebraic</span></code>.
-</p>
+			<h1>Function VertexBufferLayout.calcStride</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			{null} <span class="pln">checkError</span>(T)<span class="pun">(</span><span class="pun">)</span><span class="pun">;</span>
+			<span class="typ">int</span> <span class="pln">calcStride</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Parameters</h2>
-<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
-<tr><td id="valueOrError">valueOrError</td><td> Argument to check.</td></tr>
-</table>
-</section>
-<section><h2>Returns</h2>
-<p>Value (i.e. first component of <code class="lang-d"><span class="typ">Algebraic</span></code>) if <code class="lang-d"><span class="pln">valueOrError</span></code> doesn't hold string.
-</p>
-</section>
-<section><h2>Example</h2>
-
-<pre class="code"><code class="lang-d"><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">variant </span><span class="pun">: </span><span class="typ">Algebraic</span><span class="pun">;
-
-</span><span class="kwd">auto </span><span class="pln">a </span><span class="pun">= </span><span class="typ">Algebraic</span><span class="pun">!(</span><span class="typ">int</span><span class="pun">, </span><span class="typ">string</span><span class="pun">)(</span><span class="lit">42</span><span class="pun">);
-</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">checkError</span><span class="pun">!</span><span class="typ">int</span><span class="pun">(</span><span class="pln">a</span><span class="pun">) == </span><span class="lit">42</span><span class="pun">);
-</span></code></pre>
-</section>
-
+			
 			<footer>
 				<table class="license-info">
 					<tr>
