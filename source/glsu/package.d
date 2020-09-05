@@ -111,10 +111,6 @@ private:
     }
 }
 
-/// mixin to `bind` `obj` immediately and `unbind` at `scope(exit)`.
-enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
-    ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";
-
 /// Type of `BufferObject`.
 enum BufferType
 {
@@ -140,7 +136,7 @@ struct BufferObejct(BufferType type)
 
         static if (type == BufferType.element)
         {
-            _indexType = valueofGLType!T;
+            _indexType = valueOfGLType!T;
         }
     }
 
@@ -278,7 +274,7 @@ struct VertexArrayObject
                 static assert(0 < N && N < 5,
                         "size (dimension of vector) should be in range from 1 to 4");
 
-                GLType type = valueofGLType!U;
+                GLType type = valueOfGLType!U;
 
                 attrPointers[i] = AttribPointer(attrs[i].index, N, type,
                         attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);

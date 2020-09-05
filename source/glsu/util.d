@@ -8,18 +8,18 @@ module glsu.util;
 import glsu.enums : GLType, GLError;
 
 /// Determine GL enum value that corresponds to D type.
-template valueofGLType(T)
+template valueOfGLType(T)
 {
     static assert(0, "no according GLType");
 }
-enum valueofGLType(T : byte) = GLType.glByte; /// ditto
-enum valueofGLType(T : ubyte) = GLType.glUByte; /// ditto
-enum valueofGLType(T : short) = GLType.glShort; /// ditto
-enum valueofGLType(T : ushort) = GLType.glUShort; /// ditto
-enum valueofGLType(T : int) = GLType.glInt; /// ditto
-enum valueofGLType(T : uint) = GLType.glUInt; /// ditto
-enum valueofGLType(T : float) = GLType.glFloat; /// ditto
-enum valueofGLType(T : double) = GLType.glDouble; /// ditto
+enum valueOfGLType(T : byte) = GLType.glByte; /// ditto
+enum valueOfGLType(T : ubyte) = GLType.glUByte; /// ditto
+enum valueOfGLType(T : short) = GLType.glShort; /// ditto
+enum valueOfGLType(T : ushort) = GLType.glUShort; /// ditto
+enum valueOfGLType(T : int) = GLType.glInt; /// ditto
+enum valueOfGLType(T : uint) = GLType.glUInt; /// ditto
+enum valueOfGLType(T : float) = GLType.glFloat; /// ditto
+enum valueOfGLType(T : double) = GLType.glDouble; /// ditto
 
 /** 
  * Import as expression.
@@ -168,6 +168,10 @@ unittest
 package struct UDA
 {
 }
+
+/// mixin to `bind` `obj` immediately and `unbind` at `scope(exit)`.
+enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
+    ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";
 
 /** 
  * Hack to use until compiler bug with relaxed nothrow checks in nothrow context is fixed.
