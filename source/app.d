@@ -154,6 +154,17 @@ void main()
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
+    // auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    // scope(exit) VBO.destroy();
+
+    // VertexBufferLayout layout;
+    // // layout.push!float(3);
+    // // layout.push!float(2);
+    // layout.pushUsingPattern!Vertex();
+
+    // auto VAO = VertexArrayObject(VBO, layout);
+    // scope(exit) VAO.destroy();
+
     auto texture1 = Texture.create("resources\\container.jpg").checkError!Texture();
     texture1.setWrapMode(Texture.Coord.s, Texture.Wrap.clamptoBorder);
     texture1.setWrapMode(Texture.Coord.t, Texture.Wrap.clamptoBorder);

@@ -23,7 +23,6 @@ enum GLType
     glUShort = GL_UNSIGNED_SHORT,
     glInt = GL_INT,
     glUInt = GL_UNSIGNED_INT,
-    glHalfFloat = GL_HALF_FLOAT,
     glFloat = GL_FLOAT,
     glDouble = GL_DOUBLE
 }

@@ -102,24 +102,131 @@ struct AttribPointer
         this._pointer = pointer;
     }
 
-    void enable() nothrow @nogc
+    void enable() const nothrow @nogc
     {
         glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(void*) _pointer);
         glEnableVertexAttribArray(_index);
     }
 
-    void disable() nothrow @nogc
+    void disable() const nothrow @nogc
     {
         glDisableVertexAttribArray(_index);
     }
 
 private:
     uint _index;
-    int _size;
+    int _size; // actually count
     GLType _type;
     bool _normalized;
     int _stride;
     ptrdiff_t _pointer;
+}
+
+struct VertexBufferLayout
+{
+public:
+    void push(int size, GLType type, bool normalized = false) @nogc nothrow
+    in(0 < size && size < 5)do
+    {
+        elements ~= LayoutElement(size, type, normalized, calcStride());
+    }
+
+    void push(T)(int size, bool normalized = false) @nogc nothrow
+    {
+        push(size, valueOfGLType!T, normalized);
+    }
+
+    void pushUsingPattern(T)() @nogc nothrow
+    {
+        import std.traits : getSymbolsByUDA, getUDAs;
+        import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+        import gfm.math.vector : Vector;
+
+        alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
+
+        alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
+        static assert(attrs.length == NoDuplicates!attrs.length, "indices should be unique");
+
+        enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
+        alias sortedAttrs = staticSort!(Comp, attrs);
+
+        bool isStepByOne(VertexAttrib[] attrs...) @safe @nogc pure nothrow
+        {
+            foreach (i, attr; attrs)
+            {
+                if (attr.index != i)
+                    return false;
+            }
+            return true;
+        }
+
+        //why sortedAttrs.expand.only.enumarate.all!"a[0] == a[1].index" doesn't work? Expand?
+        static assert(isStepByOne(sortedAttrs), "indices should ascend from 0 by 1");
+
+        immutable prevLength = elements.length;
+        elements.length = elements.length + attrs.length;
+        //dfmt off
+        static foreach (i; 0 .. attrSymbols.length)
+        {{
+            static if (is(typeof(attrSymbols[i]) == Vector!(U, N), U, int N) ||
+                       is(typeof(attrSymbols[i]) == U[N], U, int N))
+            {
+                static assert(0 < N && N < 5,
+                        "size (dimension of vector) should be in range from 1 to 4");
+
+                GLType type = valueOfGLType!U;
+                elements[prevLength + attrs[i].index] = 
+                    LayoutElement(N, type, attrs[i].normalized, attrSymbols[i].offsetof);
+            }
+            else
+            {
+                static assert(0, "vertex attribute should be a static array or gfm.math.vector.Vector");
+            }
+        }}
+        //dfmt on
+    }
+
+    void enable() const nothrow @nogc
+    in(elements.length <= uint.max)do
+    {
+        import std.range : enumerate;
+        
+        immutable stride = calcStride();
+
+        foreach(i, ref elem; elements[].enumerate)
+        {
+            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, stride, cast(void*) elem.pointer);
+            glEnableVertexAttribArray(cast(uint) i);
+        }
+    }
+
+    void disable() const nothrow @nogc
+    in(elements.length <= uint.max)do
+    {
+        foreach (i; 0 .. elements.length)
+        {
+            glDisableVertexAttribArray(cast(uint) i);
+        }
+    }
+private:
+    import std.container.array : Array;
+
+    struct LayoutElement
+    {
+        int size; // actually count
+        GLType type;
+        bool normalized;
+        ptrdiff_t pointer;
+    }
+
+    Array!LayoutElement elements;
+
+    int calcStride() const pure nothrow @nogc
+    {
+        import std.algorithm.iteration : fold;
+        
+        return elements[].fold!((acc, elem) => acc + elem.size * elem.type.sizeOfGLType)(0);
+    }
 }
 
 struct VertexArrayObject
@@ -136,59 +243,21 @@ struct VertexArrayObject
         }
     }
 
+    this(VertexBufferObject VBO, VertexBufferLayout layout) nothrow @nogc
+    {
+        glGenVertexArrays(1, &_id);
+        mixin(ScopedBind!this);
+
+        VBO.bind();
+        layout.enable();
+    }
+
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
     {
-        import glsu.util : VertexAttrib;
-
         auto VBO = VertexBufferObject(buffer, usage);
-
-        import std.traits : getSymbolsByUDA, getUDAs;
-        import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
-        import gfm.math.vector : Vector;
-
-        alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
-
-        alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
-        static assert(attrs.length == NoDuplicates!attrs.length, "indices should be unique");
-
-        enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
-        alias sortedAttrs = staticSort!(Comp, attrs);
-        bool isStepByOne(VertexAttrib[] attrs...) @safe @nogc pure nothrow
-        {
-            foreach (i, attr; attrs)
-            {
-                if (attr.index != i)
-                    return false;
-            }
-            return true;
-        }
-
-        //why sortedAttrs.expand.only.enumarate.all!"a[0] == a[1].index" doesn't work? Expand?
-        static assert(isStepByOne(sortedAttrs), "indices should ascend from 0 by 1");
-
-        AttribPointer[attrs.length] attrPointers;
-        //dfmt off
-        static foreach (i; 0 .. attrSymbols.length)
-        {{
-            static if (is(typeof(attrSymbols[i]) == Vector!(U, N), U, int N) ||
-                       is(typeof(attrSymbols[i]) == U[N], U, int N))
-            {
-                static assert(0 < N && N < 5,
-                        "size (dimension of vector) should be in range from 1 to 4");
-
-                GLType type = valueOfGLType!U;
-
-                attrPointers[i] = AttribPointer(attrs[i].index, N, type,
-                        attrs[i].normalized, T.sizeof, attrSymbols[i].offsetof);
-            }
-            else
-            {
-                static assert(0, "vertex attribute should be a static array or gfm.math.vector.Vector");
-            }
-        }}
-        //dfmt on
-
-        this(VBO, attrPointers);
+        VertexBufferLayout layout;
+        layout.pushUsingPattern!T();
+        this(VBO, layout);
     }
 
     uint id() const pure nothrow @nogc @safe

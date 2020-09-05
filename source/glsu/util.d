@@ -21,6 +21,22 @@ enum valueOfGLType(T : uint) = GLType.glUInt; /// ditto
 enum valueOfGLType(T : float) = GLType.glFloat; /// ditto
 enum valueOfGLType(T : double) = GLType.glDouble; /// ditto
 
+/// Size of GL privitive type in bytes.
+ubyte sizeOfGLType(GLType t) pure nothrow @nogc @safe
+{
+    final switch(t)
+    {
+        case GLType.glByte: return byte.sizeof;
+        case GLType.glUByte: return ubyte.sizeof;
+        case GLType.glShort: return short.sizeof;
+        case GLType.glUShort: return ushort.sizeof;
+        case GLType.glInt: return int.sizeof;
+        case GLType.glUInt: return uint.sizeof;
+        case GLType.glFloat: return float.sizeof;
+        case GLType.glDouble: return double.sizeof;
+    }
+}
+
 /** 
  * Import as expression.
  * Params:
