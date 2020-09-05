@@ -521,9 +521,9 @@
   <p class="para">
     If debug specifier <code class="code">glChecks</code> is active, redefines
  all functions of <code class="code">glad.gl.funcs</code> module (except <code class="code">glGetError</code>)
- and wraps them between <code class="code">glsu.clearGLErrors</code> and <code class="code">glsu.checkGLErrors</code> calls.
- Each wrapper additionaly take three parameters, that are defaulted
- to  <code class="code">__FILE_FULL_PATH__</code>, <code class="code">__LINE__</code>, and <code class="code">__PRETTY_FUNCTION__</code>.
+ and wraps them between <code class="code">glsu.util.clearGLErrors</code> and <code class="code">glsu.util.checkGLErrors</code> calls.
+ Each wrapper additionaly take two parameters, that are defaulted
+ to  <code class="code">__FILE__</code> and <code class="code">__LINE__</code>.
 <br><br>
  If debug specifier <code class="code">glChecks</code> is not active, just
  public imports <code class="code">glad.gl.funcs</code>.

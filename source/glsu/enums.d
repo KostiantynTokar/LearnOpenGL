@@ -47,3 +47,42 @@ enum RenderMode
     trianglesAdjacency = GL_TRIANGLES_ADJACENCY
 }
 // dfmt on
+
+/// Error codes that could be returned by `glGetError`.
+enum GLError
+{
+    /**
+     * No error has been recorded. The value of this symbolic constant is guaranteed to be 0.
+     */
+    noError = GL_NO_ERROR,
+
+    /**
+     * An unacceptable value is specified for an enumerated argument.
+     * The offending command is ignored and has no other side effect than to set the error flag.
+     */
+    invalidEnum = GL_INVALID_ENUM,
+
+    /**
+     * A numeric argument is out of range.
+     * The offending command is ignored and has no other side effect than to set the error flag.
+     */
+    invalidValue = GL_INVALID_VALUE,
+
+    /**
+     * The specified operation is not allowed in the current state.
+     * The offending command is ignored and has no other side effect than to set the error flag.
+     */
+    invalidOperation = GL_INVALID_OPERATION,
+
+    /**
+     * The framebuffer object is not complete.
+     * The offending command is ignored and has no other side effect than to set the error flag.
+     */
+    invalidFramebufferOperation = GL_INVALID_FRAMEBUFFER_OPERATION,
+
+    /**
+     * There is not enough memory left to execute the command.
+     * The state of the GL is undefined, except for the state of the error flags, after this error is recorded.
+     */
+    outOfMemory = GL_OUT_OF_MEMORY
+}

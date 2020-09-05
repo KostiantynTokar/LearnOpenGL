@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>glsu</title>
+    <title>glsu.enums</title>
     <style type="text/css" media="screen">
       html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
       blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
@@ -508,7 +508,7 @@
   <body id="ddoc_main" class="ddoc dlang">
     <div class="content_wrapper">
       <article class="module">
-        <h1 class="module_name">glsu</h1>
+        <h1 class="module_name">glsu.enums</h1>
         <section id="module_content">
 <section class="section ddoc_module_members_section">
   <div class="ddoc_module_members">
@@ -516,7 +516,7 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#VertexAttrib" id="VertexAttrib"><code class="code">VertexAttrib</code></a>
+  <a href="#DataUsage" id="DataUsage"><code class="code">DataUsage</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -525,7 +525,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="VertexAttrib"></span>struct <code class="code">VertexAttrib</code>;
+            <span class="ddoc_anchor" id="DataUsage"></span>enum <code class="code">DataUsage</code>: uint;
 
           </code>
         </p>
@@ -537,7 +537,7 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    UDA for fields of a struct that are to used as vertex in <code class="code">VertexBufferArray</code>.
+    Hint to the GL implementation as to how a <code class="code">BufferObject</code>'s data store will be accessed.
   </p>
 </div>
 
@@ -546,7 +546,7 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#VertexAttrib.index" id="VertexAttrib.index"><code class="code">index</code></a>
+  <a href="#DataUsage.streamDraw" id="DataUsage.streamDraw"><code class="code">streamDraw</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -555,8 +555,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="VertexAttrib.index"></span>uint <code class="code">index</code>;
-
+            <span class="ddoc_anchor" id="DataUsage.streamDraw"></span><code class="code">streamDraw</code>
           </code>
         </p>
       </div>
@@ -567,7 +566,7 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Layout position of the attribute in a shader.
+    Modified once by app, used few times, source for GL.
   </p>
 </div>
 
@@ -578,7 +577,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#VertexAttrib.normalized" id="VertexAttrib.normalized"><code class="code">normalized</code></a>
+  <a href="#DataUsage.streamRead" id="DataUsage.streamRead"><code class="code">streamRead</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -587,8 +586,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="VertexAttrib.normalized"></span>bool <code class="code">normalized</code>;
-
+            <span class="ddoc_anchor" id="DataUsage.streamRead"></span><code class="code">streamRead</code>
           </code>
         </p>
       </div>
@@ -599,8 +597,224 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Specifies whether fixed-point data values should be <code class="code">normalized</code> or converted
- directly as fixed-point values when they are accessed.
+    Modified once by GL, used few times, source for app.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.streamCopy" id="DataUsage.streamCopy"><code class="code">streamCopy</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.streamCopy"></span><code class="code">streamCopy</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified once by GL, used few times, source for GL.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.staticDraw" id="DataUsage.staticDraw"><code class="code">staticDraw</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.staticDraw"></span><code class="code">staticDraw</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified once by app, used many times, source for GL.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.staticRead" id="DataUsage.staticRead"><code class="code">staticRead</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.staticRead"></span><code class="code">staticRead</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified once by GL, used many times, source for app.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.staticCopy" id="DataUsage.staticCopy"><code class="code">staticCopy</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.staticCopy"></span><code class="code">staticCopy</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified once by GL, used many times, source for GL.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.dynamicDraw" id="DataUsage.dynamicDraw"><code class="code">dynamicDraw</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.dynamicDraw"></span><code class="code">dynamicDraw</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified repeatedly by app, used many times, source for GL.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.dynamicRead" id="DataUsage.dynamicRead"><code class="code">dynamicRead</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.dynamicRead"></span><code class="code">dynamicRead</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified repeatedly by GL, used many times, source for app.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#DataUsage.dynamicCopy" id="DataUsage.dynamicCopy"><code class="code">dynamicCopy</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="DataUsage.dynamicCopy"></span><code class="code">dynamicCopy</code>
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Modified repeatedly by GL, used many times, source for GL.
   </p>
 </div>
 
@@ -616,7 +830,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#GLFW" id="GLFW"><code class="code">GLFW</code></a>
+  <a href="#GLError" id="GLError"><code class="code">GLError</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -625,7 +839,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="GLFW"></span>struct <code class="code">GLFW</code>;
+            <span class="ddoc_anchor" id="GLError"></span>enum <code class="code">GLError</code>: uint;
 
           </code>
         </p>
@@ -637,7 +851,7 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Wraps some functionality of <code class="code">GLFW</code>
+    Error codes that could be returned by <code class="code">glGetError</code>.
   </p>
 </div>
 
@@ -646,7 +860,7 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#GLFW.isActive" id="GLFW.isActive"><code class="code">isActive</code></a>
+  <a href="#GLError.noError" id="GLError.noError"><code class="code">noError</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -655,8 +869,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="GLFW.isActive"></span>static nothrow @nogc @safe bool <code class="code">isActive</code>();
-
+            <span class="ddoc_anchor" id="GLError.noError"></span><code class="code">noError</code>
           </code>
         </p>
       </div>
@@ -667,14 +880,7 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Checks if GLFW is active.
-
-  </p>
-</div>
-<div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    whether GLFW is active.
+    No error has been recorded. The value of this symbolic constant is guaranteed to be 0.
   </p>
 </div>
 
@@ -685,7 +891,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#GLFW.activate" id="GLFW.activate"><code class="code">activate</code></a>
+  <a href="#GLError.invalidEnum" id="GLError.invalidEnum"><code class="code">invalidEnum</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -694,8 +900,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="GLFW.activate"></span>static nothrow @nogc bool <code class="code">activate</code>(uint <code class="code">major</code>, uint <code class="code">minor</code>);
-
+            <span class="ddoc_anchor" id="GLError.invalidEnum"></span><code class="code">invalidEnum</code>
           </code>
         </p>
       </div>
@@ -706,50 +911,8 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Activate GLFW. GLFW should be activated before use.
-
-  </p>
-</div>
-<div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">uint <code class="code">major</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      <code class="code">major</code> version of OpenGL to use
-    </p>
-  </div>
-</td>
-</tr>
-<tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">uint <code class="code">minor</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      <code class="code">minor</code> version of OpenGL to use
-    </p>
-  </div>
-</td>
-</tr>
-
-    </tbody>
-  </table>
-</div>
-<div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    whether GLFW is activated with specified version of OpenGL
+    An unacceptable value is specified for an enumerated argument.
+ The offending command is ignored and has no other side effect than to set the error flag.
   </p>
 </div>
 
@@ -760,7 +923,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#GLFW.deactivate" id="GLFW.deactivate"><code class="code">deactivate</code></a>
+  <a href="#GLError.invalidValue" id="GLError.invalidValue"><code class="code">invalidValue</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -769,8 +932,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="GLFW.deactivate"></span>static nothrow @nogc bool <code class="code">deactivate</code>();
-
+            <span class="ddoc_anchor" id="GLError.invalidValue"></span><code class="code">invalidValue</code>
           </code>
         </p>
       </div>
@@ -781,14 +943,8 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Deactivate GLFW.
-
-  </p>
-</div>
-<div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    whether GLFW was active before.
+    A numeric argument is out of range.
+ The offending command is ignored and has no other side effect than to set the error flag.
   </p>
 </div>
 
@@ -799,7 +955,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#GLFW.createWindow" id="GLFW.createWindow"><code class="code">createWindow</code></a>
+  <a href="#GLError.invalidOperation" id="GLError.invalidOperation"><code class="code">invalidOperation</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -808,8 +964,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="GLFW.createWindow"></span>static nothrow from!"bindbc.glfw".GLFWwindow* <code class="code">createWindow</code>(int <code class="code">width</code>, int <code class="code">height</code>, string <code class="code">label</code>);
-
+            <span class="ddoc_anchor" id="GLError.invalidOperation"></span><code class="code">invalidOperation</code>
           </code>
         </p>
       </div>
@@ -820,101 +975,8 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Create Window. GLFW should be active.
-
-  </p>
-</div>
-<div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">int <code class="code">width</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      <code class="code">width</code> of the window in pixels
-    </p>
-  </div>
-</td>
-</tr>
-<tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">int <code class="code">height</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      <code class="code">height</code> of the window in pixels
-    </p>
-  </div>
-</td>
-</tr>
-<tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">string <code class="code">label</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      <code class="code">label</code> of the window
-    </p>
-  </div>
-</td>
-</tr>
-
-    </tbody>
-  </table>
-</div>
-<div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    Handle of newly created window or <code class="code">null</code> if window was not created.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li>
-</ul>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ScopedBind" id="ScopedBind"><code class="code">ScopedBind</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ScopedBind"></span>enum auto <code class="code">ScopedBind</code>(alias obj);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    mixin to <code class="code">bind</code> <code class="code">obj</code> immediately and <code class="code">unbind</code> at <code class="code">scope(exit)</code>.
+    The specified operation is not allowed in the current state.
+ The offending command is ignored and has no other side effect than to set the error flag.
   </p>
 </div>
 
@@ -925,7 +987,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#BufferType" id="BufferType"><code class="code">BufferType</code></a>
+  <a href="#GLError.invalidFramebufferOperation" id="GLError.invalidFramebufferOperation"><code class="code">invalidFramebufferOperation</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -934,8 +996,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BufferType"></span>enum <code class="code">BufferType</code>: uint;
-
+            <span class="ddoc_anchor" id="GLError.invalidFramebufferOperation"></span><code class="code">invalidFramebufferOperation</code>
           </code>
         </p>
       </div>
@@ -946,36 +1007,8 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Type of <code class="code">BufferObject</code>.
-  </p>
-</div>
-
-</section>
-<ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#BufferType.array" id="BufferType.array"><code class="code">array</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="BufferType.array"></span><code class="code">array</code>
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Buffer for any data.
+    The framebuffer object is not complete.
+ The offending command is ignored and has no other side effect than to set the error flag.
   </p>
 </div>
 
@@ -986,7 +1019,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#BufferType.element" id="BufferType.element"><code class="code">element</code></a>
+  <a href="#GLError.outOfMemory" id="GLError.outOfMemory"><code class="code">outOfMemory</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -995,7 +1028,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BufferType.element"></span><code class="code">element</code>
+            <span class="ddoc_anchor" id="GLError.outOfMemory"></span><code class="code">outOfMemory</code>
           </code>
         </p>
       </div>
@@ -1006,7 +1039,8 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Buffer for indices.
+    There is not enough memory left to execute the command.
+ The state of the GL is undefined, except for the state of the error flags, after this error is recorded.
   </p>
 </div>
 

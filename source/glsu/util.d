@@ -1,6 +1,6 @@
 module glsu.util;
 
-import glsu.enums : GLType;
+import glsu.enums : GLType, GLError;
 
 template valueofGLType(T)
 {
@@ -24,6 +24,38 @@ template from(string moduleName)
 {
     mixin("import from = " ~ moduleName ~ ";");
 }
+
+//dfmt off
+string errorMessage(GLError e)
+{
+    final switch(e)
+    {
+        case GLError.noError:
+            return "No error has been recorded. The value of this symbolic constant is guaranteed to be 0.";
+        
+        case GLError.invalidEnum:
+            return "An unacceptable value is specified for an enumerated argument. " ~
+                   "The offending command is ignored and has no other side effect than to set the error flag.";
+        
+        case GLError.invalidValue:
+            return "A numeric argument is out of range. " ~
+                   "The offending command is ignored and has no other side effect than to set the error flag.";
+        
+        case GLError.invalidOperation:
+            return "The specified operation is not allowed in the current state. " ~
+                   "The offending command is ignored and has no other side effect than to set the error flag.";
+
+        case GLError.invalidFramebufferOperation:
+            return "The framebuffer object is not complete. " ~
+                   "The offending command is ignored and has no other side effect than to set the error flag.";
+
+        case GLError.outOfMemory:
+            return "There is not enough memory left to execute the command. " ~
+                   "The state of the GL is undefined, except for the state of the error flags, " ~
+                   "after this error is recorded.";
+    }
+}
+//dfmt on
 
 /** 
  * Repeatedly calls `glGetError`, clearing all GL error flags.
@@ -65,7 +97,7 @@ void checkGLErrors(string message = "",
     }
     for(; e != 0; e = glGetError())
     {
-        stderr.writefln!"\tError code: 0x%X"(e);
+        stderr.writefln!"\tError 0x%X: %s"(e, errorMessage(cast(GLError) e));
     }
 
     if(flag)
