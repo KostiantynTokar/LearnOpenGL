@@ -4,8 +4,8 @@
  * If debug specifier `glChecks` is active, redefines
  * all functions of `glad.gl.funcs` module (except `glGetError`)
  * and wraps them between `glsu.util.clearGLErrors` and `glsu.util.checkGLErrors` calls.
- * Each wrapper additionaly take three parameters, that are defaulted
- * to  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
+ * Each wrapper additionaly take two parameters, that are defaulted
+ * to  `__FILE__` and `__LINE__`.
  *
  * If debug specifier `glChecks` is not active, just
  * public imports `glad.gl.funcs`.
@@ -54,7 +54,7 @@ debug(glChecks)
     private enum isNotVoid(T) = !is(T == void);
 
     /** 
-     * Generates parameter list without enclosing parentheses with parameter names of form `argn`, n = 0 .. typeNames.length.
+     * Generates parameter list without enclosing parentheses with parameter names of form `argk`, k = 0 .. Ts.length.
      * Examples:
      * ---
      * static assert(genParamList!(int, long) == "int arg0, long arg1");
@@ -78,9 +78,13 @@ debug(glChecks)
     }
     
     /** 
-     * Generates argument list without enclosing parentheses with argument names of form `argn`, n = 0 .. typeNames.length.
+     * Generates argument list without enclosing parentheses with argument names of form `argk`, k = 0 .. typeNames.length.
      * Params:
      *   n = number of arguments
+     * Examples:
+     * ---
+     * assert(genArgList(2) == "arg0, arg1");
+     * ---
      */
     private auto genArgList(uint n)
     {
@@ -88,11 +92,25 @@ debug(glChecks)
     }
 
     /** 
+     * Generates string for mixin that gives string representations of args from genArgList.
+     * Params:
+     *   n = number of arguments
+     * Examples:
+     * ---
+     * assert(genArgToStringList(2) == "arg0.to!string() ~ \", \" ~ arg1.to!string()");
+     * ---
+     */
+    private auto genArgToStringList(uint n)
+    {
+        return iota(0, n).map!"\"arg\" ~ to!string(a) ~ \".to!string()\"".join(" ~ \", \" ~ ");
+    }
+    
+    /** 
      * Defines a wrapper of a function from module `glad.gl.funcs` with the same name.
      *
      * Wraps a function with calls to `glsu.util.clearGLErrors` and `glsu.util.ckechGLErrors`,
-     * additionally taking three parameters, that are defaulted to
-     *  `__FILE_FULL_PATH__`, `__LINE__`, and `__PRETTY_FUNCTION__`.
+     * additionally taking two parameters, that are defaulted to
+     *  `__FILE__` and `__LINE__`.
      * Params:
      *   name = name of function to wrap
      */
@@ -107,14 +125,16 @@ debug(glChecks)
         alias Ret = ReturnType!func;
 
         enum params = genParamList!Params;
-        enum additionalParams = "string file = __FILE_FULL_PATH__, size_t line = __LINE__, "
-            ~ "string caller = __PRETTY_FUNCTION__";
+        enum additionalParams = "string file = __FILE__, size_t line = __LINE__";
         enum extendedParams = params ~ (params.length == 0 ? "" : ", ") ~ additionalParams;
         enum args = genArgList(Params.length);
+        enum argsToString = genArgToStringList(Params.length);
         enum ret = Ret.stringof;
+
 
         enum signature = "__gshared extern(System) " ~ ret ~ " " ~ name ~ "(" ~ extendedParams ~ ") nothrow @nogc";
         
+        enum bodyImport = "\timport std.conv : to;";
         enum bodyBegin = "\tclearGLErrors();";
         static if(is(Ret == void))
         {
@@ -126,9 +146,25 @@ debug(glChecks)
             enum bodyMid = "\t" ~ ret ~ " returnValue = " ~ fullName ~ "(" ~ args ~ ");";
             enum bodyRet = "\n\treturn returnValue;";
         }
-        enum bodyEnd = "\tdebugHack({checkGLErrors(file, line, caller);});";
 
-        enum body = "{\n" ~ bodyBegin ~ "\n" ~ bodyMid ~ "\n" ~ bodyEnd ~ bodyRet ~ "\n" ~ "}";
+        enum hackBodyMessage = "string logMessage = \"Executing \" ~ \"" ~ name ~ `" ~ "("` ~ (Params.length == 0? "" : " ~ ") ~ argsToString ~ ` ~ ")";`;
+        enum hackBodyCheck = "checkGLErrors(logMessage, file, line);";
+
+        enum hackBody = "{\n" ~
+                            "\t\t" ~ hackBodyMessage ~ "\n" ~
+                            "\t\t" ~ hackBodyCheck ~ "\n" ~
+                        "\t}";
+        enum bodyEnd = "\tdebugHack(" ~ hackBody ~ ");";
+
+        //dfmt off
+        enum body = "{\n" ~ 
+                        bodyImport ~ "\n" ~
+                        bodyBegin ~ "\n" ~
+                        bodyMid ~ "\n" ~
+                        bodyEnd ~
+                        bodyRet ~ "\n" ~
+                    "}";
+        //dfmt on
 
         enum generatedFunc = signature ~ "\n" ~ body;
 

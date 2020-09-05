@@ -41,13 +41,13 @@ void clearGLErrors() nothrow @nogc
  * If error was discovered, prints error message to `stderr`
  * and exits program with `EXIT_FAILURE` code.
  * Params:
+ *   message = written to stderr
  *   file = file name of caller
  *   line = line number of caller
- *   func = string representation of caller function
  */
-void checkGLErrors(string file = __FILE_FULL_PATH__,
-                   size_t line = __LINE__,
-                   string func = __PRETTY_FUNCTION__)
+void checkGLErrors(string message = "",
+                   string file = __FILE__,
+                   size_t line = __LINE__)
 {
     import glad.gl.funcs : glGetError;
     
@@ -59,12 +59,13 @@ void checkGLErrors(string file = __FILE_FULL_PATH__,
     if(e)
     {
         stderr.writeln("ERROR::GL::CALL");
-        stderr.writefln!"\tin %s:%s while executing\n\t%s"(file, line, func);
+        stderr.writeln("\t", message);
+        stderr.writefln!"\tat %s:%s"(file, line);
         flag = true;
     }
     for(; e != 0; e = glGetError())
     {
-        stderr.writefln!"\tError code: %X"(e);
+        stderr.writefln!"\tError code: 0x%X"(e);
     }
 
     if(flag)
