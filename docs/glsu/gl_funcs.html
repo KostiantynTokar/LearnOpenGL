@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Module glsu.gl_funcs</title>
+		<link rel="stylesheet" type="text/css" href="../styles/ddox.css"/>
+		<link rel="stylesheet" href="../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../scripts/jquery.js">/**/</script><script type="text/javascript" src="../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module selected">
+						<a href="../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../glsu/util.html">util</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Module glsu.gl_funcs</h1><p>Redefines OpenGL functions, could be imported instead of glad.gl.funcs.
+</p><section><p>If debug specifier <code class="lang-d"><span class="pln">glChecks</span></code> is active, redefines
+ all functions of <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code> module (except <code class="lang-d"><span class="pln">glGetError</span></code>)
+ and wraps them between <code class="lang-d"><a href="../glsu/util/clearGLErrors.html" title="glsu.util.clearGLErrors"><span class="pln">clearGLErrors</span></a></code> and <code class="lang-d"><a href="../glsu/util/checkGLErrors.html" title="glsu.util.checkGLErrors"><span class="pln">checkGLErrors</span></a></code> calls.
+ Each wrapper additionaly take two parameters, that are defaulted
+ to  <code class="lang-d"><span class="kwd">__FILE__</span></code> and <code class="lang-d"><span class="kwd">__LINE__</span></code>.
+</p>
+
+<p> If debug specifier <code class="lang-d"><span class="pln">glChecks</span></code> is not active, just
+ public imports <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code>.
+</p>
+</section>
+
+			<section></section>
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

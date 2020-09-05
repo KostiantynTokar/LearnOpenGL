@@ -1,3 +1,6 @@
+/**
+ * GLSU (OpenGL Simple Utility Library) is an abstraction layer over OpenGL that features some of D metaprogramming capabilities.
+ */
 module glsu;
 
 public import glsu.util;

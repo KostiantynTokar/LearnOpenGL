@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Enum GLError</title>
+		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
+		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module selected">
+						<a href="../../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Enum GLError</h1><p>Error codes that could be returned by <code class="lang-d"><span class="pln">glGetError</span></code>.
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="kwd">enum</span> <span class="typ">GLError</span>
+			 <span class="pun">:</span> <span class="typ">uint</span> <span class="pun">{ ... }</span>
+					</div>
+				</code>
+			</div>
+			
+			<section><h2>Enum members</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td id="invalidEnum">
+							<code>invalidEnum</code>
+						</td>
+						<td>An unacceptable value is specified for an enumerated argument.
+ The offending command is ignored and has no other side effect than to set the error flag.
+</td>
+					</tr>
+					<tr>
+						<td id="invalidFramebufferOperation">
+							<code>invalidFramebufferOperation</code>
+						</td>
+						<td>The framebuffer object is not complete.
+ The offending command is ignored and has no other side effect than to set the error flag.
+</td>
+					</tr>
+					<tr>
+						<td id="invalidOperation">
+							<code>invalidOperation</code>
+						</td>
+						<td>The specified operation is not allowed in the current state.
+ The offending command is ignored and has no other side effect than to set the error flag.
+</td>
+					</tr>
+					<tr>
+						<td id="invalidValue">
+							<code>invalidValue</code>
+						</td>
+						<td>A numeric argument is out of range.
+ The offending command is ignored and has no other side effect than to set the error flag.
+</td>
+					</tr>
+					<tr>
+						<td id="noError">
+							<code>noError</code>
+						</td>
+						<td>No error has been recorded. The value of this symbolic constant is guaranteed to be 0.
+</td>
+					</tr>
+					<tr>
+						<td id="outOfMemory">
+							<code>outOfMemory</code>
+						</td>
+						<td>There is not enough memory left to execute the command.
+ The state of the GL is undefined, except for the state of the error flags, after this error is recorded.
+</td>
+					</tr>
+				</table>
+			</section>
+			
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

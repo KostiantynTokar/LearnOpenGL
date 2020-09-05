@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>http://127.0.0.1/index.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/enums.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/enums/DataUsage.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/enums/GLError.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/enums/GLType.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/enums/RenderMode.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/gl_funcs.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/checkError.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/checkGLErrors.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/clearGLErrors.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/from.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/valueofGLType.html</loc></url>
+<url><loc>http://127.0.0.1/glsu.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/BufferType.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/GLFW.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/GLFW.activate.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/GLFW.createWindow.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/GLFW.deactivate.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/GLFW.isActive.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/ScopedBind.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/VertexAttrib.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/VertexAttrib.index.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/VertexAttrib.normalized.html</loc></url>
+</urlset>

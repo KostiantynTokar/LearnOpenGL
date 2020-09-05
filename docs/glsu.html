@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Module glsu</title>
+		<link rel="stylesheet" type="text/css" href="./styles/ddox.css"/>
+		<link rel="stylesheet" href="./prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="./scripts/jquery.js">/**/</script><script type="text/javascript" src="./scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="./symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "./";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package selected">
+						<a href="./glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="./glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="./glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="./glsu/util.html">util</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Module glsu</h1><p>GLSU (OpenGL Simple Utility Library) is an abstraction layer over OpenGL that features some of D metaprogramming capabilities.
+</p>
+			<section></section>
+			<section>
+				<h2>Structs</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<code>
+								<a id="GLFW" class="public" href="./glsu/GLFW.html">GLFW</a>
+							</code>
+						</td>
+						<td>Wraps some functionality of GLFW
+</td>
+					</tr>
+					<tr>
+						<td>
+							<code>
+								<a id="VertexAttrib" class="public" href="./glsu/VertexAttrib.html">VertexAttrib</a>
+							</code>
+						</td>
+						<td>UDA for fields of a struct that are to used as vertex in <code class="lang-d"><span class="typ">VertexBufferArray</span></code>.
+</td>
+					</tr>
+				</table>
+			</section>
+			<section>
+				<h2>Enums</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<code>
+								<a id="BufferType" class="public" href="./glsu/BufferType.html">BufferType</a>
+							</code>
+						</td>
+						<td>Type of <code class="lang-d"><span class="typ">BufferObject</span></code>.
+</td>
+					</tr>
+				</table>
+			</section>
+			<section>
+				<h2>Manifest constants</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a id="ScopedBind" class="public" href="./glsu/ScopedBind.html">
+								<code>ScopedBind</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>mixin to <code class="lang-d"><span class="pln">bind</span></code> <code class="lang-d"><span class="pln">obj</span></code> immediately and <code class="lang-d"><span class="pln">unbind</span></code> at <code class="lang-d"><span class="kwd">scope</span><span class="pun">(</span><span class="pln">exit</span><span class="pun">)</span></code>.
+</td>
+					</tr>
+				</table>
+			</section>
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

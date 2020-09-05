@@ -1,3 +1,6 @@
+/**
+ * Utility functions and tempaltes.
+ */
 module glsu.util;
 
 import glsu.enums : GLType, GLError;

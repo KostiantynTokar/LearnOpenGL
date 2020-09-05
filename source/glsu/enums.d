@@ -1,3 +1,6 @@
+/**
+ * Enums of the package.
+ */
 module glsu.enums;
 
 import glad.gl.enums;
