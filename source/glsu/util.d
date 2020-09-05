@@ -10,23 +10,32 @@ template valueofGLType(T)
 {
     static assert(0, "no according GLType");
 }
-enum valueofGLType(T : byte) = GLType.glByte;
-enum valueofGLType(T : ubyte) = GLType.glUByte;
-enum valueofGLType(T : short) = GLType.glShort;
-enum valueofGLType(T : ushort) = GLType.glUShort;
-enum valueofGLType(T : int) = GLType.glInt;
-enum valueofGLType(T : uint) = GLType.glUInt;
-enum valueofGLType(T : float) = GLType.glFloat;
-enum valueofGLType(T : double) = GLType.glDouble;
+enum valueofGLType(T : byte) = GLType.glByte; /// ditto
+enum valueofGLType(T : ubyte) = GLType.glUByte; /// ditto
+enum valueofGLType(T : short) = GLType.glShort; /// ditto
+enum valueofGLType(T : ushort) = GLType.glUShort; /// ditto
+enum valueofGLType(T : int) = GLType.glInt; /// ditto
+enum valueofGLType(T : uint) = GLType.glUInt; /// ditto
+enum valueofGLType(T : float) = GLType.glFloat; /// ditto
+enum valueofGLType(T : double) = GLType.glDouble; /// ditto
 
 /** 
  * Import as expression.
  * Params:
  *   moduleName = name of a module to import from
+ * See_Also: https://dlang.org/blog/2017/02/13/a-new-import-idiom/
  */
 template from(string moduleName)
 {
     mixin("import from = " ~ moduleName ~ ";");
+}
+///
+unittest
+{
+    void f(from!"std.typecons".Tuple!(int, double) arg)
+    {
+        from!"std.stdio".writeln(arg);
+    }
 }
 
 //dfmt off
