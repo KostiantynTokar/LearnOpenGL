@@ -175,7 +175,10 @@ struct AttribPointer
      *   pointer = Specifies a offset of the first component of the first generic vertex attribute in the `VertexBufferObject`.
      */
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
-    in(0 < size && size < 5)do
+    in(0 < size && size < 5)
+    in(normalized || type == GLType.glFloat || type == GLType.glDouble,
+       "normalized may be set only for integer types")
+    do
     {
         this._index = index;
         this._size = size;
@@ -234,7 +237,10 @@ public:
      *                Otherwise, values will be converted to floats directly without normalization.
      */
     void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
-    in(0 < size && size < 5)do
+    in(0 < size && size < 5)
+    in(normalized || type == GLType.glFloat || type == GLType.glDouble,
+       "normalized may be set only for integer types")
+    do
     {
         elements ~= LayoutElement(size, type, normalized, calcStride());
     }
@@ -285,8 +291,10 @@ public:
             {
                 static assert(0 < N && N < 5,
                         "size (dimension of vector) should be in range from 1 to 4");
+                enum type = valueOfGLType!U;
+                static assert(attrs[i].normalized || type == GLType.glFloat || type == GLType.glDouble,
+                              "normalized may be set only for integer types");
 
-                GLType type = valueOfGLType!U;
                 elements[prevLength + attrs[i].index] = 
                     LayoutElement(N, type, attrs[i].normalized, prevStride + attrSymbols[i].offsetof);
             }
