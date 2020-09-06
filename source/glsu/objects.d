@@ -275,6 +275,7 @@ public:
                 "indices should ascend from 0 by 1");
 
         immutable prevLength = elements.length;
+        immutable prevStride = calcStride();
         elements.length = elements.length + attrs.length;
         //dfmt off
         static foreach (i; 0 .. attrSymbols.length)
@@ -287,7 +288,7 @@ public:
 
                 GLType type = valueOfGLType!U;
                 elements[prevLength + attrs[i].index] = 
-                    LayoutElement(N, type, attrs[i].normalized, attrSymbols[i].offsetof);
+                    LayoutElement(N, type, attrs[i].normalized, prevStride + attrSymbols[i].offsetof);
             }
             else
             {

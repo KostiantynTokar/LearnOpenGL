@@ -157,10 +157,16 @@ void main()
     // auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
     // scope(exit) VBO.destroy();
 
+    // struct PartialVertex
+    // {
+    //     @VertexAttrib(0)
+    //     vec2f texCoord;
+    // }
+
     // VertexBufferLayout layout;
-    // // layout.push!float(3);
+    // layout.push!float(3);
     // // layout.push!float(2);
-    // layout.pushUsingPattern!Vertex();
+    // layout.pushUsingPattern!PartialVertex();
 
     // auto VAO = VertexArrayObject(VBO, layout);
     // scope(exit) VAO.destroy();
