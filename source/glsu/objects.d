@@ -391,12 +391,12 @@ struct ShaderProgram
         }
 
         ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
-        immutable vertexShader = checkError!uint(vertexShaderOrError);
+        immutable vertexShader = assertNoError!uint(vertexShaderOrError);
         scope (exit)
             glDeleteShader(vertexShader);
 
         ShaderOrError fragmentShaderOrError = compileShader!fragmentShaderPath(Type.fragment);
-        immutable fragmentShader = checkError!uint(fragmentShaderOrError);
+        immutable fragmentShader = assertNoError!uint(fragmentShaderOrError);
         scope (exit)
             glDeleteShader(fragmentShader);
 

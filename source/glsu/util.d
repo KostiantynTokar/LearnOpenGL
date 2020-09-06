@@ -101,55 +101,58 @@ void clearGLErrors() nothrow @nogc
 }
 
 /** 
- * Repeatedly checks `glGetError`.
+ * Asserts there are no active GL error glags.
  *
- * If error was discovered, prints error message to `stderr`
- * and exits program with `EXIT_FAILURE` code.
+ * If error was discovered with `glGetError`,
+ * prints error message to `stderr` and commits `assert(0)`.
  * Params:
  *   message = Written to stderr.
  *   file = File name of caller.
  *   line = Line number of caller.
  */
-void checkGLErrors(string message = "",
+void assertNoGLErrors(string message = "",
                    string file = __FILE__,
-                   size_t line = __LINE__)
+                   size_t line = __LINE__) nothrow
 {
     import glad.gl.funcs : glGetError;
     
-    import core.stdc.stdlib : exit, EXIT_FAILURE;
     import std.stdio : stderr, writeln;
     
     bool flag = false;
     auto e = glGetError();
-    if(e)
-    {
-        stderr.writeln("ERROR::GL::CALL");
-        stderr.writeln("\t", message);
-        stderr.writefln!"\tat %s:%s"(file, line);
-        flag = true;
-    }
-    for(; e != 0; e = glGetError())
-    {
-        stderr.writefln!"\tError 0x%X: %s"(e, errorDescription(cast(GLError) e));
-    }
 
-    if(flag)
+    try
     {
-        exit(EXIT_FAILURE);
+        if(e)
+        {
+            stderr.writeln("ERROR::GL::CALL");
+            stderr.writeln("\t", message);
+            stderr.writefln!"\tat %s:%s"(file, line);
+            flag = true;
+        }
+        for(; e != 0; e = glGetError())
+        {
+            stderr.writefln!"\tError 0x%X: %s"(e, errorDescription(cast(GLError) e));
+        }
     }
+    catch (Exception e)
+    {
+        assert(0, "Exeption was thrown while writing error message.");
+    }
+    
+
+    assert(!flag);
 }
 
 /** 
- * If `valueOrError` holds `string`, then `stderr` it and exit program
- * with `EXIT_FAILURE` code;
+ * If `valueOrError` holds `string`, then `stderr` it and commits `assert(0)`;
  * else returns first component of `valueOrError` `Algebraic`.
  * Params:
  *   valueOrError = Argument to check.
  * Returns: Value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
  */
-T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
+T assertNoError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
 {
-    import core.stdc.stdlib : exit, EXIT_FAILURE;
     import std.stdio : stderr, writeln;
 
     T res;
@@ -158,13 +161,13 @@ T checkError(T)(from!"std.variant".Algebraic!(T, string) valueOrError)
         if (string* error = valueOrError.peek!string)
         {
             stderr.writeln(*error);
-            exit(EXIT_FAILURE);
+            assert(0);
         }
         res = valueOrError.get!T;
     }
     catch (Exception e)
     {
-        exit(EXIT_FAILURE);
+        assert(0, "Exeption was thrown while writing error message.");
     }
     return res;
 }
@@ -174,7 +177,7 @@ unittest
     import std.variant : Algebraic;
 
     auto a = Algebraic!(int, string)(42);
-    assert(checkError!int(a) == 42);
+    assert(assertNoError!int(a) == 42);
 }
 
 /** 

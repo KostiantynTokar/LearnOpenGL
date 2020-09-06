@@ -3,7 +3,7 @@
  *
  * If debug specifier `glChecks` is active, redefines
  * all functions of `glad.gl.funcs` module (except `glGetError`)
- * and wraps them between `glsu.util.clearGLErrors` and `glsu.util.checkGLErrors` calls.
+ * and wraps them between `glsu.util.clearGLErrors` and `glsu.util.assertNoGLErrors` calls.
  * Each wrapper additionaly take two parameters, that are defaulted
  * to  `__FILE__` and `__LINE__`.
  *
@@ -127,7 +127,7 @@ debug(glChecks)
      */
     private mixin template genCheckedFunc(string name)
     {
-        import glsu.util : clearGLErrors, checkGLErrors;
+        import glsu.util : clearGLErrors, assertNoGLErrors;
 
         alias func = __traits(getMember, glad.gl.funcs, name);
         enum fullName = fullyQualifiedName!func;
@@ -159,7 +159,7 @@ debug(glChecks)
         }
 
         enum hackBodyMessage = "string logMessage = \"Executing \" ~ \"" ~ name ~ `" ~ "("` ~ (Params.length == 0? "" : " ~ ") ~ argsToString ~ ` ~ ")";`;
-        enum hackBodyCheck = "checkGLErrors(logMessage, file, line);";
+        enum hackBodyCheck = "assertNoGLErrors(logMessage, file, line);";
 
         enum hackBody = "{\n" ~
                             "\t\t" ~ hackBodyMessage ~ "\n" ~
