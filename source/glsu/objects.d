@@ -140,6 +140,8 @@ public:
     {
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+        import std.range : only, enumerate;
+        import std.algorithm.searching : all;
         import gfm.math.vector : Vector;
 
         alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
@@ -149,19 +151,8 @@ public:
 
         enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
         alias sortedAttrs = staticSort!(Comp, attrs);
-
-        bool isStepByOne(VertexAttrib[] attrs...) pure nothrow @nogc @safe
-        {
-            foreach (i, attr; attrs)
-            {
-                if (attr.index != i)
-                    return false;
-            }
-            return true;
-        }
-
-        //why sortedAttrs.expand.only.enumarate.all!"a[0] == a[1].index" doesn't work? Expand?
-        static assert(isStepByOne(sortedAttrs), "indices should ascend from 0 by 1");
+        static assert(sortedAttrs.only.enumerate.all!"a.index == a.value.index", 
+                "indices should ascend from 0 by 1");
 
         immutable prevLength = elements.length;
         elements.length = elements.length + attrs.length;
