@@ -40,9 +40,9 @@ ubyte sizeOfGLType(GLType t) pure nothrow @nogc @safe
 /** 
  * Import as expression.
  * Params:
- *   moduleName = name of a module to import from
+ *   moduleName = Name of a module to import from.
+ *
  * See_Also: $(LINK2 https://dlang.org/blog/2017/02/13/a-new-import-idiom/, A New Import Idiom)
- * 
  */
 template from(string moduleName)
 {

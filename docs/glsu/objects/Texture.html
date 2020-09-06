@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct Texture</h1><p></p>
+			<h1>Struct Texture</h1><p>2D texture.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -92,7 +93,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(index)</span>
 						</td>
-						<td></td>
+						<td>Binds the object, affecting state of OpenGL.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -101,7 +103,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(imageFileName)</span>
 						</td>
-						<td></td>
+						<td>Loads an image and creates OpenGL texture with it.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -110,7 +113,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -119,7 +123,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>OpenGL object id.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -128,7 +133,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Checks if object is not destroyed and it can be used.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -137,7 +143,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(filter)</span>
 						</td>
-						<td></td>
+						<td>Sets magnifying filter.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -146,7 +153,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(filter)</span>
 						</td>
-						<td></td>
+						<td>Sets minifying filter.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -155,7 +163,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(coord, wrap)</span>
 						</td>
-						<td></td>
+						<td>Sets the wrap parameter for specified texture coordinate.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -171,7 +180,8 @@ $('#symbolSearchPane').show();</script>
 								<code>Coord</code>
 							</a>
 						</td>
-						<td></td>
+						<td><code class="lang-d"><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a></code> coordinates.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -179,15 +189,17 @@ $('#symbolSearchPane').show();</script>
 								<code>Filter</code>
 							</a>
 						</td>
-						<td></td>
+						<td>Filter type for minifying and magnifying functions.
+</td>
 					</tr>
 					<tr>
 						<td>
-							<a href="../../glsu/objects/Texture.Wrap.html" class="public">
-								<code>Wrap</code>
+							<a href="../../glsu/objects/Texture.WrapMode.html" class="public">
+								<code>WrapMode</code>
 							</a>
 						</td>
-						<td></td>
+						<td>Wrap mode for specified coordinate.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -203,7 +215,8 @@ $('#symbolSearchPane').show();</script>
 								<code>TextureOrError</code>
 							</a>
 						</td>
-						<td></td>
+						<td><code class="lang-d"><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a></code> on success, message string on failure.
+</td>
 					</tr>
 				</table>
 			</section>

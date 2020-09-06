@@ -11,6 +11,7 @@ import glsu.gl_funcs;
 
 /**
  * Represents buffer in GPU memory.
+ *
  * See_Also: `VertexBufferObject` and `ElementBufferArray` as actual instantiations of the template.
  */
 struct BufferObejct(BufferType type)
@@ -108,7 +109,6 @@ struct BufferObejct(BufferType type)
 
     /** 
      * Checks if object is not destroyed and it can be used.
-     * Returns: Whether object is not destroyed.
      */
     bool isValid() const pure nothrow @nogc @safe
     {
@@ -377,8 +377,9 @@ private:
     import std.container.array : Array;
 
     /** 
-     * Internally used instead of `AttribPointer`,
-     * because index of an attribute is an index of the entry in `elements`,
+     * Internally used instead of `AttribPointer`.
+     *
+     * Index of an attribute is an index of the entry in `elements`,
      * and stride is calculated as total size of all attributes.
      */
     struct LayoutElement
@@ -414,6 +415,8 @@ struct VertexArrayObject
      * Params:
      *   VBO = Buffer to bind with this VAO.
      *   attrs = Array of attributes that specifies a layout of the `VBO`.
+     *
+     * See_Also: `VertexBufferObject`, `AttribPointer`.
      */
     this(VertexBufferObject VBO, AttribPointer[] attrs) nothrow @nogc
     {
@@ -432,6 +435,8 @@ struct VertexArrayObject
      * Params:
      *   VBO = Buffer to bind with this VAO.
      *   layout = Layout of the `VBO`.
+     *
+     * See_Also: `VertexBufferObject`, `VertexBufferLayout`.
      */
     this(VertexBufferObject VBO, VertexBufferLayout layout) nothrow @nogc
     {
@@ -468,12 +473,14 @@ struct VertexArrayObject
     }
 
     /** 
-     * Binds VAO with `ElementBufferArray`.
+     * Binds `ElementBufferArray` to the object.
      *
      * To use indexed drawing one should utilize returned `IndexedVertexArrayObject`.
      * Params:
-     *   EBO = index buffer to bind with the object.
+     *   EBO = Index buffer to bind with the object.
      * Returns: VAO that can use provided `ElementBufferArray` in draw calls.
+     *
+     * See_Also: `IndexedVertexArrayObject`
      */
     IndexedVertexArrayObject bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
     in(isValid)do
@@ -486,7 +493,7 @@ struct VertexArrayObject
      * Params:
      *   mode = Specifies what kind of primitives to render.
      *   first = Specifies the starting index in the enabled arrays.
-     *   count = Specifies the number of indices to be rendered.
+     *   count = Specifies the number of vertices to be rendered.
      */
     void draw(RenderMode mode, int first, int count) const nothrow @nogc
     in(isValid)do
@@ -525,7 +532,6 @@ struct VertexArrayObject
 
     /** 
      * Checks if object is not destroyed and it can be used.
-     * Returns: Whether object is not destroyed.
      */
     bool isValid() const pure nothrow @nogc @safe
     {
@@ -536,12 +542,21 @@ private:
     uint _id;
 }
 
+/** 
+ * `VertexArrayObject` with binded `ElementBufferObject`.
+ *
+ * Used for indexing drawing.
+ */
 struct IndexedVertexArrayObject
 {
+    /// Underlying `VertexArrayObject`.
     VertexArrayObject VAO;
 
     alias VAO this;
 
+    /** 
+     * Constructor that binds `ElementBufferArray` to `VertexArrayObject`.
+     */
     this(VertexArrayObject VAO, ElementBufferArray EBO) nothrow @nogc
     {
         this.VAO = VAO;
@@ -551,6 +566,12 @@ struct IndexedVertexArrayObject
         EBO.bind();
     }
 
+    /** 
+     * Draw call that uses vertices of `VertexBufferObject`, layout and `ElementBufferArray` bounded to this object.
+     * Params:
+     *   mode = Specifies what kind of primitives to render.
+     *   count = Specifies the number of elements to be rendered.
+     */
     void drawElements(RenderMode mode, int count) const nothrow @nogc
     in(isValid)do
     {
@@ -558,6 +579,13 @@ struct IndexedVertexArrayObject
         glDrawElements(mode, count, _indexType, null);
     }
 
+    /** 
+     * Draw call that uses vertices of `VertexBufferObject`, layout and `ElementBufferArray` bounded to this object.
+     *
+     * Uses all indices of bounded `ElementBufferArray`.
+     * Params:
+     *   mode = Specifies what kind of primitives to render.
+     */
     void drawElements(RenderMode mode) const nothrow @nogc
     in(isValid)do
     {
@@ -570,15 +598,25 @@ private:
     int _count;
 }
 
+/// Represents OpenGL shader program.
 struct ShaderProgram
 {
+    /// Shader type
     enum Type
     {
         vertex = from!"glad.gl.enums".GL_VERTEX_SHADER,
         fragment = from!"glad.gl.enums".GL_FRAGMENT_SHADER,
     }
 
+    /// `ShaderProgram` on success, message string on failure.
     alias ShaderProgramOrError = from!"std.variant".Algebraic!(ShaderProgram, string);
+    /** 
+     * Compiles and links `ShaderProgram`.
+     * Params:
+     *   vertexShaderPath = Path to vertex shader source.
+     *   fragmentShaderPath = Path to fragment shader source.
+     * Returns: `ShaderProgram` on success, message string on failure.
+     */
     static ShaderProgramOrError create(string vertexShaderPath, string fragmentShaderPath)()
     {
         import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
@@ -653,18 +691,31 @@ struct ShaderProgram
         return res;
     }
 
+    /** 
+     * OpenGL object id.
+     */
     uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
+    /** 
+     * Activate program.
+     */
     void use() const nothrow @nogc
     in(isValid)do
     {
         glUseProgram(id);
     }
 
+    /** 
+     * Gets an integer that represents the location of a
+     * specific uniform variable within a program object.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     * Returns: Location of a uniform variable.
+     */
     int getUniformLocation(string name) const nothrow
     in(isValid)do
     {
@@ -673,6 +724,18 @@ struct ShaderProgram
         return glGetUniformLocation(id, name.toStringz);
     }
 
+    /** 
+     * Sets a uniform variable or vector.
+     *
+     * Values should have the same type
+     * and their count should be 1, 2, 3 or 4.
+     *
+     * This method allows setting uniform values of privitive types (if values.length == 1)
+     * and uniform vec's.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     *   values = Data to transfer to GPU memory for the `ShaderProgram`.
+     */
     void setUniform(Ts...)(string name, Ts values) nothrow 
             if (0 < Ts.length && Ts.length < 5
                 && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
@@ -704,6 +767,12 @@ struct ShaderProgram
 
     import gfm.math.matrix : Matrix;
 
+    /** 
+     * Sets uniform matrix or uniform array of matrices.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     *   values = Matrix or matrices to transfer to GPU memory for the `ShaderProgram`.
+     */
     void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
             if (2 <= R && R <= 4 && 2 <= C && C <= 4)
     in(isValid)do
@@ -726,6 +795,11 @@ struct ShaderProgram
         mixin(funcName ~ "(location, cast(int) values.length, GL_TRUE, values[0].ptr);");
     }
 
+    /** 
+     * Sets textures for the `ShaderProgram`.
+     * Params:
+     *   textures = pairs texture-name to set for the `ShaderProgram`.
+     */
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
     in(textures.length <= 32, "It's possible to bind only 32 textures")
     in(isValid)do
@@ -737,6 +811,9 @@ struct ShaderProgram
         }
     }
 
+    /** 
+     * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+     */
     void destroy() nothrow @nogc
     in(isValid)do
     {
@@ -744,6 +821,9 @@ struct ShaderProgram
         _id = 0;
     }
 
+    /** 
+     * Checks if object is not destroyed and it can be used.
+     */
     bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
@@ -753,9 +833,17 @@ private:
     uint _id;
 }
 
+/// 2D texture.
 struct Texture
 {
+    /// `Texture` on success, message string on failure.
     alias TextureOrError = from!"std.variant".Algebraic!(Texture, string);
+    /** 
+     * Loads an image and creates OpenGL texture with it.
+     * Params:
+     *   imageFileName = File name of an image to be used as a texture.
+     * Returns: `Texture` on success, message string on failure.
+     */
     static TextureOrError create(string imageFileName) nothrow
     {
         import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
@@ -815,21 +903,49 @@ struct Texture
         return res;
     }
 
+    /// `Texture` coordinates.
     enum Coord
     {
         s,
         t
     }
 
-    enum Wrap
+    /// Wrap mode for specified coordinate.
+    enum WrapMode
     {
+        /**
+         * Causes specified coordinates to be clamped to the range [1/2N, 1-1/2N],
+         * where N is the size of the texture in the direction of clamping.
+         */
         clampToEdge = from!"glad.gl.enums".GL_CLAMP_TO_EDGE,
-        clamptoBorder = from!"glad.gl.enums".GL_CLAMP_TO_BORDER,
+
+        /**
+         * Evaluates specified coordinates in a similar manner to clampToEdge.
+         * However, in cases where clamping would have occurred in clampToEdge mode,
+         * the fetched texel data is substituted with the values specified by GL_TEXTURE_BORDER_COLOR.
+         */
+        clampToBorder = from!"glad.gl.enums".GL_CLAMP_TO_BORDER,
+
+        /**
+         * Causes specified coordinate to be set to the fractional part of the texture coordinate
+         * if the integer part of coordinate is even;
+         * if the integer part of coordinate is odd,
+         * then the texture coordinate is set to 1−frac(x),
+         * where frac(x) represents the fractional part of x, and x is coordinate value.
+         */
         mirroredRepeat = from!"glad.gl.enums".GL_MIRRORED_REPEAT,
+
+        /**
+         * Causes the integer part of the specified coordinate to be ignored;
+         * the GL uses only the fractional part, thereby creating a repeating pattern.
+         */
         repeat = from!"glad.gl.enums".GL_REPEAT
     }
 
-    void setWrapMode(Coord coord, Wrap wrap) nothrow @nogc
+    /** 
+     * Sets the wrap parameter for specified texture coordinate.
+     */
+    void setWrapMode(Coord coord, WrapMode wrap) nothrow @nogc
     in(isValid)do
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
@@ -849,17 +965,52 @@ struct Texture
         glTexParameteri(GL_TEXTURE_2D, glCoord, wrap);
     }
 
+    /// Filter type for minifying and magnifying functions.
     enum Filter
     {
+        /**
+         * Returns the value of the texture element that is nearest
+         * (in Manhattan distance) to the specified texture coordinates.
+         */
         nearest = from!"glad.gl.enums".GL_NEAREST,
+
+        /**
+         * Returns the weighted average of the four texture elements
+         * that are closest to the specified texture coordinates.
+         */
         linear = from!"glad.gl.enums".GL_LINEAR,
+
+        /**
+         * Chooses the mipmap that most closely matches the size of the pixel being textured
+         * and uses the `nearest` criterion to produce a texture value.
+         */
         nearestMipmapNearest = from!"glad.gl.enums".GL_NEAREST_MIPMAP_NEAREST,
+
+        /**
+         * Chooses the mipmap that most closely matches the size of the pixel being textured
+         * and uses the `linear` criterion to produce a texture value.
+         */
         nearestMipmapLinear = from!"glad.gl.enums".GL_NEAREST_MIPMAP_LINEAR,
+
+        /**
+         * Chooses the two mipmaps that most closely match the size of the pixel being textured
+         * and uses the `nearest` criterion to produce a texture value from each mipmap.
+         * The final texture value is a weighted average of those two values.
+         */
         linearMipmapNearest = from!"glad.gl.enums".GL_LINEAR_MIPMAP_NEAREST,
+
+        /**
+         * Chooses the two mipmaps that most closely match the size of the pixel being textured
+         * and uses the `linear` criterion to produce a texture value from each mipmap.
+         * The final texture value is a weighted average of those two values.
+         */
         linearMipmapLinear = from!"glad.gl.enums".GL_LINEAR_MIPMAP_LINEAR
 
     }
 
+    /** 
+     * Sets minifying filter.
+     */
     void setMinFilter(Filter filter) nothrow @nogc
     in(isValid)do
     {
@@ -869,8 +1020,15 @@ struct Texture
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     }
 
+    /** 
+     * Sets magnifying filter.
+     *
+     * Could be either Filter.nearest or Filter.linear.
+     */
     void setMagFilter(Filter filter) nothrow @nogc
-    in(isValid)do
+    in(isValid)
+    in(filter == Filter.nearest || filter == Filter.linear)
+    do
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
 
@@ -878,12 +1036,18 @@ struct Texture
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     }
 
+    /** 
+     * OpenGL object id.
+     */
     uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
+    /** 
+     * Binds the object, affecting state of OpenGL.
+     */
     void bind(uint index = 0) const nothrow @nogc
     in(index <= 32, "It's possible to bind only 32 textures")
     in(isValid)do
@@ -894,6 +1058,9 @@ struct Texture
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
+    /** 
+     * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+     */
     void destroy() nothrow @nogc
     in(isValid)do
     {
@@ -901,6 +1068,9 @@ struct Texture
         _id = 0;
     }
 
+    /** 
+     * Checks if object is not destroyed and it can be used.
+     */
     bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;

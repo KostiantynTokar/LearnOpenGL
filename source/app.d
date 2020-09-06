@@ -172,15 +172,15 @@ void main()
     // scope(exit) VAO.destroy();
 
     auto texture1 = Texture.create("resources\\container.jpg").assertNoError!Texture();
-    texture1.setWrapMode(Texture.Coord.s, Texture.Wrap.clamptoBorder);
-    texture1.setWrapMode(Texture.Coord.t, Texture.Wrap.clamptoBorder);
+    texture1.setWrapMode(Texture.Coord.s, Texture.WrapMode.clampToBorder);
+    texture1.setWrapMode(Texture.Coord.t, Texture.WrapMode.clampToBorder);
     texture1.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture1.setMagFilter(Texture.Filter.linear);
     scope(exit) texture1.destroy();
 
     auto texture2 = Texture.create("resources\\awesomeface.png").assertNoError!Texture();
-    texture2.setWrapMode(Texture.Coord.s, Texture.Wrap.repeat);
-    texture2.setWrapMode(Texture.Coord.t, Texture.Wrap.repeat);
+    texture2.setWrapMode(Texture.Coord.s, Texture.WrapMode.repeat);
+    texture2.setWrapMode(Texture.Coord.t, Texture.WrapMode.repeat);
     texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture2.setMagFilter(Texture.Filter.linear);
     scope(exit) texture2.destroy();

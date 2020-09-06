@@ -98,7 +98,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setMinFilter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setWrapMode.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.TextureOrError.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/Texture.Wrap.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/Texture.WrapMode.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture._id.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.bind.html</loc></url>

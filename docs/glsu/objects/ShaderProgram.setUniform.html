@@ -69,7 +69,8 @@ $('#symbolSearchPane').show();</script>
 						</a>
 					</li>
 				</ul>
-			</nav><h2 id="0">Function ShaderProgram.setUniform</h2><p></p>
+			</nav><h2 id="0">Function ShaderProgram.setUniform</h2><p>Sets a uniform variable or vector.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -86,8 +87,23 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</code>
 			</div>
-			
-			<h2 id="1">Function ShaderProgram.setUniform</h2><p></p>
+			<section><p>Values should have the same type
+ and their count should be 1, 2, 3 or 4.
+</p>
+
+<p> This method allows setting uniform values of privitive types (if values.length == 1)
+ and uniform vec's.
+</p>
+</section>
+
+			<section><h3>Parameters</h3>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
+<tr><td id="values">values</td><td> Data to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
+</table>
+</section>
+<h2 id="1">Function ShaderProgram.setUniform</h2><p>Sets uniform matrix or uniform array of matrices.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -98,7 +114,13 @@ $('#symbolSearchPane').show();</script>
 				</code>
 			</div>
 			
-			
+			<section><h3>Parameters</h3>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
+<tr><td id="values">values</td><td> Matrix or matrices to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
+</table>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>
