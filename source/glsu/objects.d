@@ -262,7 +262,29 @@ public:
         push(size, valueOfGLType!T, normalized);
     }
 
+    /** 
+     * Pushes new attributes to the layout according to the pattern specified by type `T`.
+     *
+     * `T` should be a struct or a class.
+     * It can represent an `AttribPointer` by specifying a field by UDA `glsu.util.VertexAttrib`.
+     * That field should be a static array or has a type `gfm.math.vector.Vector`.
+     *
+     * Parameters of the attribute determined by:
+     *
+     * 1. index --- sum of count of previously pushed attributes and `glsu.util.VertexAttrib.index`;
+     *
+     * 2. size --- length of static array or Vector;
+     *
+     * 3. type --- type of elements of static array or Vector;
+     *
+     * 4. normalized --- `glsu.util.VertexAttrib.normalized` value;
+     *
+     * 5. stride --- size of all attributes pushed to the layout in the moment of enabling;
+     *
+     * 6. pointer --- size of all previously pushed attributes and the offset of the field.
+     */
     void pushUsingPattern(T)() pure nothrow @nogc
+        if(is(T == struct) || is(T == class))
     {
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
@@ -278,7 +300,7 @@ public:
         enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
         alias sortedAttrs = staticSort!(Comp, attrs);
         static assert(sortedAttrs.only.enumerate.all!"a.index == a.value.index", 
-                "indices should ascend from 0 by 1");
+                      "indices should ascend from 0 by 1");
 
         immutable prevLength = elements.length;
         immutable prevStride = calcStride();
