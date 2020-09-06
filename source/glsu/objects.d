@@ -19,7 +19,7 @@ struct BufferObejct(BufferType type)
      * Constructor that transfer data to GPU memory.
      * Params:
      *   buffer = Buffer to transfer to GPU memory.
-     *   usage = Describes how the buffer would be used.
+     *   usage = Describes how the `VertexBufferObject` would be used.
      */
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
@@ -32,7 +32,7 @@ struct BufferObejct(BufferType type)
      * Transfers data to GPU memory.
      * Params:
      *   buffer = Buffer to transfer to GPU memory.
-     *   usage = Describes how the buffer would be used.
+     *   usage = Describes how the `VertexBufferObject` would be used.
      */
     void setData(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
@@ -49,7 +49,7 @@ struct BufferObejct(BufferType type)
     }
 
     /** 
-     * Returns: OpenGL object id.
+     * OpenGL object id.
      */
     uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
@@ -58,7 +58,7 @@ struct BufferObejct(BufferType type)
     }
 
     /** 
-     * Binds the buffer, affecting state of OpenGL.
+     * Binds the object, affecting state of OpenGL.
      */
     void bind() const nothrow @nogc
     in(isValid)do
@@ -67,7 +67,7 @@ struct BufferObejct(BufferType type)
     }
 
     /** 
-     * Unbinds the buffer, affecting state of OpenGL.
+     * Unbinds the object, affecting state of OpenGL.
      */
     void unbind() const nothrow @nogc
     in(isValid)do
@@ -78,7 +78,7 @@ struct BufferObejct(BufferType type)
     static if (type == BufferType.element)
     {
         /** 
-         * Returns: Type of indices that the buffer contains.
+         * Type of indices that the buffer contains.
          */
         GLType indexType() const pure nothrow @nogc @safe
         in(isValid)do
@@ -87,7 +87,7 @@ struct BufferObejct(BufferType type)
         }
 
         /** 
-         * Returns: Count of indices that the buffer contains.
+         * Count of indices that the buffer contains.
          */
         uint count() const pure nothrow @nogc @safe
         in(isValid)do
@@ -345,6 +345,9 @@ public:
         //dfmt on
     }
 
+    /** 
+     * Enables and sets all of the attributes represented by this object.
+     */
     void enable() const nothrow @nogc
     in(elements.length <= uint.max)do
     {
@@ -359,6 +362,9 @@ public:
         }
     }
 
+    /** 
+     * Disables all of the attributes represented by this object.
+     */
     void disable() const nothrow @nogc
     in(elements.length <= uint.max)do
     {
@@ -370,6 +376,11 @@ public:
 private:
     import std.container.array : Array;
 
+    /** 
+     * Internally used instead of `AttribPointer`,
+     * because index of an attribute is an index of the entry in `elements`,
+     * and stride is calculated as total size of all attributes.
+     */
     struct LayoutElement
     {
         int size; // actually count
@@ -380,6 +391,10 @@ private:
 
     Array!LayoutElement elements;
 
+    /** 
+     * Calculates stride as sum of sizes of all attributes.
+     * Returns: Stride of the vertex specified by the layout.
+     */
     int calcStride() const pure nothrow @nogc
     {
         import std.algorithm.iteration : fold;
@@ -388,8 +403,18 @@ private:
     }
 }
 
+/** 
+ * A Vertex Array Object (VAO) is an OpenGL Object that stores all of the state needed to supply vertex data.
+ * It stores the format of the vertex data as well as the `BufferObject`'s.
+ */
 struct VertexArrayObject
 {
+    /** 
+     * Constructor that binds `VertexBufferObject` with a layout specified by an array of `AttribPointer`'s.
+     * Params:
+     *   VBO = Buffer to bind with this VAO.
+     *   attrs = Array of attributes that specifies a layout of the `VBO`.
+     */
     this(VertexBufferObject VBO, AttribPointer[] attrs) nothrow @nogc
     {
         glGenVertexArrays(1, &_id);
@@ -402,6 +427,12 @@ struct VertexArrayObject
         }
     }
 
+    /** 
+     * Constructor that binds `VertexBufferObject` with a `VertexBufferLayout`.
+     * Params:
+     *   VBO = Buffer to bind with this VAO.
+     *   layout = Layout of the `VBO`.
+     */
     this(VertexBufferObject VBO, VertexBufferLayout layout) nothrow @nogc
     {
         glGenVertexArrays(1, &_id);
@@ -411,6 +442,14 @@ struct VertexArrayObject
         layout.enable();
     }
 
+    /** 
+     * Constructor that creates `VertexBufferObject` and automatically determines its layout using `T` as pattern.
+     * Params:
+     *   buffer = Source for `VertexBufferObject`.
+     *   usage = Describes how the `VertexBufferObject` would be used.
+     *
+     * See_Also: `VertexBufferLayout.pushUsingPattern`.
+     */
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
     {
         auto VBO = VertexBufferObject(buffer, usage);
@@ -419,18 +458,36 @@ struct VertexArrayObject
         this(VBO, layout);
     }
 
+    /** 
+     * OpenGL object id.
+     */
     uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
+    /** 
+     * Binds VAO with `ElementBufferArray`.
+     *
+     * To use indexed drawing one should utilize returned `VertexArrayObjectIndexed`.
+     * Params:
+     *   EBO = index buffer to bind with the object.
+     * Returns: VAO that can use provided `ElementBufferArray` in draw calls.
+     */
     VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
     in(isValid)do
     {
         return VertexArrayObjectIndexed(this, EBO);
     }
 
+    /** 
+     * Draw call that uses vertices of `VertexBufferObject` and layout bounded to this object.
+     * Params:
+     *   mode = Specifies what kind of primitives to render.
+     *   first = Specifies the starting index in the enabled arrays.
+     *   count = Specifies the number of indices to be rendered.
+     */
     void draw(RenderMode mode, int first, int count) const nothrow @nogc
     in(isValid)do
     {
@@ -438,18 +495,27 @@ struct VertexArrayObject
         glDrawArrays(mode, first, count);
     }
 
+    /** 
+     * Binds the object, affecting state of OpenGL.
+     */
     void bind() const nothrow @nogc
     in(isValid)do
     {
         glBindVertexArray(id);
     }
 
+    /** 
+     * Unbinds the object, affecting state of OpenGL.
+     */
     void unbind() const nothrow @nogc
     in(isValid)do
     {
         glBindVertexArray(0);
     }
 
+    /** 
+     * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+     */
     void destroy() nothrow @nogc
     in(isValid)do
     {
@@ -457,6 +523,10 @@ struct VertexArrayObject
         _id = 0;
     }
 
+    /** 
+     * Checks if object is not destroyed and it can be used.
+     * Returns: Whether object is not destroyed.
+     */
     bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;

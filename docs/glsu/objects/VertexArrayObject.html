@@ -55,7 +55,9 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct VertexArrayObject</h1><p></p>
+			<h1>Struct VertexArrayObject</h1><p>A Vertex Array Object (VAO) is an OpenGL Object that stores all of the state needed to supply vertex data.
+ It stores the format of the vertex data as well as the <code class="lang-d"><span class="typ">BufferObject</span></code>'s.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -78,7 +80,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(VBO, attrs)</span>
 						</td>
-						<td></td>
+						<td>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a layout specified by an array of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -87,7 +90,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(VBO, layout)</span>
 						</td>
-						<td></td>
+						<td>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -96,7 +100,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(buffer, usage)</span>
 						</td>
-						<td></td>
+						<td>Constructor that creates <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and automatically determines its layout using <code class="lang-d"><span class="pln">T</span></code> as pattern.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -127,7 +132,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Binds the object, affecting state of OpenGL.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -136,7 +142,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(EBO)</span>
 						</td>
-						<td></td>
+						<td>Binds VAO with <code class="lang-d"><a href="../../glsu/objects/ElementBufferArray.html"><span class="typ">ElementBufferArray</span></a></code>.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -145,7 +152,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -154,7 +162,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(mode, first, count)</span>
 						</td>
-						<td></td>
+						<td>Draw call that uses vertices of <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and layout bounded to this object.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -163,7 +172,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>OpenGL object id.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -172,7 +182,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Checks if object is not destroyed and it can be used.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -181,7 +192,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Unbinds the object, affecting state of OpenGL.
+</td>
 					</tr>
 				</table>
 			</section>

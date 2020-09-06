@@ -55,7 +55,10 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct VertexBufferLayout.LayoutElement</h1><p></p>
+			<h1>Struct VertexBufferLayout.LayoutElement</h1><p>Internally used instead of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>,
+ because index of an attribute is an index of the entry in <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.elements.html"><span class="pln">elements</span></a></code>,
+ and stride is calculated as total size of all attributes.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">

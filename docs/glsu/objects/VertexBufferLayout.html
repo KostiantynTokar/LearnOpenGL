@@ -98,7 +98,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Disables all of the attributes represented by this object.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -107,7 +108,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Enables and sets all of the attributes represented by this object.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -146,7 +148,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Calculates stride as sum of sizes of all attributes.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -162,7 +165,10 @@ $('#symbolSearchPane').show();</script>
 								<code>LayoutElement</code>
 							</a>
 						</td>
-						<td></td>
+						<td>Internally used instead of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>,
+ because index of an attribute is an index of the entry in <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.elements.html"><span class="pln">elements</span></a></code>,
+ and stride is calculated as total size of all attributes.
+</td>
 					</tr>
 				</table>
 			</section>
