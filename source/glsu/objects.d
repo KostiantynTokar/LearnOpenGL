@@ -52,7 +52,7 @@ struct BufferObejct(BufferType type)
 
     static if (type == BufferType.element)
     {
-        GLType indexType() const nothrow @nogc
+        GLType indexType() const pure nothrow @nogc @safe
         in(isValid)do
         {
             return _indexType;
@@ -92,7 +92,7 @@ alias ElementBufferArray = BufferObejct!(BufferType.element);
 
 struct AttribPointer
 {
-    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) nothrow @nogc
+    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
     {
         this._index = index;
         this._size = size;
@@ -125,18 +125,18 @@ private:
 struct VertexBufferLayout
 {
 public:
-    void push(int size, GLType type, bool normalized = false) @nogc nothrow
+    void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
     in(0 < size && size < 5)do
     {
         elements ~= LayoutElement(size, type, normalized, calcStride());
     }
 
-    void push(T)(int size, bool normalized = false) @nogc nothrow
+    void push(T)(int size, bool normalized = false) pure nothrow @nogc
     {
         push(size, valueOfGLType!T, normalized);
     }
 
-    void pushUsingPattern(T)() @nogc nothrow
+    void pushUsingPattern(T)() pure nothrow @nogc
     {
         import std.traits : getSymbolsByUDA, getUDAs;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
@@ -150,7 +150,7 @@ public:
         enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
         alias sortedAttrs = staticSort!(Comp, attrs);
 
-        bool isStepByOne(VertexAttrib[] attrs...) @safe @nogc pure nothrow
+        bool isStepByOne(VertexAttrib[] attrs...) pure nothrow @nogc @safe
         {
             foreach (i, attr; attrs)
             {
