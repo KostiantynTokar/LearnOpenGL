@@ -128,22 +128,22 @@ private:
 /** 
  * Represents raw data in GPU memory.
  *
+ * Examples: 
+ * ---
+ * // Buffer in main memory.
+ * float[] abstractData = [
+ *     -0.5f, -0.5f,
+ *      0.5f, -0.5f,
+ *      0.0f,  0.5f,
+ * ];
+ * // Transfer data to GPU memory.
+ * auto VBO = VertexBufferObject(abstractData, DataUsage.staticDraw);
+ * scope(exit) VBO.destroy();
+ * ---
+ *
  * See_Also: `BufferObject` for `VertexBufferObject` methods documentation.
  */
 alias VertexBufferObject = BufferObejct!(BufferType.array);
-///
-unittest
-{
-    // Buffer in main memory.
-    float[] abstractData = [
-        -0.5f, -0.5f,
-         0.5f, -0.5f,
-         0.0f,  0.5f,
-    ];
-    // Transfer data to GPU memory.
-    auto VBO = VertexBufferObject(abstractData, DataUsage.staticDraw);
-    scope(exit) VBO.destroy();
-}
 
 /** 
  * Represents buffer of indices in GPU memory.
@@ -155,13 +155,52 @@ unittest
  */
 alias ElementBufferArray = BufferObejct!(BufferType.element);
 
-/// Represents abstract vertex attribute. Set of `AttribPointer`'s can be used to specify layout of `VertexBufferObject`.
+/** 
+ * Represents abstract vertex attribute. Set of `AttribPointer`'s can be used to specify layout of `VertexBufferObject`.
+ *
+ * Examples:
+ * ---
+ * // Specifying layout of interleaved buffer.
+ * // 2D-coordinates and RGB color (5 floats total) per vertex.
+ * float[] vertices = [
+ *     -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // vertex 1
+ *      0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // vertex 2
+ *      0.0f,  0.5f, 0.0f, 0.0f, 1.0f, // vertex 3
+ * ];
+ * auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+ * auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 5 * sizeof(float), cast(void*) 0);
+ * auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 5 * sizeof(float), cast(void*) 2 * sizeof(float));
+ * auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+ * // Now position and color of the vertex is accessible in vertex shader as
+ * // layout (location = 0) in vec2 position;
+ * // layout (location = 1) in vec3 color;
+ * ---
+ *
+ * ---
+ * // Specifying layout of buffer, that stores attribute blocks in a batch.
+ * // 2D-coordinates and RGB color (5 floats total) per vertex.
+ * float[] vertices = [
+ *      // vertex 1          // vertex 2          // vertex 3
+ *     -0.5f, -0.5f,         0.5f, -0.5f,         0.0f,  0.5f,        // positions
+ *      1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // colors
+ * ];
+ * auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+ * auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 2 * sizeof(float), cast(void*) 0);
+ * auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 3 * sizeof(float), cast(void*) 3 * 2 * sizeof(float));
+ * auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+ * // Now position and color of the vertex is accessible in vertex shader as
+ * // layout (location = 0) in vec2 position;
+ * // layout (location = 1) in vec3 color;
+ * ---
+ * See_Also: `VertexBufferObject`, `VertexArrayObject`, `VertexBufferLayout`.
+ */
 struct AttribPointer
 {
     /** 
      * Constructor that sets arguments for `glVertexAttribPointer` (doesn't do anything else).
      * Params:
-     *   index = Specifies the index of the generic vertex attribute to be modified.
+     *   index = Specifies the index of the generic vertex attribute to be modified
+     *           and location of the attribute in a vertex shader.
      *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
      *   type = Specifies the data type of each component in the array.
      *   normalized = specifies whether fixed-point data values should be normalized (true) or
@@ -193,7 +232,7 @@ struct AttribPointer
      */
     void enable() const nothrow @nogc
     {
-        glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(void*) _pointer);
+        glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(const(void)*) _pointer);
         glEnableVertexAttribArray(_index);
     }
 
@@ -357,7 +396,7 @@ public:
 
         foreach(i, ref elem; elements[].enumerate)
         {
-            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, stride, cast(void*) elem.pointer);
+            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, stride, cast(const(void)*) elem.pointer);
             glEnableVertexAttribArray(cast(uint) i);
         }
     }
