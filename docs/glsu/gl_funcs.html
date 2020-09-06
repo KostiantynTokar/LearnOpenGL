@@ -58,7 +58,7 @@ $('#symbolSearchPane').show();</script>
 			<h1>Module glsu.gl_funcs</h1><p>Redefines OpenGL functions, could be imported instead of <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code>.
 </p><section><p>If debug specifier <code class="lang-d"><span class="pln">glChecks</span></code> is active, redefines
  all functions of <code class="lang-d"><span class="pln">glad<wbr/></span><span class="pun">.</span><span class="pln">gl<wbr/></span><span class="pun">.</span><span class="pln">funcs</span></code> module (except <code class="lang-d"><span class="pln">glGetError</span></code>)
- and wraps them between <code class="lang-d"><a href="../glsu/util/clearGLErrors.html" title="glsu.util.clearGLErrors"><span class="pln">clearGLErrors</span></a></code> and <code class="lang-d"><a href="../glsu/util/checkGLErrors.html" title="glsu.util.checkGLErrors"><span class="pln">checkGLErrors</span></a></code> calls.
+ and wraps them between <code class="lang-d"><a href="../glsu/util/clearGLErrors.html" title="glsu.util.clearGLErrors"><span class="pln">clearGLErrors</span></a></code> and <code class="lang-d"><a href="../glsu/util/assertNoGLErrors.html" title="glsu.util.assertNoGLErrors"><span class="pln">assertNoGLErrors</span></a></code> calls.
  Each wrapper additionaly take two parameters, that are defaulted
  to  <code class="lang-d"><span class="kwd">__FILE__</span></code> and <code class="lang-d"><span class="kwd">__LINE__</span></code>.
 </p>

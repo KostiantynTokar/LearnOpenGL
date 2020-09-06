@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct BufferObejct</h1><p></p>
+			<h1>Struct BufferObejct</h1><p>Represents buffer in GPU memory.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -78,7 +79,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(buffer, usage)</span>
 						</td>
-						<td></td>
+						<td>Constructor that transfer data to GPU memory.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -121,7 +123,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Binds the buffer, affecting state of OpenGL.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -139,7 +142,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -166,7 +170,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Checks if object is not destroyed and it can be used.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -175,7 +180,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(buffer, usage)</span>
 						</td>
-						<td></td>
+						<td>Transfers data to GPU memory.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -184,11 +190,16 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Unbinds the buffer, affecting state of OpenGL.
+</td>
 					</tr>
 				</table>
 			</section>
-			
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and <code class="lang-d"><a href="../../glsu/objects/ElementBufferArray.html"><span class="typ">ElementBufferArray</span></a></code> as actual instantiations of the template.
+</p>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

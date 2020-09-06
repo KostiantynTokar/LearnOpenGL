@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct VertexBufferLayout</h1><p></p>
+			<h1>Struct VertexBufferLayout</h1><p>Represents <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> layout. Works as an array of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -64,7 +65,12 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</code>
 			</div>
-			
+			<section><p>Allows specifying a layout step-by-step.
+ Calls to <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.push.html"><span class="pln">push</span></a></code> and <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.pushUsingPattern.html"><span class="pln">pushUsingPattern</span></a></code> should be done accordingly to the offset of vertex attributes,
+ so that attributes with lesser offset should be pushed earlier.
+</p>
+</section>
+
 			<section><h2>Fields</h2>
 				<table>
 					<col class="caption"/>
@@ -110,7 +116,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(size, type, normalized)</span>
 						</td>
-						<td></td>
+						<td>Pushes new attribute to the layout.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -119,7 +126,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(size, normalized)</span>
 						</td>
-						<td></td>
+						<td>Pushes new attribute to the layout. Determines <code class="lang-d"><span class="typ">GLType</span></code> from the template parameter.
+</td>
 					</tr>
 					<tr>
 						<td>

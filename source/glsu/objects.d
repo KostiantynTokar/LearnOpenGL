@@ -9,8 +9,18 @@ import glsu.util;
 import glsu.enums;
 import glsu.gl_funcs;
 
+/**
+ * Represents buffer in GPU memory.
+ * See_Also: `VertexBufferObject` and `ElementBufferArray` as actual instantiations of the template.
+ */
 struct BufferObejct(BufferType type)
 {
+    /** 
+     * Constructor that transfer data to GPU memory.
+     * Params:
+     *   buffer = Buffer to transfer to GPU memory.
+     *   usage = Describes how the buffer would be used.
+     */
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     {
@@ -18,6 +28,12 @@ struct BufferObejct(BufferType type)
         setData(buffer, usage);
     }
 
+    /** 
+     * Transfers data to GPU memory.
+     * Params:
+     *   buffer = Buffer to transfer to GPU memory.
+     *   usage = Describes how the buffer would be used.
+     */
     void setData(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
     in(isValid && buffer.length <= int.max)do
@@ -32,18 +48,27 @@ struct BufferObejct(BufferType type)
         }
     }
 
+    /** 
+     * Returns: OpenGL object id.
+     */
     uint id() const pure nothrow @nogc @safe
     in(_id != 0)do
     {
         return _id;
     }
 
+    /** 
+     * Binds the buffer, affecting state of OpenGL.
+     */
     void bind() const nothrow @nogc
     in(isValid)do
     {
         glBindBuffer(type, id);
     }
 
+    /** 
+     * Unbinds the buffer, affecting state of OpenGL.
+     */
     void unbind() const nothrow @nogc
     in(isValid)do
     {
@@ -52,12 +77,18 @@ struct BufferObejct(BufferType type)
 
     static if (type == BufferType.element)
     {
+        /** 
+         * Returns: Type of indices that the buffer contains.
+         */
         GLType indexType() const pure nothrow @nogc @safe
         in(isValid)do
         {
             return _indexType;
         }
 
+        /** 
+         * Returns: Count of indices that the buffer contains.
+         */
         uint count() const pure nothrow @nogc @safe
         in(isValid)do
         {
@@ -65,6 +96,9 @@ struct BufferObejct(BufferType type)
         }
     }
 
+    /** 
+     * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
+     */
     void destroy() nothrow @nogc
     in(isValid)do
     {
@@ -72,6 +106,10 @@ struct BufferObejct(BufferType type)
         _id = 0;
     }
 
+    /** 
+     * Checks if object is not destroyed and it can be used.
+     * Returns: Whether object is not destroyed.
+     */
     bool isValid() const pure nothrow @nogc @safe
     {
         return id != 0;
@@ -87,12 +125,57 @@ private:
     }
 }
 
+/** 
+ * Represents raw data in GPU memory.
+ *
+ * See_Also: `BufferObject` for `VertexBufferObject` methods documentation.
+ */
 alias VertexBufferObject = BufferObejct!(BufferType.array);
+///
+unittest
+{
+    // Buffer in main memory.
+    float[] abstractData = [
+        -0.5f, -0.5f,
+         0.5f, -0.5f,
+         0.0f,  0.5f,
+    ];
+    // Transfer data to GPU memory.
+    auto VBO = VertexBufferObject(abstractData, DataUsage.staticDraw);
+    scope(exit) VBO.destroy();
+}
+
+/** 
+ * Represents buffer of indices in GPU memory.
+ *
+ * See_Also:
+ *   `BufferObject` for `ElementBufferArray` methods documentation.
+ * 
+ *   `VertexArrayObjectIndexed` for examples.
+ */
 alias ElementBufferArray = BufferObejct!(BufferType.element);
 
+/// Represents abstract vertex attribute. Set of `AttribPointer`'s is used to specify layout of `VertexBufferObject`.
 struct AttribPointer
 {
+    /** 
+     * Constructor that sets arguments for `glVertexAttribPointer` (doesn't do anything else).
+     * Params:
+     *   index = Specifies the index of the generic vertex attribute to be modified.
+     *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+     *   type = Specifies the data type of each component in the array.
+     *   normalized = specifies whether fixed-point data values should be normalized (true) or
+     *                converted directly as fixed-point values (false) when they are accessed.
+     *                If `normalized` is set to true, it indicates that values stored in an integer format
+     *                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
+     *                when they are accessed and converted to floating point.
+     *                Otherwise, values will be converted to floats directly without normalization.
+     *   stride = Specifies the byte offset between consecutive generic vertex attributes.
+     *            If stride is 0, the generic vertex attributes are understood to be tightly packed in the array.
+     *   pointer = Specifies a offset of the first component of the first generic vertex attribute in the `VertexBufferObject`.
+     */
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
+    in(0 < size && size < 5)do
     {
         this._index = index;
         this._size = size;
@@ -102,12 +185,18 @@ struct AttribPointer
         this._pointer = pointer;
     }
 
+    /** 
+     * Enables and sets the attribute.
+     */
     void enable() const nothrow @nogc
     {
         glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(void*) _pointer);
         glEnableVertexAttribArray(_index);
     }
 
+    /** 
+     * Disables the attribute.
+     */
     void disable() const nothrow @nogc
     {
         glDisableVertexAttribArray(_index);
@@ -122,16 +211,47 @@ private:
     ptrdiff_t _pointer;
 }
 
+/**
+ * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
+ *
+ * Allows specifying a layout step-by-step.
+ * Calls to `push` and `pushUsingPattern` should be done accordingly to the offset of vertex attributes,
+ * so that attributes with lesser offset should be pushed earlier.
+ */
 struct VertexBufferLayout
 {
 public:
+    /** 
+     * Pushes new attribute to the layout.
+     * Params:
+     *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+     *   type = Specifies the data type of each component in the array.
+     *   normalized = specifies whether fixed-point data values should be normalized (true) or
+     *                converted directly as fixed-point values (false) when they are accessed.
+     *                If `normalized` is set to true, it indicates that values stored in an integer format
+     *                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
+     *                when they are accessed and converted to floating point.
+     *                Otherwise, values will be converted to floats directly without normalization.
+     */
     void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
     in(0 < size && size < 5)do
     {
         elements ~= LayoutElement(size, type, normalized, calcStride());
     }
 
+    /** 
+     * Pushes new attribute to the layout. Determines `GLType` from the template parameter.
+     * Params:
+     *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+     *   normalized = specifies whether fixed-point data values should be normalized (true) or
+     *                converted directly as fixed-point values (false) when they are accessed.
+     *                If `normalized` is set to true, it indicates that values stored in an integer format
+     *                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
+     *                when they are accessed and converted to floating point.
+     *                Otherwise, values will be converted to floats directly without normalization.
+     */
     void push(T)(int size, bool normalized = false) pure nothrow @nogc
+    in(0 < size && size < 5)do
     {
         push(size, valueOfGLType!T, normalized);
     }

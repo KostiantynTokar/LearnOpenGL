@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Alias VertexBufferObject</h1><p></p>
+			<h1>Alias VertexBufferObject</h1><p>Represents raw data in GPU memory.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -64,8 +65,26 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</code>
 			</div>
-			
-			
+			<section></section>
+
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><span class="typ">BufferObject</span></code> for <code class="lang-d"><span class="typ">VertexBufferObject</span></code> methods documentation.
+</p>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="com">// Buffer in main memory.
+</span><span class="typ">float</span><span class="pun">[] </span><span class="pln">abstractData </span><span class="pun">= [
+    -</span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">,
+     </span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">,
+     </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.5f</span><span class="pun">,
+];
+</span><span class="com">// Transfer data to GPU memory.
+</span><span class="kwd">auto </span><span class="pln">VBO </span><span class="pun">= </span><span class="typ">VertexBufferObject</span><span class="pun">(</span><span class="pln">abstractData</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">);
+</span><span class="kwd">scope</span><span class="pun">(</span><span class="pln">exit</span><span class="pun">) </span><span class="pln">VBO<wbr/></span><span class="pun">.</span><span class="pln">destroy</span><span class="pun">();
+</span></code></pre>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

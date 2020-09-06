@@ -127,8 +127,8 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.type.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferObject.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/checkError.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/checkGLErrors.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/assertNoError.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/assertNoGLErrors.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/clearGLErrors.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/errorDescription.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/from.html</loc></url>
