@@ -151,7 +151,7 @@ unittest
  * See_Also:
  *   `BufferObject` for `ElementBufferArray` methods documentation.
  * 
- *   `VertexArrayObjectIndexed` for examples.
+ *   `IndexedVertexArrayObject` for examples.
  */
 alias ElementBufferArray = BufferObejct!(BufferType.element);
 
@@ -470,15 +470,15 @@ struct VertexArrayObject
     /** 
      * Binds VAO with `ElementBufferArray`.
      *
-     * To use indexed drawing one should utilize returned `VertexArrayObjectIndexed`.
+     * To use indexed drawing one should utilize returned `IndexedVertexArrayObject`.
      * Params:
      *   EBO = index buffer to bind with the object.
      * Returns: VAO that can use provided `ElementBufferArray` in draw calls.
      */
-    VertexArrayObjectIndexed bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
+    IndexedVertexArrayObject bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
     in(isValid)do
     {
-        return VertexArrayObjectIndexed(this, EBO);
+        return IndexedVertexArrayObject(this, EBO);
     }
 
     /** 
@@ -536,7 +536,7 @@ private:
     uint _id;
 }
 
-struct VertexArrayObjectIndexed
+struct IndexedVertexArrayObject
 {
     VertexArrayObject VAO;
 

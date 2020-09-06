@@ -66,6 +66,13 @@
 <url><loc>http://127.0.0.1/glsu/objects/BufferObejct.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/BufferObejct.unbind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ElementBufferArray.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject.drawElements.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject.drawElements.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject.this.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject.VAO.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject._count.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/IndexedVertexArrayObject._indexType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.create.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.destroy.html</loc></url>
@@ -105,13 +112,6 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.unbind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject._id.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.drawElements.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.drawElements.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.this.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.VAO.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed._count.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed._indexType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.index.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.normalized.html</loc></url>
