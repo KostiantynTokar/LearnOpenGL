@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Variable VertexAttrib.normalized</title>
+		<title>Variable VertexAttrib.index</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -41,12 +41,12 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module ">
+					<div class="module selected">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/util.html">util</a>
 					</div>
 				</li>
@@ -55,13 +55,12 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Variable VertexAttrib.normalized</h1><p>Specifies whether fixed-point data values should be normalized or converted
- directly as fixed-point values when they are accessed.
+			<h1>Variable VertexAttrib.index</h1><p>Layout position of the attribute in a shader.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <a href="../../glsu/util/VertexAttrib.html"><span class="typ">VertexAttrib</span></a>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexAttrib.html"><span class="typ">VertexAttrib</span></a>
 			<br/>
 			<span class="pun">
 				{
@@ -69,8 +68,8 @@ $('#symbolSearchPane').show();</script>
 			</span>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span>
-			 <span class="pun">=</span> <span class="kwd">false</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">index</span>
+			<span class="pun">;</span>
 			<br/>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>

@@ -275,21 +275,6 @@ private:
     }
 }
 
-/** 
- * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
- */
-@UDA struct VertexAttrib
-{
-    /// Layout position of the attribute in a shader.
-    uint index;
-
-    /** 
-     * Specifies whether fixed-point data values should be normalized or converted
-     * directly as fixed-point values when they are accessed.
-     */
-    bool normalized = false;
-}
-
 /// mixin to `bind` `obj` immediately and `unbind` at `scope(exit)`.
 enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
     ~ "scope(exit)" ~ __traits(identifier, obj) ~ ".unbind();";

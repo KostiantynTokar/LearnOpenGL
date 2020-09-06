@@ -112,6 +112,9 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed.VAO.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed._count.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObjectIndexed._indexType.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.index.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexAttrib.normalized.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.disable.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.enable.html</loc></url>
@@ -153,9 +156,6 @@
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/VertexAttrib.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/VertexAttrib.index.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/VertexAttrib.normalized.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/debugHack.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/UDA.html</loc></url>
 <url><loc>http://127.0.0.1/glsu.html</loc></url>

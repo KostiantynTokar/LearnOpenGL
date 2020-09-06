@@ -155,7 +155,7 @@ unittest
  */
 alias ElementBufferArray = BufferObejct!(BufferType.element);
 
-/// Represents abstract vertex attribute. Set of `AttribPointer`'s is used to specify layout of `VertexBufferObject`.
+/// Represents abstract vertex attribute. Set of `AttribPointer`'s can be used to specify layout of `VertexBufferObject`.
 struct AttribPointer
 {
     /** 
@@ -214,6 +214,23 @@ private:
     ptrdiff_t _pointer;
 }
 
+/** 
+ * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
+ *
+ * See_Also: `VertexBufferLayout`.
+ */
+@UDA struct VertexAttrib
+{
+    /// Layout position of the attribute in a shader.
+    uint index;
+
+    /** 
+     * Specifies whether fixed-point data values should be normalized or converted
+     * directly as fixed-point values when they are accessed.
+     */
+    bool normalized = false;
+}
+
 /**
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
@@ -266,18 +283,18 @@ public:
      * Pushes new attributes to the layout according to the pattern specified by type `T`.
      *
      * `T` should be a struct or a class.
-     * It can represent an `AttribPointer` by specifying a field by UDA `glsu.util.VertexAttrib`.
+     * It can represent an `AttribPointer` by specifying a field by UDA `VertexAttrib`.
      * That field should be a static array or has a type `gfm.math.vector.Vector`.
      *
      * Parameters of the attribute determined by:
      *
-     * 1. index --- sum of count of previously pushed attributes and `glsu.util.VertexAttrib.index`;
+     * 1. index --- sum of count of previously pushed attributes and `VertexAttrib.index`;
      *
      * 2. size --- length of static array or Vector;
      *
      * 3. type --- type of elements of static array or Vector;
      *
-     * 4. normalized --- `glsu.util.VertexAttrib.normalized` value;
+     * 4. normalized --- `VertexAttrib.normalized` value;
      *
      * 5. stride --- size of all attributes pushed to the layout in the moment of enabling;
      *

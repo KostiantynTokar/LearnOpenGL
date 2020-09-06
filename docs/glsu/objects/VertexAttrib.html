@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Variable VertexAttrib.index</title>
+		<title>Struct VertexAttrib</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -41,12 +41,12 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module ">
+					<div class="module selected">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/util.html">util</a>
 					</div>
 				</li>
@@ -55,30 +55,46 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Variable VertexAttrib.index</h1><p>Layout position of the attribute in a shader.
+			<h1>Struct VertexAttrib</h1><p>UDA for fields of a struct that are to used as vertex in <code class="lang-d"><span class="typ">VertexBufferArray</span></code>.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <a href="../../glsu/util/VertexAttrib.html"><span class="typ">VertexAttrib</span></a>
-			<br/>
-			<span class="pun">
-				{
-				<br/>
-			</span>
-			&nbsp;&nbsp;<span class="com">// ...</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">index</span>
+			<span class="kwd">struct</span> <span class="typ">VertexAttrib</span>
 			<span class="pun">;</span>
-			<br/>
-			&nbsp;&nbsp;<span class="com">// ...</span>
-			<br/>
-			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>
-			
-			
+			<section></section>
+
+			<section><h2>Fields</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexAttrib.index.html" class="public"><code>index</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">uint</span></code></td><td>Layout position of the attribute in a shader.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexAttrib.normalized.html" class="public"><code>normalized</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">bool</span></code></td><td>Specifies whether fixed-point data values should be normalized or converted
+ directly as fixed-point values when they are accessed.
+</td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+</p>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>
