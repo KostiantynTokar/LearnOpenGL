@@ -157,8 +157,14 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 				</table>
 			</section>
-			<section><h2>Examples</h2>
-<pre class="code"><code class="lang-d"><span class="com">// Specifying layout of interleaved buffer.
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexArrayObject.html"><span class="typ">VertexArrayObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+</p>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+</span><span class="com">// Specifying layout of interleaved buffer.
 // 2D-coordinates and RGB color (5 floats total) per vertex.
 </span><span class="typ">float</span><span class="pun">[] </span><span class="pln">vertices </span><span class="pun">= [
     -</span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="com">// vertex 1
@@ -166,14 +172,18 @@ $('#symbolSearchPane').show();</script>
      </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">, </span><span class="com">// vertex 3
 </span><span class="pun">];
 </span><span class="kwd">auto </span><span class="pln">VBO </span><span class="pun">= <a href="../../glsu/objects/VertexBufferObject.html"></span><span class="typ">VertexBufferObject</span></a><span class="pun">(</span><span class="pln">vertices</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">);
-</span><span class="kwd">auto </span><span class="pln">positionAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">5 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">), </span><span class="kwd">cast</span><span class="pun">(</span><span class="typ">void</span><span class="pun">*) </span><span class="lit">0</span><span class="pun">);
-</span><span class="kwd">auto </span><span class="pln">colorAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">5 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">), </span><span class="kwd">cast</span><span class="pun">(</span><span class="typ">void</span><span class="pun">*) </span><span class="lit">2 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">));
+</span><span class="kwd">auto </span><span class="pln">positionAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">5 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">0</span><span class="pun">);
+</span><span class="kwd">auto </span><span class="pln">colorAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">5 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">);
 </span><span class="kwd">auto </span><span class="pln">VAO </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(</span><span class="pln">VBO</span><span class="pun">, [</span><span class="pln">positionAttrib</span><span class="pun">, </span><span class="pln">colorAttrib</span><span class="pun">]);
 </span><span class="com">// Now position and color of the vertex is accessible in vertex shader as
 // layout (location = 0) in vec2 position;
-// layout (location = 1) in vec3 color;</span></code></pre>
+// layout (location = 1) in vec3 color;
+</span></code></pre>
+</section>
+<section><h2>Example</h2>
 
-<pre class="code"><code class="lang-d"><span class="com">// Specifying layout of buffer, that stores attribute blocks in a batch.
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+</span><span class="com">// Specifying layout of buffer, that stores attribute blocks in a batch.
 // 2D-coordinates and RGB color (5 floats total) per vertex.
 </span><span class="typ">float</span><span class="pun">[] </span><span class="pln">vertices </span><span class="pun">= [
      </span><span class="com">// vertex 1          // vertex 2          // vertex 3
@@ -181,16 +191,13 @@ $('#symbolSearchPane').show();</script>
      </span><span class="lit">1.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">1.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">1.0f</span><span class="pun">, </span><span class="com">// colors
 </span><span class="pun">];
 </span><span class="kwd">auto </span><span class="pln">VBO </span><span class="pun">= <a href="../../glsu/objects/VertexBufferObject.html"></span><span class="typ">VertexBufferObject</span></a><span class="pun">(</span><span class="pln">vertices</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">);
-</span><span class="kwd">auto </span><span class="pln">positionAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">2 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">), </span><span class="kwd">cast</span><span class="pun">(</span><span class="typ">void</span><span class="pun">*) </span><span class="lit">0</span><span class="pun">);
-</span><span class="kwd">auto </span><span class="pln">colorAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">), </span><span class="kwd">cast</span><span class="pun">(</span><span class="typ">void</span><span class="pun">*) </span><span class="lit">3 </span><span class="pun">* </span><span class="lit">2 </span><span class="pun">* </span><span class="pln">sizeof</span><span class="pun">(</span><span class="typ">float</span><span class="pun">));
+</span><span class="kwd">auto </span><span class="pln">positionAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">0</span><span class="pun">);
+</span><span class="kwd">auto </span><span class="pln">colorAttrib </span><span class="pun">= </span><span class="typ">AttribPointer</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">);
 </span><span class="kwd">auto </span><span class="pln">VAO </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(</span><span class="pln">VBO</span><span class="pun">, [</span><span class="pln">positionAttrib</span><span class="pun">, </span><span class="pln">colorAttrib</span><span class="pun">]);
 </span><span class="com">// Now position and color of the vertex is accessible in vertex shader as
 // layout (location = 0) in vec2 position;
-// layout (location = 1) in vec3 color;</span></code></pre>
-</section>
-<section><h2>See Also</h2>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexArrayObject.html"><span class="typ">VertexArrayObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
-</p>
+// layout (location = 1) in vec3 color;
+</span></code></pre>
 </section>
 
 			<footer>

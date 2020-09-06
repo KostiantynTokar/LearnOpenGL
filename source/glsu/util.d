@@ -90,6 +90,24 @@ string errorDescription(GLError e)
 }
 //dfmt on
 
+bool isIntegral(GLType type) pure nothrow @nogc @safe
+{
+    final switch(type)
+    {
+        case GLType.glByte:
+        case GLType.glUByte:
+        case GLType.glShort:
+        case GLType.glUShort:
+        case GLType.glInt:
+        case GLType.glUInt:
+            return true;
+
+        case GLType.glFloat:
+        case GLType.glDouble:
+            return false;
+    }
+}
+
 /** 
  * Repeatedly calls `glGetError`, clearing all GL error flags.
  */
@@ -299,5 +317,24 @@ unittest
     @safe nothrow @nogc pure void bar()
     {
         debug debugHack({foo();});
+    }
+}
+
+version(unittest)
+{
+    import bindbc.glfw;
+    import glad.gl.loader;
+
+    void setupOpenGLContext()
+    {
+        if(GLFW.isActive) return;
+
+        GLFW.activate(3, 3);
+
+        GLFWwindow* window = GLFW.createWindow(800, 600, "LearnOpenGL");
+        assert(window, "Failed to create GLFW window.");
+        glfwMakeContextCurrent(window);
+
+        assert(gladLoadGL(), "Failed to initialize GLAD.");
     }
 }

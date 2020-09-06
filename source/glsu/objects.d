@@ -128,22 +128,23 @@ private:
 /** 
  * Represents raw data in GPU memory.
  *
- * Examples: 
- * ---
- * // Buffer in main memory.
- * float[] abstractData = [
- *     -0.5f, -0.5f,
- *      0.5f, -0.5f,
- *      0.0f,  0.5f,
- * ];
- * // Transfer data to GPU memory.
- * auto VBO = VertexBufferObject(abstractData, DataUsage.staticDraw);
- * scope(exit) VBO.destroy();
- * ---
- *
  * See_Also: `BufferObject` for `VertexBufferObject` methods documentation.
  */
 alias VertexBufferObject = BufferObejct!(BufferType.array);
+///
+unittest
+{
+    setupOpenGLContext();
+    // Buffer in main memory.
+    float[] abstractData = [
+        -0.5f, -0.5f,
+         0.5f, -0.5f,
+         0.0f,  0.5f,
+    ];
+    // Transfer data to GPU memory.
+    auto VBO = VertexBufferObject(abstractData, DataUsage.staticDraw);
+    scope(exit) VBO.destroy();
+}
 
 /** 
  * Represents buffer of indices in GPU memory.
@@ -158,40 +159,6 @@ alias ElementBufferArray = BufferObejct!(BufferType.element);
 /** 
  * Represents abstract vertex attribute. Set of `AttribPointer`'s can be used to specify layout of `VertexBufferObject`.
  *
- * Examples:
- * ---
- * // Specifying layout of interleaved buffer.
- * // 2D-coordinates and RGB color (5 floats total) per vertex.
- * float[] vertices = [
- *     -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // vertex 1
- *      0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // vertex 2
- *      0.0f,  0.5f, 0.0f, 0.0f, 1.0f, // vertex 3
- * ];
- * auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
- * auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 5 * sizeof(float), cast(void*) 0);
- * auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 5 * sizeof(float), cast(void*) 2 * sizeof(float));
- * auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
- * // Now position and color of the vertex is accessible in vertex shader as
- * // layout (location = 0) in vec2 position;
- * // layout (location = 1) in vec3 color;
- * ---
- *
- * ---
- * // Specifying layout of buffer, that stores attribute blocks in a batch.
- * // 2D-coordinates and RGB color (5 floats total) per vertex.
- * float[] vertices = [
- *      // vertex 1          // vertex 2          // vertex 3
- *     -0.5f, -0.5f,         0.5f, -0.5f,         0.0f,  0.5f,        // positions
- *      1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // colors
- * ];
- * auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
- * auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 2 * sizeof(float), cast(void*) 0);
- * auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 3 * sizeof(float), cast(void*) 3 * 2 * sizeof(float));
- * auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
- * // Now position and color of the vertex is accessible in vertex shader as
- * // layout (location = 0) in vec2 position;
- * // layout (location = 1) in vec3 color;
- * ---
  * See_Also: `VertexBufferObject`, `VertexArrayObject`, `VertexBufferLayout`.
  */
 struct AttribPointer
@@ -215,7 +182,7 @@ struct AttribPointer
      */
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
     in(0 < size && size < 5)
-    in(normalized || type == GLType.glFloat || type == GLType.glDouble,
+    in(!normalized || isIntegral(type),
        "normalized may be set only for integer types")
     do
     {
@@ -251,6 +218,44 @@ private:
     bool _normalized;
     int _stride;
     ptrdiff_t _pointer;
+}
+///
+unittest
+{
+    setupOpenGLContext();
+    // Specifying layout of interleaved buffer.
+    // 2D-coordinates and RGB color (5 floats total) per vertex.
+    float[] vertices = [
+        -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // vertex 1
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // vertex 2
+         0.0f,  0.5f, 0.0f, 0.0f, 1.0f, // vertex 3
+    ];
+    auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 5 * float.sizeof, 0);
+    auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 5 * float.sizeof, 2 * float.sizeof);
+    auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    // Now position and color of the vertex is accessible in vertex shader as
+    // layout (location = 0) in vec2 position;
+    // layout (location = 1) in vec3 color;
+}
+///
+unittest
+{
+    setupOpenGLContext();
+    // Specifying layout of buffer, that stores attribute blocks in a batch.
+    // 2D-coordinates and RGB color (5 floats total) per vertex.
+    float[] vertices = [
+         // vertex 1          // vertex 2          // vertex 3
+        -0.5f, -0.5f,         0.5f, -0.5f,         0.0f,  0.5f,        // positions
+         1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // colors
+    ];
+    auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 2 * float.sizeof, 0);
+    auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 3 * float.sizeof, 3 * 2 * float.sizeof);
+    auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    // Now position and color of the vertex is accessible in vertex shader as
+    // layout (location = 0) in vec2 position;
+    // layout (location = 1) in vec3 color;
 }
 
 /** 
@@ -294,7 +299,7 @@ public:
      */
     void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
     in(0 < size && size < 5)
-    in(normalized || type == GLType.glFloat || type == GLType.glDouble,
+    in(!normalized || isIntegral(type),
        "normalized may be set only for integer types")
     do
     {
@@ -324,6 +329,7 @@ public:
      * `T` should be a struct or a class.
      * It can represent an `AttribPointer` by specifying a field by UDA `VertexAttrib`.
      * That field should be a static array or has a type `gfm.math.vector.Vector`.
+     * `VertexAttrib`s' indices should start from 0 and ascend by 1, but can be specified not in order. 
      *
      * Parameters of the attribute determined by:
      *
@@ -342,7 +348,7 @@ public:
     void pushUsingPattern(T)() pure nothrow @nogc
         if(is(T == struct) || is(T == class))
     {
-        import std.traits : getSymbolsByUDA, getUDAs;
+        import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
         import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
         import std.range : only, enumerate;
         import std.algorithm.searching : all;
@@ -370,7 +376,7 @@ public:
                 static assert(0 < N && N < 5,
                         "size (dimension of vector) should be in range from 1 to 4");
                 enum type = valueOfGLType!U;
-                static assert(attrs[i].normalized || type == GLType.glFloat || type == GLType.glDouble,
+                static assert(!attrs[i].normalized || isIntegral!U,
                               "normalized may be set only for integer types");
 
                 elements[prevLength + attrs[i].index] = 
@@ -382,6 +388,74 @@ public:
             }
         }}
         //dfmt on
+    }
+    ///
+    unittest
+    {
+        // Pattern.
+        struct Vertex
+        {
+            @VertexAttrib(0)
+            float[2] position;
+
+            @VertexAttrib(1)
+            float[3] color;
+
+            // @VertexAttrib(42) // Error, indices should ascend by 1.
+            // float[4] somethingElse;
+        }
+
+        VertexBufferLayout layout1;
+        layout1.pushUsingPattern!Vertex();
+
+        VertexBufferLayout layout2;
+        layout2.push!float(2);
+        layout2.push!float(3);
+
+        assert(layout1 == layout2);
+    }
+    ///
+    unittest
+    {
+        // Pattern is used to partially specify layout.
+        struct PartialVertex1
+        {
+            @VertexAttrib(0)
+            float[3] color;
+
+            @VertexAttrib(1)
+            float[2] textureCoord;
+        }
+        struct PartialVertex2
+        {
+            @VertexAttrib(0)
+            float[2] normal;
+
+            @VertexAttrib(1, true)
+            ubyte[1] size;
+        }
+
+        VertexBufferLayout layout1;
+        layout1.push!int(3);
+        layout1.pushUsingPattern!PartialVertex1();
+        layout1.push!uint(2, true);
+        layout1.pushUsingPattern!PartialVertex2();
+        layout1.push!byte(1);
+
+        VertexBufferLayout layout2;
+        layout2.push(3, GLType.glInt);
+        // PartialVertex1
+        layout2.push(3, GLType.glFloat);
+        layout2.push(2, GLType.glFloat);
+
+        layout2.push(2, GLType.glUInt, true);
+        // PartialVertex2
+        layout2.push(2, GLType.glFloat);
+        layout2.push(1, GLType.glUByte, true);
+
+        layout2.push(1, GLType.glByte);
+
+        assert(layout1 == layout2);
     }
 
     /** 
