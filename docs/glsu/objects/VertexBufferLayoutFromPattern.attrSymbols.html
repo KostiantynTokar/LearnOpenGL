@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.push</title>
+		<title>Alias VertexBufferLayoutFromPattern.attrSymbols</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,49 +55,29 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.push</h1><p>Pushes new attribute to the layout.
-</p>
+			<h1>Alias VertexBufferLayoutFromPattern.attrSymbols</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="typ">void</span> <span class="pln">push</span>
-			<span class="pun">(</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">size</span><span class="pun">,</span>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/enums/GLType.html"><span class="typ">GLType</span></a> <span class="pln">type</span><span class="pun">,</span>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">attrSymbols</span>
+			 <span class="pun">=</span> <span class="pln">getSymbolsByUDA</span>!(T,VertexAttrib)<span class="pun">;</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc</span><span class="pun">;</span>
-			<br/>
-			<br/>
-			<span class="typ">void</span> <span class="pln">push</span>(T)
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">size</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc</span><span class="pun">;</span>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Parameters</h2>
-<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
-<tr><td id="T">T</td><td> Specifies the data type of each component in the array.</td></tr>
-<tr><td id="size">size</td><td> Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.</td></tr>
-<tr><td id="type">type</td><td> Specifies the data type of each component in the array.</td></tr>
-<tr><td id="normalized">normalized</td><td> specifies whether fixed-point data values should be normalized (true) or
-                converted directly as fixed-point values (false) when they are accessed.
-                If <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.push.html#normalized"><span class="pln">normalized</span></a></code> is set to true, it indicates that values stored in an integer format
-                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
-                when they are accessed and converted to floating point.
-                Otherwise, values will be converted to floats directly without normalization.</td></tr>
-</table>
-</section>
-
+			
 			<footer>
 				<table class="license-info">
 					<tr>

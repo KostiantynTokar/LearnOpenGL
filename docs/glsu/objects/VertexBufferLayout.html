@@ -66,7 +66,7 @@ $('#symbolSearchPane').show();</script>
 				</code>
 			</div>
 			<section><p>Allows specifying a layout step-by-step.
- Calls to <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.push.html"><span class="pln">push</span></a></code> and <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.pushUsingPattern.html"><span class="pln">pushUsingPattern</span></a></code> should be done accordingly to the offset of vertex attributes,
+ Calls to <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.push.html"><span class="pln">push</span></a></code> and <code class="lang-d"><span class="pln">pushUsingPattern</span></code> should be done accordingly to the offset of vertex attributes,
  so that attributes with lesser offset should be pushed earlier.
 </p>
 </section>
@@ -79,9 +79,15 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.elements.html" class="private"><code>elements</code></a>
+							<a href="../../glsu/objects/VertexBufferLayout._elements.html" class="private"><code>_elements</code></a>
 						</td>
 						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">container<wbr/></span><span class="pun">.</span><span class="pln">array<wbr/></span><span class="pun">.</span><span class="typ">Array</span>!(glsu.objects.VertexBufferLayout.LayoutElement)</code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.base.html" class="private"><code>base</code></a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code></td><td></td>
 					</tr>
 				</table>
 			</section>
@@ -123,22 +129,12 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.push.html" class="public">
-								<code>push</code>
+							<a href="../../glsu/objects/VertexBufferLayout.calcPointer.html" class="private">
+								<code>calcPointer</code>
 							</a>
-							<span class="tableEntryAnnotation">(size, normalized)</span>
+							<span class="tableEntryAnnotation">(index)</span>
 						</td>
-						<td>Pushes new attribute to the layout. Determines <code class="lang-d"><span class="typ">GLType</span></code> from the template parameter.
-</td>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.pushUsingPattern.html" class="public">
-								<code>pushUsingPattern</code>
-							</a>
-							<span class="tableEntryAnnotation">()</span>
-						</td>
-						<td>Pushes new attributes to the layout according to the pattern specified by type <code class="lang-d"><span class="pln">T</span></code>.
+						<td>Calculates pointer of the attribute located on <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.calcPointer.html#index"><span class="pln">index</span></a></code>.
 </td>
 					</tr>
 					<tr>
@@ -146,10 +142,28 @@ $('#symbolSearchPane').show();</script>
 							<a href="../../glsu/objects/VertexBufferLayout.calcStride.html" class="private">
 								<code>calcStride</code>
 							</a>
-							<span class="tableEntryAnnotation">()</span>
+							<span class="tableEntryAnnotation">(index)</span>
 						</td>
-						<td>Calculates stride as sum of sizes of all attributes.
+						<td>Calculates stride of the attribute located on <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.calcStride.html#index"><span class="pln">index</span></a></code>.
 </td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.sizeOfAttribute.html" class="private">
+								<code>sizeOfAttribute</code>
+							</a>
+							<span class="tableEntryAnnotation">(elem)</span>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayout.sizeOfAttribute.html" class="private">
+								<code>sizeOfAttribute</code>
+							</a>
+							<span class="tableEntryAnnotation">(index)</span>
+						</td>
+						<td></td>
 					</tr>
 				</table>
 			</section>

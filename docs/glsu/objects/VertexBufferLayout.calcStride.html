@@ -55,21 +55,22 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.calcStride</h1><p>Calculates stride as sum of sizes of all attributes.
+			<h1>Function VertexBufferLayout.calcStride</h1><p>Calculates stride of the attribute located on <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.calcStride.html#index"><span class="pln">index</span></a></code>.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="typ">int</span> <span class="pln">calcStride</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
+			<span class="typ">int</span> <span class="pln">calcStride</span>
+			<span class="pun">(</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
+			<br/>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Returns</h2>
-<p>Stride of the vertex specified by the layout.
-</p>
-</section>
-
+			
 			<footer>
 				<table class="license-info">
 					<tr>

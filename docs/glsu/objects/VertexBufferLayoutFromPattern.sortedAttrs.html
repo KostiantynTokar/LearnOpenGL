@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Variable VertexBufferLayout.LayoutElement.pointer</title>
+		<title>Alias VertexBufferLayoutFromPattern.sortedAttrs</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,11 +55,11 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Variable VertexBufferLayout.LayoutElement.pointer</h1><p></p>
+			<h1>Alias VertexBufferLayoutFromPattern.sortedAttrs</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayout.LayoutElement.html"><span class="typ">VertexBufferLayout.LayoutElement</span></a>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
 			<br/>
 			<span class="pun">
 				{
@@ -67,8 +67,8 @@ $('#symbolSearchPane').show();</script>
 			</span>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">long</span> <span class="pln">pointer</span>
-			<span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">sortedAttrs</span>
+			 <span class="pun">=</span> <span class="pln">staticSort</span>!(comp,attrs)<span class="pun">;</span>
 			<br/>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>

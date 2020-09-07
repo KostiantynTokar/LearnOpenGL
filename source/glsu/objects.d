@@ -178,7 +178,7 @@ struct AttribPointer
      *                Otherwise, values will be converted to floats directly without normalization.
      *   stride = Specifies the byte offset between consecutive generic vertex attributes.
      *            If stride is 0, the generic vertex attributes are understood to be tightly packed in the array.
-     *   pointer = Specifies a offset of the first component of the first generic vertex attribute in the `VertexBufferObject`.
+     *   pointer = Specifies an offset of the first component of the first generic vertex attribute in the `VertexBufferObject`.
      */
     this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
     in(0 < size && size < 5)
@@ -275,6 +275,46 @@ unittest
     bool normalized = false;
 }
 
+/** 
+ * Basic functionality for vertex buffer layout objects.
+ *
+ * See_Also: `VertexBufferLayout`.
+ */
+private struct VertexBufferLayoutBase
+{
+public:
+    /** 
+     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
+     *
+     * By default equals to 1.
+     *
+     * Batch is a consecutive sequence of the same attributes.
+     *
+     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
+     *
+     * 123412341234
+     *
+     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
+     * Example for `batchCount` equal to 3:
+     *
+     * 111222333444
+     *
+     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
+     */
+    size_t batchCount() const pure nothrow @nogc @safe
+    {
+        return _batchCount;
+    }
+    /// ditto
+    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
+    {
+        _batchCount = newBatchCount;
+    }
+private:
+    size_t _batchCount = 1;
+    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
+}
+
 /**
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
@@ -288,6 +328,7 @@ public:
     /** 
      * Pushes new attribute to the layout.
      * Params:
+     *   T = Specifies the data type of each component in the array.
      *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
      *   type = Specifies the data type of each component in the array.
      *   normalized = specifies whether fixed-point data values should be normalized (true) or
@@ -300,179 +341,98 @@ public:
     void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
     in(0 < size && size < 5)
     in(!normalized || isIntegral(type),
-       "normalized may be set only for integer types")
+       "Normalized may be set only for integer types.")
     do
     {
-        elements ~= LayoutElement(size, type, normalized, calcStride());
+        _elements ~= LayoutElement(size, type, normalized);
     }
-
-    /** 
-     * Pushes new attribute to the layout. Determines `GLType` from the template parameter.
-     * Params:
-     *   size = Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
-     *   normalized = specifies whether fixed-point data values should be normalized (true) or
-     *                converted directly as fixed-point values (false) when they are accessed.
-     *                If `normalized` is set to true, it indicates that values stored in an integer format
-     *                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
-     *                when they are accessed and converted to floating point.
-     *                Otherwise, values will be converted to floats directly without normalization.
-     */
+    /// ditto
     void push(T)(int size, bool normalized = false) pure nothrow @nogc
     in(0 < size && size < 5)do
     {
         push(size, valueOfGLType!T, normalized);
     }
 
-    /** 
-     * Pushes new attributes to the layout according to the pattern specified by type `T`.
-     *
-     * `T` should be a struct or a class.
-     * It can represent an `AttribPointer` by specifying a field by UDA `VertexAttrib`.
-     * That field should be a static array or has a type `gfm.math.vector.Vector`.
-     * `VertexAttrib`s' indices should start from 0 and ascend by 1, but can be specified not in order. 
-     *
-     * Parameters of the attribute determined by:
-     *
-     * 1. index --- sum of count of previously pushed attributes and `VertexAttrib.index`;
-     *
-     * 2. size --- length of static array or Vector;
-     *
-     * 3. type --- type of elements of static array or Vector;
-     *
-     * 4. normalized --- `VertexAttrib.normalized` value;
-     *
-     * 5. stride --- size of all attributes pushed to the layout in the moment of enabling;
-     *
-     * 6. pointer --- size of all previously pushed attributes and the offset of the field.
-     *
-     * See_Also: `VertexBufferLayout.push`
-     */
-    void pushUsingPattern(T)() pure nothrow @nogc
-        if(is(T == struct) || is(T == class))
-    {
-        import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
-        import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
-        import std.range : only, enumerate;
-        import std.algorithm.searching : all;
-        import gfm.math.vector : Vector;
+    // ///
+    // unittest
+    // {
+    //     // Pattern.
+    //     struct Vertex
+    //     {
+    //         @VertexAttrib(0)
+    //         float[2] position;
 
-        alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
+    //         @VertexAttrib(1)
+    //         float[3] color;
 
-        alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
-        static assert(attrs.length == NoDuplicates!attrs.length, "indices should be unique");
+    //         // @VertexAttrib(42) // Error, indices should ascend by 1.
+    //         // float[4] somethingElse;
+    //     }
 
-        enum Comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
-        alias sortedAttrs = staticSort!(Comp, attrs);
-        static assert(sortedAttrs.only.enumerate.all!"a.index == a.value.index", 
-                      "indices should ascend from 0 by 1");
+    //     VertexBufferLayout layout1;
+    //     layout1.pushUsingPattern!Vertex();
 
-        immutable prevLength = elements.length;
-        immutable prevStride = calcStride();
-        elements.length = elements.length + attrs.length;
-        //dfmt off
-        static foreach (i; 0 .. attrSymbols.length)
-        {{
-            static if (is(typeof(attrSymbols[i]) == Vector!(U, N), U, int N) ||
-                       is(typeof(attrSymbols[i]) == U[N], U, int N))
-            {
-                static assert(0 < N && N < 5,
-                        "size (dimension of vector) should be in range from 1 to 4");
-                enum type = valueOfGLType!U;
-                static assert(!attrs[i].normalized || isIntegral!U,
-                              "normalized may be set only for integer types");
+    //     VertexBufferLayout layout2;
+    //     layout2.push!float(2);
+    //     layout2.push!float(3);
 
-                elements[prevLength + attrs[i].index] = 
-                    LayoutElement(N, type, attrs[i].normalized, prevStride + attrSymbols[i].offsetof);
-            }
-            else
-            {
-                static assert(0, "vertex attribute should be a static array or gfm.math.vector.Vector");
-            }
-        }}
-        //dfmt on
-    }
-    ///
-    unittest
-    {
-        // Pattern.
-        struct Vertex
-        {
-            @VertexAttrib(0)
-            float[2] position;
+    //     assert(layout1 == layout2);
+    // }
+    // ///
+    // unittest
+    // {
+    //     // Pattern is used to partially specify layout.
+    //     struct PartialVertex1
+    //     {
+    //         @VertexAttrib(0)
+    //         float[3] color;
 
-            @VertexAttrib(1)
-            float[3] color;
+    //         @VertexAttrib(1)
+    //         float[2] textureCoord;
+    //     }
+    //     struct PartialVertex2
+    //     {
+    //         @VertexAttrib(0)
+    //         float[2] normal;
 
-            // @VertexAttrib(42) // Error, indices should ascend by 1.
-            // float[4] somethingElse;
-        }
+    //         @VertexAttrib(1, true)
+    //         ubyte[1] size;
+    //     }
 
-        VertexBufferLayout layout1;
-        layout1.pushUsingPattern!Vertex();
+    //     VertexBufferLayout layout1;
+    //     layout1.push!int(3);
+    //     layout1.pushUsingPattern!PartialVertex1();
+    //     layout1.push!uint(2, true);
+    //     layout1.pushUsingPattern!PartialVertex2();
+    //     layout1.push!byte(1);
 
-        VertexBufferLayout layout2;
-        layout2.push!float(2);
-        layout2.push!float(3);
+    //     VertexBufferLayout layout2;
+    //     layout2.push(3, GLType.glInt);
+    //     // PartialVertex1
+    //     layout2.push(3, GLType.glFloat);
+    //     layout2.push(2, GLType.glFloat);
 
-        assert(layout1 == layout2);
-    }
-    ///
-    unittest
-    {
-        // Pattern is used to partially specify layout.
-        struct PartialVertex1
-        {
-            @VertexAttrib(0)
-            float[3] color;
+    //     layout2.push(2, GLType.glUInt, true);
+    //     // PartialVertex2
+    //     layout2.push(2, GLType.glFloat);
+    //     layout2.push(1, GLType.glUByte, true);
 
-            @VertexAttrib(1)
-            float[2] textureCoord;
-        }
-        struct PartialVertex2
-        {
-            @VertexAttrib(0)
-            float[2] normal;
+    //     layout2.push(1, GLType.glByte);
 
-            @VertexAttrib(1, true)
-            ubyte[1] size;
-        }
-
-        VertexBufferLayout layout1;
-        layout1.push!int(3);
-        layout1.pushUsingPattern!PartialVertex1();
-        layout1.push!uint(2, true);
-        layout1.pushUsingPattern!PartialVertex2();
-        layout1.push!byte(1);
-
-        VertexBufferLayout layout2;
-        layout2.push(3, GLType.glInt);
-        // PartialVertex1
-        layout2.push(3, GLType.glFloat);
-        layout2.push(2, GLType.glFloat);
-
-        layout2.push(2, GLType.glUInt, true);
-        // PartialVertex2
-        layout2.push(2, GLType.glFloat);
-        layout2.push(1, GLType.glUByte, true);
-
-        layout2.push(1, GLType.glByte);
-
-        assert(layout1 == layout2);
-    }
+    //     assert(layout1 == layout2);
+    // }
 
     /** 
      * Enables and sets all of the attributes represented by this object.
      */
     void enable() const nothrow @nogc
-    in(elements.length <= uint.max)do
+    in(_elements.length <= uint.max)do
     {
         import std.range : enumerate;
-        
-        immutable stride = calcStride();
 
-        foreach(i, ref elem; elements[].enumerate)
+        foreach(i, ref elem; _elements[].enumerate)
         {
-            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, stride, cast(const(void)*) elem.pointer);
+            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, calcStride(i), cast(const(void)*) calcPointer(i));
             glEnableVertexAttribArray(cast(uint) i);
         }
     }
@@ -481,41 +441,211 @@ public:
      * Disables all of the attributes represented by this object.
      */
     void disable() const nothrow @nogc
-    in(elements.length <= uint.max)do
+    in(_elements.length <= uint.max)do
     {
-        foreach (i; 0 .. elements.length)
+        foreach (i; 0 .. _elements.length)
         {
             glDisableVertexAttribArray(cast(uint) i);
         }
     }
+
 private:
+    VertexBufferLayoutBase base;
+    
+    alias base this;
+
     import std.container.array : Array;
 
     /** 
      * Internally used instead of `AttribPointer`.
      *
-     * Index of an attribute is an index of the entry in `elements`,
-     * and stride is calculated as total size of all attributes.
+     * Index of an attribute is an index of the entry in `_elements`,
+     * and stride and pointer is calculated according to `batchCount`.
      */
     struct LayoutElement
     {
         int size; // actually count
         GLType type;
         bool normalized;
-        ptrdiff_t pointer;
     }
 
-    Array!LayoutElement elements;
+    Array!LayoutElement _elements;
+
+    static size_t sizeOfAttribute(LayoutElement elem) pure nothrow @nogc @safe
+    {
+        return elem.size * elem.type.sizeOfGLType;
+    }
+
+    size_t sizeOfAttribute(size_t index) const pure nothrow @nogc @safe
+    {
+        return sizeOfAttribute(_elements[index]);
+    }
 
     /** 
-     * Calculates stride as sum of sizes of all attributes.
-     * Returns: Stride of the vertex specified by the layout.
+     * Calculates stride of the attribute located on `index`.
      */
-    int calcStride() const pure nothrow @nogc
+    int calcStride(size_t index) const pure nothrow @nogc
     {
-        import std.algorithm.iteration : fold;
+        import std.algorithm.iteration : map, sum;
         
-        return elements[].fold!((acc, elem) => acc + elem.size * elem.type.sizeOfGLType)(0);
+        if(batchCount == 1)
+        {
+            return _elements[]
+                .map!(x => cast(int) sizeOfAttribute(x))
+                .sum(0);
+        }
+        else
+        {
+            return cast(int) sizeOfAttribute(index);
+        }
+    }
+
+    /** 
+     * Calculates pointer of the attribute located on `index`.
+     */
+    ptrdiff_t calcPointer(size_t index) const pure nothrow @nogc
+    {
+        import std.algorithm.iteration : map, sum;
+
+        return batchCount * _elements[0 .. index]
+            .map!(sizeOfAttribute)
+            .sum(ptrdiff_t.init);
+    }
+}
+
+/** 
+ * Layout statically determined by the pattern specified by type `T`.
+ *
+ * `T` should be a struct or a class.
+ * It can represent an `AttribPointer` by specifying a field by UDA `VertexAttrib`.
+ * That field should be a static array or has a type `gfm.math.vector.Vector`.
+ * `VertexAttrib`s' indices should start from 0 and ascend by 1, but can be specified not in order. 
+ *
+ * Parameters of the attribute determined by:
+ *
+ * 1. index --- `VertexAttrib.index` value;
+ *
+ * 2. size --- length of static array or Vector;
+ *
+ * 3. type --- type of elements of static array or Vector;
+ *
+ * 4. normalized --- `VertexAttrib.normalized` value;
+ *
+ * 5. stride --- size of attributes and batchCount;
+ *
+ * 6. pointer --- size of attributes and batchCount.
+ *
+ * See_Also: `VertexBufferLayout`
+ */
+struct VertexBufferLayoutFromPattern(T)
+    if(is(T == struct) || is(T == class))
+{
+public:
+    /** 
+     * Enables and sets all of the attributes represented by this object.
+     */
+    void enable() const nothrow @nogc
+    {
+        //dfmt off
+        static foreach (i; 0 .. attrsCount)
+        {{
+            static if (is(typeof(sortedAttrSymbols[i]) == Vector!(U, N), U, int N) ||
+                       is(typeof(sortedAttrSymbols[i]) == U[N], U, int N))
+            {
+                static assert(0 < N && N < 5,
+                              "Size (dimension of vector) should be in range from 1 to 4.");
+                enum type = valueOfGLType!U;
+                static assert(!sortedAttrs[i].normalized || isIntegral!U,
+                              "Normalized may be set only for integer types.");
+
+                glVertexAttribPointer(sortedAttrs[i].index, N, type, sortedAttrs[i].normalized,
+                                      cast(int) calcStride!i, cast(const(void)*) calcPointer!i);
+                glEnableVertexAttribArray(sortedAttrs[i].index);
+            }
+            else
+            {
+                static assert(0, "Vertex attribute should be a static array or gfm.math.vector.Vector.");
+            }
+        }}
+        //dfmt on
+    }
+
+    /** 
+     * Disables all of the attributes represented by this object.
+     */
+    void disable() const nothrow @nogc
+    {
+        static foreach (attr; sortedAttrs)
+        {
+            glDisableVertexAttribArray(attr.index);
+        }
+    }
+
+private:
+    VertexBufferLayoutBase base;
+    
+    alias base this;
+
+    import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
+    import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+    import std.range : only, enumerate;
+    import std.algorithm.searching : all;
+    import gfm.math.vector : Vector;
+
+    alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
+
+    alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
+    static assert(attrs.length == attrSymbols.length, "Each field can be attributed by VertexAttrib only once.");
+    static assert(attrs.length == NoDuplicates!attrs.length, "Indices should be unique.");
+
+    enum comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
+    alias sortedAttrs = staticSort!(comp, attrs);
+    static assert(sortedAttrs.only.enumerate.all!"a.index == a.value.index", 
+                  "Indices should ascend from 0 by 1.");
+
+    enum compSymbols(alias s1, alias s2) = comp!(getUDAs!(s1, VertexAttrib)[0], getUDAs!(s2, VertexAttrib)[0]);
+    alias sortedAttrSymbols = staticSort!(compSymbols, attrSymbols);
+
+    enum attrsCount = attrs.length;
+
+    size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
+    {
+        static if (is(typeof(sortedAttrSymbols[index]) == Vector!(U, N), U, int N) ||
+                   is(typeof(sortedAttrSymbols[index]) == U[N], U, int N))
+        {
+            return N * U.sizeof;
+        }
+        else
+        {
+            static assert(0, "Vertex attribute should be a static array or gfm.math.vector.Vector.");
+        }
+    }
+
+    size_t sizeOfAllAttributesBefore(size_t index)() const pure nothrow @nogc @safe
+    {
+        size_t res = 0;
+        static foreach(i; 0 .. index)
+        {
+            res += sizeOfAttribute!i;
+        }
+        return res;
+    }
+
+    size_t calcStride(size_t index)() const pure nothrow @nogc @safe
+    {
+        if(batchCount == 1)
+        {
+            return sizeOfAllAttributesBefore!attrsCount;
+        }
+        else
+        {
+            return sizeOfAttribute!index;
+        }
+    }
+
+    size_t calcPointer(size_t index)() const pure nothrow @nogc @safe
+    {
+        return batchCount * sizeOfAllAttributesBefore!index;
     }
 }
 
@@ -568,14 +698,18 @@ struct VertexArrayObject
      *   buffer = Source for `VertexBufferObject`.
      *   usage = Describes how the `VertexBufferObject` would be used.
      *
-     * See_Also: `VertexBufferLayout.pushUsingPattern`.
+     * See_Also: `VertexBufferLayoutFromPattern`.
      */
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
     {
         auto VBO = VertexBufferObject(buffer, usage);
-        VertexBufferLayout layout;
-        layout.pushUsingPattern!T();
-        this(VBO, layout);
+        VertexBufferLayoutFromPattern!T layout;
+
+        glGenVertexArrays(1, &_id);
+        mixin(ScopedBind!this);
+
+        VBO.bind();
+        layout.enable();
     }
 
     /** 
