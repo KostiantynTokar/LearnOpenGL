@@ -167,6 +167,7 @@
 <url><loc>http://127.0.0.1/glsu/util/GLFW._minor.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/GLFW.initLib.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/isIntegral.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/isVertexBufferLayout.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/ScopedBind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/sizeOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>

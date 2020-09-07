@@ -209,6 +209,7 @@ var symbols = [
 {name: 'glsu.util.GLFW._minor', kind: "variabledeclaration", path: './glsu/util/GLFW._minor.html', attributes: []},
 {name: 'glsu.util.GLFW.initLib', kind: "functiondeclaration", path: './glsu/util/GLFW.initLib.html', attributes: ["static", "nothrow", "nogc"]},
 {name: 'glsu.util.isIntegral', kind: "functiondeclaration", path: './glsu/util/isIntegral.html', attributes: ["pure", "nothrow", "nogc", "safe"]},
+{name: 'glsu.util.isVertexBufferLayout', kind: "enummemberdeclaration", path: './glsu/util/isVertexBufferLayout.html', attributes: []},
 {name: 'glsu.util.ScopedBind', kind: "enummemberdeclaration", path: './glsu/util/ScopedBind.html', attributes: []},
 {name: 'glsu.util.sizeOfGLType', kind: "functiondeclaration", path: './glsu/util/sizeOfGLType.html', attributes: ["pure", "nothrow", "nogc", "safe"]},
 {name: 'glsu.util.valueOfGLType', kind: "templatedeclaration", path: './glsu/util/valueOfGLType.html', attributes: []},

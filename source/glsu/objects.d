@@ -278,7 +278,7 @@ unittest
 /** 
  * Basic functionality for vertex buffer layout objects.
  *
- * See_Also: `VertexBufferLayout`.
+ * See_Also: `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
  */
 private struct VertexBufferLayoutBase
 {
@@ -319,8 +319,12 @@ private:
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
  * Allows specifying a layout step-by-step.
- * Calls to `push` and `pushUsingPattern` should be done accordingly to the offset of vertex attributes,
+ * Calls to `push` and should be done accordingly to the offset of vertex attributes,
  * so that attributes with lesser offset should be pushed earlier.
+ *
+ * Extends `VertexBufferLayoutBase`.
+ *
+ * See_Also: `VertexBufferLayoutBase`, `VertexBufferLayoutFromPattern`.
  */
 struct VertexBufferLayout
 {
@@ -514,6 +518,8 @@ private:
 }
 
 /** 
+ * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
+ *
  * Layout statically determined by the pattern specified by type `T`.
  *
  * `T` should be a struct or a class.
@@ -535,7 +541,9 @@ private:
  *
  * 6. pointer --- size of attributes and batchCount.
  *
- * See_Also: `VertexBufferLayout`
+ * Extends `VertexBufferLayoutBase`.
+ *
+ * See_Also: `VertexBufferLayoutBase`, `VertexBufferLayout`.
  */
 struct VertexBufferLayoutFromPattern(T)
     if(is(T == struct) || is(T == class))
@@ -676,14 +684,15 @@ struct VertexArrayObject
     }
 
     /** 
-     * Constructor that binds `VertexBufferObject` with a `VertexBufferLayout`.
+     * Constructor that binds `VertexBufferObject` with a layout object.
      * Params:
      *   VBO = Buffer to bind with this VAO.
      *   layout = Layout of the `VBO`.
      *
-     * See_Also: `VertexBufferObject`, `VertexBufferLayout`.
+     * See_Also: `VertexBufferObject`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
      */
-    this(VertexBufferObject VBO, VertexBufferLayout layout) nothrow @nogc
+    this(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
+        if(isVertexBufferLayout!Layout)
     {
         glGenVertexArrays(1, &_id);
         mixin(ScopedBind!this);
@@ -704,12 +713,7 @@ struct VertexArrayObject
     {
         auto VBO = VertexBufferObject(buffer, usage);
         VertexBufferLayoutFromPattern!T layout;
-
-        glGenVertexArrays(1, &_id);
-        mixin(ScopedBind!this);
-
-        VBO.bind();
-        layout.enable();
+        this(VBO, layout);
     }
 
     /** 

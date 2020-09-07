@@ -6,6 +6,7 @@
 module glsu.util;
 
 import glsu.enums : GLType, GLError;
+import glsu.objects : VertexBufferLayout, VertexBufferLayoutFromPattern;
 
 /// Determine GL enum value that corresponds to D type.
 template valueOfGLType(T)
@@ -107,6 +108,9 @@ bool isIntegral(GLType type) pure nothrow @nogc @safe
             return false;
     }
 }
+
+/// Trait to determine vertex buffer layouts.
+enum isVertexBufferLayout(T) = is(T : VertexBufferLayout) || is(T : VertexBufferLayoutFromPattern!(U), U);
 
 /** 
  * Repeatedly calls `glGetError`, clearing all GL error flags.

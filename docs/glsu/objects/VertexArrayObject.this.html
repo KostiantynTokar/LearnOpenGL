@@ -101,19 +101,21 @@ $('#symbolSearchPane').show();</script>
 <p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>.
 </p>
 </section>
-<h2 id="1">Function VertexArrayObject.this</h2><p>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+<h2 id="1">Function VertexArrayObject.this</h2><p>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a layout object.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">ref </span><span class="pln">this</span>
+			<span class="pln">this</span>(Layout)
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/BufferObejct.html"><span class="typ">BufferObejct</span></a>!(34962) <span class="pln">VBO</span><span class="pun">,</span>
+			&nbsp;&nbsp;<a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a> <span class="pln">VBO</span><span class="pun">,</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a> <span class="pln">layout</span>
+			&nbsp;&nbsp;<span class="typ">Layout</span> <span class="pln">layout</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow @nogc</span><span class="pun">;</span>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow @nogc</span>
+			<br/>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isVertexBufferLayout</span><span class="pun">!</span><span class="typ">Layout</span><span class="pun">);</span>
 					</div>
 				</code>
 			</div>
@@ -125,7 +127,7 @@ $('#symbolSearchPane').show();</script>
 </table>
 </section>
 <section><h3>See Also</h3>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a></code>.
 </p>
 </section>
 <h2 id="2">Function VertexArrayObject.this</h2><p>Constructor that creates <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and automatically determines its layout using <code class="lang-d"><span class="pln">T</span></code> as pattern.

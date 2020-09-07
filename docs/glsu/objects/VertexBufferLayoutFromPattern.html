@@ -55,7 +55,7 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct VertexBufferLayoutFromPattern</h1><p>Layout statically determined by the pattern specified by type <code class="lang-d"><span class="pln">T</span></code>.
+			<h1>Struct VertexBufferLayoutFromPattern</h1><p>Represents <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> layout. Works as an array of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
@@ -68,7 +68,10 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</code>
 			</div>
-			<section><p><code class="lang-d"><span class="pln">T</span></code> should be a struct or a class.
+			<section><p>Layout statically determined by the pattern specified by type <code class="lang-d"><span class="pln">T</span></code>.
+</p>
+
+<p> <code class="lang-d"><span class="pln">T</span></code> should be a struct or a class.
  It can represent an <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code> by specifying a field by UDA <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.html"><span class="typ">VertexAttrib</span></a></code>.
  That field should be a static array or has a type <code class="lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span></code>.
  <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.html"><span class="typ">VertexAttrib</span></a></code>s' indices should start from 0 and ascend by 1, but can be specified not in order.
@@ -93,6 +96,9 @@ $('#symbolSearchPane').show();</script>
 </p>
 
 <p> 6. pointer --- size of attributes and batchCount.
+</p>
+
+<p> Extends <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code>.
 </p>
 </section>
 
@@ -215,7 +221,7 @@ $('#symbolSearchPane').show();</script>
 				</table>
 			</section>
 			<section><h2>See Also</h2>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
 </p>
 </section>
 
