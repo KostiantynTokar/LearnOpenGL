@@ -436,7 +436,8 @@ public:
 
         foreach(i, ref elem; _elements[].enumerate)
         {
-            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized, calcStride(i), cast(const(void)*) calcPointer(i));
+            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized,
+                                  cast(int) calcStride(i), cast(const(void)*) calcPointer(i));
             glEnableVertexAttribArray(cast(uint) i);
         }
     }
@@ -454,9 +455,10 @@ public:
     }
 
 private:
-    VertexBufferLayoutBase base;
+    /// Extended object.
+    VertexBufferLayoutBase _base;
     
-    alias base this;
+    alias _base this;
 
     import std.container.array : Array;
 
@@ -488,19 +490,19 @@ private:
     /** 
      * Calculates stride of the attribute located on `index`.
      */
-    int calcStride(size_t index) const pure nothrow @nogc
+    size_t calcStride(size_t index) const pure nothrow @nogc
     {
         import std.algorithm.iteration : map, sum;
         
         if(batchCount == 1)
         {
             return _elements[]
-                .map!(x => cast(int) sizeOfAttribute(x))
-                .sum(0);
+                .map!(x => sizeOfAttribute(x))
+                .sum(size_t.init);
         }
         else
         {
-            return cast(int) sizeOfAttribute(index);
+            return sizeOfAttribute(index);
         }
     }
 
@@ -557,15 +559,15 @@ public:
         //dfmt off
         static foreach (i; 0 .. attrsCount)
         {{
-            static if (is(typeof(sortedAttrSymbols[i]) == Vector!(U, N), U, int N) ||
-                       is(typeof(sortedAttrSymbols[i]) == U[N], U, int N))
+            static if (is(typeof(sortedMarkedSymbols[i]) == Vector!(U, N), U, int N) ||
+                       is(typeof(sortedMarkedSymbols[i]) == U[N], U, int N))
             {
                 static assert(0 < N && N < 5,
                               "Size (dimension of vector) should be in range from 1 to 4.");
-                enum type = valueOfGLType!U;
                 static assert(!sortedAttrs[i].normalized || isIntegral!U,
                               "Normalized may be set only for integer types.");
 
+                enum type = valueOfGLType!U;
                 glVertexAttribPointer(sortedAttrs[i].index, N, type, sortedAttrs[i].normalized,
                                       cast(int) calcStride!i, cast(const(void)*) calcPointer!i);
                 glEnableVertexAttribArray(sortedAttrs[i].index);
@@ -590,9 +592,10 @@ public:
     }
 
 private:
-    VertexBufferLayoutBase base;
+    /// Extended object.
+    VertexBufferLayoutBase _base;
     
-    alias base this;
+    alias _base this;
 
     import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
     import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
@@ -600,10 +603,10 @@ private:
     import std.algorithm.searching : all;
     import gfm.math.vector : Vector;
 
-    alias attrSymbols = getSymbolsByUDA!(T, VertexAttrib);
+    alias markedSymbols = getSymbolsByUDA!(T, VertexAttrib);
 
-    alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), attrSymbols);
-    static assert(attrs.length == attrSymbols.length, "Each field can be attributed by VertexAttrib only once.");
+    alias attrs = staticMap!(ApplyRight!(getUDAs, VertexAttrib), markedSymbols);
+    static assert(attrs.length == markedSymbols.length, "Each field can be attributed by VertexAttrib only once.");
     static assert(attrs.length == NoDuplicates!attrs.length, "Indices should be unique.");
 
     enum comp(VertexAttrib a1, VertexAttrib a2) = a1.index < a2.index;
@@ -612,14 +615,14 @@ private:
                   "Indices should ascend from 0 by 1.");
 
     enum compSymbols(alias s1, alias s2) = comp!(getUDAs!(s1, VertexAttrib)[0], getUDAs!(s2, VertexAttrib)[0]);
-    alias sortedAttrSymbols = staticSort!(compSymbols, attrSymbols);
+    alias sortedMarkedSymbols = staticSort!(compSymbols, markedSymbols);
 
     enum attrsCount = attrs.length;
 
     size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
     {
-        static if (is(typeof(sortedAttrSymbols[index]) == Vector!(U, N), U, int N) ||
-                   is(typeof(sortedAttrSymbols[index]) == U[N], U, int N))
+        static if (is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
+                   is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
         {
             return N * U.sizeof;
         }
