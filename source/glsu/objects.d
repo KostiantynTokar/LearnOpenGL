@@ -197,7 +197,7 @@ struct AttribPointer
     /** 
      * Enables and sets the attribute.
      */
-    void enable() const nothrow @nogc
+    void bind() const nothrow @nogc
     {
         glVertexAttribPointer(_index, _size, _type, _normalized, _stride, cast(const(void)*) _pointer);
         glEnableVertexAttribArray(_index);
@@ -206,7 +206,7 @@ struct AttribPointer
     /** 
      * Disables the attribute.
      */
-    void disable() const nothrow @nogc
+    void unbind() const nothrow @nogc
     {
         glDisableVertexAttribArray(_index);
     }
@@ -429,7 +429,7 @@ public:
     /** 
      * Enables and sets all of the attributes represented by this object.
      */
-    void enable() const nothrow @nogc
+    void bind() const nothrow @nogc
     in(_elements.length <= uint.max)do
     {
         import std.range : enumerate;
@@ -445,7 +445,7 @@ public:
     /** 
      * Disables all of the attributes represented by this object.
      */
-    void disable() const nothrow @nogc
+    void unbind() const nothrow @nogc
     in(_elements.length <= uint.max)do
     {
         foreach (i; 0 .. _elements.length)
@@ -554,7 +554,7 @@ public:
     /** 
      * Enables and sets all of the attributes represented by this object.
      */
-    void enable() const nothrow @nogc
+    void bind() const nothrow @nogc
     {
         //dfmt off
         static foreach (i; 0 .. attrsCount)
@@ -583,7 +583,7 @@ public:
     /** 
      * Disables all of the attributes represented by this object.
      */
-    void disable() const nothrow @nogc
+    void unbind() const nothrow @nogc
     {
         static foreach (attr; sortedAttrs)
         {
@@ -682,7 +682,7 @@ struct VertexArrayObject
         VBO.bind();
         foreach (ref attr; attrs)
         {
-            attr.enable();
+            attr.bind();
         }
     }
 
@@ -701,7 +701,7 @@ struct VertexArrayObject
         mixin(ScopedBind!this);
 
         VBO.bind();
-        layout.enable();
+        layout.bind();
     }
 
     /** 
@@ -748,7 +748,7 @@ struct VertexArrayObject
      * Draw call that uses vertices of `VertexBufferObject` and layout bounded to this object.
      * Params:
      *   mode = Specifies what kind of primitives to render.
-     *   first = Specifies the starting index in the enabled arrays.
+     *   first = Specifies the starting index in the binded arrays.
      *   count = Specifies the number of vertices to be rendered.
      */
     void draw(RenderMode mode, int first, int count) const nothrow @nogc
@@ -958,10 +958,19 @@ struct ShaderProgram
     /** 
      * Activate program.
      */
-    void use() const nothrow @nogc
+    void bind() const nothrow @nogc
     in(isValid)do
     {
         glUseProgram(id);
+    }
+
+    /** 
+     * Deactivate program.
+     */
+    void unbind() const nothrow @nogc
+    in(isValid)do
+    {
+        glUseProgram(0);
     }
 
     /** 
