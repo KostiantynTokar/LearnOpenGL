@@ -68,12 +68,12 @@ struct BufferObejct(BufferType type)
     }
 
     /** 
-     * Unbinds the object, affecting state of OpenGL.
+     * Unbinds the object, affecting state of OpenGL, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
     in(isValid)do
     {
-        glBindBuffer(type, 0);
+        debug(glChecks) glBindBuffer(type, 0);
     }
 
     static if (type == BufferType.element)
@@ -768,12 +768,12 @@ struct VertexArrayObject
     }
 
     /** 
-     * Unbinds the object, affecting state of OpenGL.
+     * Unbinds the object, affecting state of OpenGL, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
     in(isValid)do
     {
-        glBindVertexArray(0);
+        debug(glChecks) glBindVertexArray(0);
     }
 
     /** 
@@ -965,12 +965,12 @@ struct ShaderProgram
     }
 
     /** 
-     * Deactivate program.
+     * Deactivate program, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
     in(isValid)do
     {
-        glUseProgram(0);
+        debug(glChecks) glUseProgram(0);
     }
 
     /** 
