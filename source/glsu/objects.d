@@ -344,6 +344,8 @@ public:
      * 5. stride --- size of all attributes pushed to the layout in the moment of enabling;
      *
      * 6. pointer --- size of all previously pushed attributes and the offset of the field.
+     *
+     * See_Also: `VertexBufferLayout.push`
      */
     void pushUsingPattern(T)() pure nothrow @nogc
         if(is(T == struct) || is(T == class))
@@ -662,11 +664,6 @@ private:
  */
 struct IndexedVertexArrayObject
 {
-    /// Underlying `VertexArrayObject`.
-    VertexArrayObject VAO;
-
-    alias VAO this;
-
     /** 
      * Constructor that binds `ElementBufferArray` to `VertexArrayObject`.
      */
@@ -707,6 +704,10 @@ struct IndexedVertexArrayObject
     }
 
 private:
+    /// Underlying `VertexArrayObject`.
+    VertexArrayObject VAO;
+    alias VAO this;
+    
     GLType _indexType;
     int _count;
 }
