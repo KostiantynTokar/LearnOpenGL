@@ -93,7 +93,6 @@ void main()
         vec2f texCoord;
     }
 
-    //dfmt off
     Vertex[] vertices = [
         Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
         Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 0.0f) ),
@@ -149,27 +148,9 @@ void main()
         vec3f( 1.5f,  0.2f, -1.5f), 
         vec3f(-1.3f,  1.0f, -1.5f)
     ];
-    //dfmt on
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
-
-    // auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
-    // scope(exit) VBO.destroy();
-
-    // struct PartialVertex
-    // {
-    //     @VertexAttrib(0)
-    //     vec2f texCoord;
-    // }
-
-    // VertexBufferLayout layout;
-    // layout.push!float(3);
-    // // layout.push!float(2);
-    // layout.pushUsingPattern!PartialVertex();
-
-    // auto VAO = VertexArrayObject(VBO, layout);
-    // scope(exit) VAO.destroy();
 
     auto texture1 = Texture.create("resources\\container.jpg").assertNoError!Texture();
     texture1.setWrapMode(Texture.Coord.s, Texture.WrapMode.clampToBorder);

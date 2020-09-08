@@ -158,7 +158,8 @@ debug(glChecks)
             enum bodyRet = "\n\treturn returnValue;";
         }
 
-        enum hackBodyMessage = "string logMessage = \"Executing \" ~ \"" ~ name ~ `" ~ "("` ~ (Params.length == 0? "" : " ~ ") ~ argsToString ~ ` ~ ")";`;
+        enum hackBodyMessage = "string logMessage = \"Executing \" ~ \"" ~ name ~ `" ~ "("` ~
+                               (Params.length == 0? "" : " ~ ") ~ argsToString ~ ` ~ ")";`;
         enum hackBodyCheck = "assertNoGLErrors(logMessage, file, line);";
 
         enum hackBody = "{\n" ~
@@ -167,7 +168,6 @@ debug(glChecks)
                         "\t}";
         enum bodyEnd = "\tdebugHack(" ~ hackBody ~ ");";
 
-        //dfmt off
         enum body = "{\n" ~ 
                         bodyImport ~ "\n" ~
                         bodyBegin ~ "\n" ~
@@ -175,7 +175,6 @@ debug(glChecks)
                         bodyEnd ~
                         bodyRet ~ "\n" ~
                     "}";
-        //dfmt on
 
         enum generatedFunc = signature ~ "\n" ~ body;
 

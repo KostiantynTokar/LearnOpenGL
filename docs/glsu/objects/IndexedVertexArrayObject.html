@@ -142,7 +142,43 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 				</table>
 			</section>
-			
+			<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+
+</span><span class="kwd">struct </span><span class="typ">Vertex
+</span><span class="pun">{
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">position</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">color</span><span class="pun">;
+}
+
+</span><span class="typ">Vertex</span><span class="pun">[] </span><span class="pln">vertices </span><span class="pun">= [
+    </span><span class="typ">Vertex</span><span class="pun">([-</span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">], [</span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">]), </span><span class="com">// 0, bottom left
+    </span><span class="typ">Vertex</span><span class="pun">([ </span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">], [</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">]), </span><span class="com">// 1, bottom right
+    </span><span class="typ">Vertex</span><span class="pun">([ </span><span class="lit">0.5f</span><span class="pun">,  </span><span class="lit">0.5f</span><span class="pun">], [</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">]), </span><span class="com">// 2, top right
+    </span><span class="typ">Vertex</span><span class="pun">([-</span><span class="lit">0.5f</span><span class="pun">,  </span><span class="lit">0.5f</span><span class="pun">], [</span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">]), </span><span class="com">// 3, top left
+</span><span class="pun">];
+</span><span class="typ">uint</span><span class="pun">[] </span><span class="pln">indices </span><span class="pun">= [
+    </span><span class="lit">0</span><span class="pun">, </span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="com">// first triangle
+    </span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="com">// second triangle
+</span><span class="pun">];
+
+</span><span class="kwd">auto </span><span class="pln">EBO </span><span class="pun">= <a href="../../glsu/objects/ElementBufferArray.html"></span><span class="typ">ElementBufferArray</span></a><span class="pun">(</span><span class="pln">indices</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">);
+
+</span><span class="kwd">auto <a href="../../glsu/objects/IndexedVertexArrayObject.VAO.html"></span><span class="pln">VAO</span></a><span class="pln"> </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(</span><span class="pln">vertices</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">)<wbr/>.</span><span class="pln">bindElementBufferArray</span><span class="pun">(</span><span class="pln">EBO</span><span class="pun">);
+</span><span class="kwd">scope</span><span class="pun">(</span><span class="pln">exit</span><span class="pun">) </span><span class="pln">VAO<wbr/></span><span class="pun">.</span><span class="pln">destroy</span><span class="pun">();
+
+</span><span class="typ">void </span><span class="pln">later</span><span class="pun">()
+{
+    </span><span class="pln">VAO<wbr/></span><span class="pun">.</span><span class="pln">drawElements</span><span class="pun">(</span><span class="typ">RenderMode<wbr/></span><span class="pun">.</span><span class="pln">triangles</span><span class="pun">, </span><span class="lit">3</span><span class="pun">); </span><span class="com">// Draw only first triangle.
+    </span><span class="pln">VAO<wbr/></span><span class="pun">.</span><span class="pln">drawElements</span><span class="pun">(</span><span class="typ">RenderMode<wbr/></span><span class="pun">.</span><span class="pln">triangles</span><span class="pun">); </span><span class="com">// Draw all elements.
+</span><span class="pun">}
+</span></code></pre>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

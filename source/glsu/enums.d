@@ -43,7 +43,6 @@ enum DataUsage
     dynamicCopy = GL_DYNAMIC_COPY /// Modified repeatedly by GL, used many times, source for GL.
 }
 
-// dfmt off
 /// Kind of primitives to render in GL draw calls.
 enum RenderMode
 {
@@ -59,7 +58,6 @@ enum RenderMode
     triangleStripAdjacency = GL_TRIANGLE_STRIP_ADJACENCY,
     trianglesAdjacency = GL_TRIANGLES_ADJACENCY
 }
-// dfmt on
 
 /// Error codes that could be returned by `glGetError`.
 enum GLError

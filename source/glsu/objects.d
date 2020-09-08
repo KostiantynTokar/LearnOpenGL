@@ -37,7 +37,7 @@ struct BufferObejct(BufferType type)
      */
     void setData(T)(const T[] buffer, DataUsage usage) nothrow @nogc
             if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
-    in(isValid && buffer.length <= int.max)do
+    in(isValid && buffer.length <= int.max)
     {
         mixin(ScopedBind!this);
         glBufferData(type, buffer.length * T.sizeof, buffer.ptr, usage);
@@ -53,7 +53,7 @@ struct BufferObejct(BufferType type)
      * OpenGL object id.
      */
     uint id() const pure nothrow @nogc @safe
-    in(_id != 0)do
+    in(_id != 0)
     {
         return _id;
     }
@@ -62,7 +62,7 @@ struct BufferObejct(BufferType type)
      * Binds the object, affecting state of OpenGL.
      */
     void bind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glBindBuffer(type, id);
     }
@@ -71,7 +71,7 @@ struct BufferObejct(BufferType type)
      * Unbinds the object, affecting state of OpenGL, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         debug(glChecks) glBindBuffer(type, 0);
     }
@@ -82,7 +82,7 @@ struct BufferObejct(BufferType type)
          * Type of indices that the buffer contains.
          */
         GLType indexType() const pure nothrow @nogc @safe
-        in(isValid)do
+        in(isValid)
         {
             return _indexType;
         }
@@ -91,7 +91,7 @@ struct BufferObejct(BufferType type)
          * Count of indices that the buffer contains.
          */
         uint count() const pure nothrow @nogc @safe
-        in(isValid)do
+        in(isValid)
         {
             return _count;
         }
@@ -101,7 +101,7 @@ struct BufferObejct(BufferType type)
      * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
      */
     void destroy() nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glDeleteBuffers(1, &_id);
         _id = 0;
@@ -234,6 +234,7 @@ unittest
     auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 5 * float.sizeof, 0);
     auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 5 * float.sizeof, 2 * float.sizeof);
     auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    VAO.bind();
     // Now position and color of the vertex is accessible in vertex shader as
     // layout (location = 0) in vec2 position;
     // layout (location = 1) in vec3 color;
@@ -253,6 +254,7 @@ unittest
     auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 2 * float.sizeof, 0);
     auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 3 * float.sizeof, 3 * 2 * float.sizeof);
     auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    VAO.bind();
     // Now position and color of the vertex is accessible in vertex shader as
     // layout (location = 0) in vec2 position;
     // layout (location = 1) in vec3 color;
@@ -365,7 +367,7 @@ public:
     }
     /// ditto
     void push(T)(int size, bool normalized = false) pure nothrow @nogc
-    in(0 < size && size < 5)do
+    in(0 < size && size < 5)
     {
         push(size, valueOfGLType!T, normalized);
     }
@@ -374,7 +376,7 @@ public:
      * Enables and sets all of the attributes represented by this object.
      */
     void bind() const nothrow @nogc
-    in(_elements.length <= uint.max)do
+    in(_elements.length <= uint.max)
     {
         import std.range : enumerate;
 
@@ -390,7 +392,7 @@ public:
      * Disables all of the attributes represented by this object.
      */
     void unbind() const nothrow @nogc
-    in(_elements.length <= uint.max)do
+    in(_elements.length <= uint.max)
     {
         foreach (i; 0 .. _elements.length)
         {
@@ -493,7 +495,7 @@ private:
      */
     AttribPointer calcAttrib(size_t index) const pure nothrow @nogc
     in(index < uint.max)
-    in(calcStride(index) <= int.max)do
+    in(calcStride(index) <= int.max)
     {
         return AttribPointer(cast(uint) index, _elements[index].size,
                              _elements[index].type, _elements[index].normalized,
@@ -513,7 +515,8 @@ unittest
     auto layout2 = [
         AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
         AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
-        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof + 2 * int.sizeof)
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof +
+                                                                                            2 * int.sizeof)
     ];
 
     import std.algorithm : equal;
@@ -797,7 +800,8 @@ unittest
     auto layout2 = [
         AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
         AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
-        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof + 2 * int.sizeof)
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof +
+                                                                                            2 * int.sizeof)
     ];
 
     import std.algorithm : equal;
@@ -885,7 +889,7 @@ struct VertexArrayObject
      * OpenGL object id.
      */
     uint id() const pure nothrow @nogc @safe
-    in(_id != 0)do
+    in(_id != 0)
     {
         return _id;
     }
@@ -901,7 +905,7 @@ struct VertexArrayObject
      * See_Also: `IndexedVertexArrayObject`
      */
     IndexedVertexArrayObject bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         return IndexedVertexArrayObject(this, EBO);
     }
@@ -914,7 +918,7 @@ struct VertexArrayObject
      *   count = Specifies the number of vertices to be rendered.
      */
     void draw(RenderMode mode, int first, int count) const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         mixin(ScopedBind!this);
         glDrawArrays(mode, first, count);
@@ -924,7 +928,7 @@ struct VertexArrayObject
      * Binds the object, affecting state of OpenGL.
      */
     void bind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glBindVertexArray(id);
     }
@@ -933,7 +937,7 @@ struct VertexArrayObject
      * Unbinds the object, affecting state of OpenGL, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         debug(glChecks) glBindVertexArray(0);
     }
@@ -942,7 +946,7 @@ struct VertexArrayObject
      * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
      */
     void destroy() nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glDeleteVertexArrays(1, &_id);
         _id = 0;
@@ -958,6 +962,34 @@ struct VertexArrayObject
 
 private:
     uint _id;
+}
+///
+unittest
+{
+    setupOpenGLContext();
+    
+    struct Vertex
+    {
+        @VertexAttrib(0)
+        float[2] position;
+
+        @VertexAttrib(1)
+        float[3] color;
+    }
+
+    Vertex[] vertices = [
+        Vertex([-0.5f, -0.5f], [1.0f, 0.0f, 0.0f]),
+        Vertex([ 0.5f, -0.5f], [0.0f, 1.0f, 0.0f]),
+        Vertex([ 0.0f,  0.5f], [0.0f, 0.0f, 1.0f]),
+    ];
+
+    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    scope(exit) VAO.destroy();
+
+    void later()
+    {
+        VAO.draw(RenderMode.triangles, 0, 3);
+    }
 }
 
 /** 
@@ -986,7 +1018,7 @@ struct IndexedVertexArrayObject
      *   count = Specifies the number of elements to be rendered.
      */
     void drawElements(RenderMode mode, int count) const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         mixin(ScopedBind!this);
         glDrawElements(mode, count, _indexType, null);
@@ -1000,7 +1032,7 @@ struct IndexedVertexArrayObject
      *   mode = Specifies what kind of primitives to render.
      */
     void drawElements(RenderMode mode) const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         mixin(ScopedBind!this);
         glDrawElements(mode, _count, _indexType, null);
@@ -1013,6 +1045,42 @@ private:
     
     GLType _indexType;
     int _count;
+}
+///
+unittest
+{
+    setupOpenGLContext();
+    
+    struct Vertex
+    {
+        @VertexAttrib(0)
+        float[2] position;
+
+        @VertexAttrib(1)
+        float[3] color;
+    }
+
+    Vertex[] vertices = [
+        Vertex([-0.5f, -0.5f], [1.0f, 0.0f, 0.0f]), // 0, bottom left
+        Vertex([ 0.5f, -0.5f], [0.0f, 1.0f, 0.0f]), // 1, bottom right
+        Vertex([ 0.5f,  0.5f], [0.0f, 0.0f, 1.0f]), // 2, top right
+        Vertex([-0.5f,  0.5f], [1.0f, 0.0f, 1.0f]), // 3, top left
+    ];
+    uint[] indices = [
+        0, 1, 2, // first triangle
+        0, 2, 3, // second triangle
+    ];
+
+    auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
+
+    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw).bindElementBufferArray(EBO);
+    scope(exit) VAO.destroy();
+
+    void later()
+    {
+        VAO.drawElements(RenderMode.triangles, 3); // Draw only first triangle.
+        VAO.drawElements(RenderMode.triangles); // Draw all elements.
+    }
 }
 
 /// Represents OpenGL shader program.
@@ -1049,7 +1117,7 @@ struct ShaderProgram
 
             import glad.gl.enums : GL_COMPILE_STATUS;
 
-            ShaderOrError res;
+            ShaderOrError resInner;
 
             int success;
             int infoLogLength;
@@ -1064,14 +1132,14 @@ struct ShaderProgram
                 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
                 char[] infoLog = new char[infoLogLength];
                 glGetShaderInfoLog(shader, infoLogLength, null, infoLog.ptr);
-                res = "ERROR::SHADER::" ~ type.stringof.toUpper
-                    ~ "::COMPILATION_FAILED\n" ~ shaderPath ~ "\n" ~ infoLog.idup;
+                resInner = "ERROR::SHADER::" ~ type.stringof.toUpper ~
+                           "::COMPILATION_FAILED\n" ~ shaderPath ~ "\n" ~ infoLog.idup;
                 glDeleteShader(shader);
-                return res;
+                return resInner;
             }
 
-            res = shader;
-            return res;
+            resInner = shader;
+            return resInner;
         }
 
         ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
@@ -1112,7 +1180,7 @@ struct ShaderProgram
      * OpenGL object id.
      */
     uint id() const pure nothrow @nogc @safe
-    in(_id != 0)do
+    in(_id != 0)
     {
         return _id;
     }
@@ -1121,7 +1189,7 @@ struct ShaderProgram
      * Activate program.
      */
     void bind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glUseProgram(id);
     }
@@ -1130,7 +1198,7 @@ struct ShaderProgram
      * Deactivate program, if debug=glChecks.
      */
     void unbind() const nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         debug(glChecks) glUseProgram(0);
     }
@@ -1143,7 +1211,7 @@ struct ShaderProgram
      * Returns: Location of a uniform variable.
      */
     int getUniformLocation(string name) const nothrow
-    in(isValid)do
+    in(isValid)
     {
         import std.string : toStringz;
 
@@ -1166,7 +1234,7 @@ struct ShaderProgram
             if (0 < Ts.length && Ts.length < 5
                 && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
                 || is(Ts[0] == int) || is(Ts[0] == uint) || is(Ts[0] == float)))
-    in(isValid)do
+    in(isValid)
     {
         import std.conv : to;
 
@@ -1191,7 +1259,7 @@ struct ShaderProgram
         mixin(funcName ~ "(location, values);");
     }
 
-    import gfm.math.matrix : Matrix;
+    import gfm.math : Matrix;
 
     /** 
      * Sets uniform matrix or uniform array of matrices.
@@ -1201,7 +1269,7 @@ struct ShaderProgram
      */
     void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
             if (2 <= R && R <= 4 && 2 <= C && C <= 4)
-    in(isValid)do
+    in(isValid)
     {
         import std.conv : to;
         import glad.gl.enums : GL_TRUE;
@@ -1228,7 +1296,7 @@ struct ShaderProgram
      */
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
     in(textures.length <= 32, "It's possible to bind only 32 textures")
-    in(isValid)do
+    in(isValid)
     {
         foreach (i, textureNamePair; textures)
         {
@@ -1241,7 +1309,7 @@ struct ShaderProgram
      * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
      */
     void destroy() nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glDeleteProgram(id);
         _id = 0;
@@ -1372,7 +1440,7 @@ struct Texture
      * Sets the wrap parameter for specified texture coordinate.
      */
     void setWrapMode(Coord coord, WrapMode wrap) nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T;
 
@@ -1438,7 +1506,7 @@ struct Texture
      * Sets minifying filter.
      */
     void setMinFilter(Filter filter) nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
 
@@ -1466,7 +1534,7 @@ struct Texture
      * OpenGL object id.
      */
     uint id() const pure nothrow @nogc @safe
-    in(_id != 0)do
+    in(_id != 0)
     {
         return _id;
     }
@@ -1476,7 +1544,7 @@ struct Texture
      */
     void bind(uint index = 0) const nothrow @nogc
     in(index <= 32, "It's possible to bind only 32 textures")
-    in(isValid)do
+    in(isValid)
     {
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
 
@@ -1488,7 +1556,7 @@ struct Texture
      * Deletes the object, affecting state of OpenGL. Object can't be used afterwards.
      */
     void destroy() nothrow @nogc
-    in(isValid)do
+    in(isValid)
     {
         glDeleteTextures(1, &_id);
         _id = 0;

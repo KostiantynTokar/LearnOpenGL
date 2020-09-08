@@ -60,7 +60,6 @@ unittest
     }
 }
 
-//dfmt off
 /// Description of GLError.
 string errorDescription(GLError e)
 {
@@ -91,7 +90,6 @@ string errorDescription(GLError e)
                    "after this error is recorded.";
     }
 }
-//dfmt on
 
 /** 
  * Checks if GLType is integral.
@@ -363,7 +361,7 @@ template unpack(alias func)
  *   $(LINK2 https://forum.dlang.org/post/lwcciwwvwdizlrwoxyiu@forum.dlang.org, @nogc closures),
  *   `unpack`.
  */
-auto packWith(R, Args...)(R r, Args args)
+auto packWith(R, Args...)(R r, Args args) // @suppress(dscanner.suspicious.missing_return)
 {
     import std.range : zip, repeat;
 
@@ -417,7 +415,7 @@ template staticIota(T, T from, T to, T step = 1)
 {
     import std.meta : AliasSeq;
     
-    static if(step > 0 && from >= to || step < 0 && from <= to)
+    static if((step > 0 && from >= to) || (step < 0 && from <= to))
     {
         alias staticIota = AliasSeq!();
     }
