@@ -306,7 +306,7 @@ enum ScopedBind(alias obj) = __traits(identifier, obj) ~ ".bind();"
  * Params:
  *   a = Delegate that is to used in nothrow context.
  */
-package void debugHack(scope void delegate() a) nothrow @nogc @trusted
+void debugHack(scope void delegate() a) nothrow @nogc @trusted
 {
     auto hack = cast(void delegate() @nogc) a;
     try
@@ -327,11 +327,13 @@ unittest
 /**
  * Tuple unpacker
  *
- * Usage: myTuple.unpack!((x, y) => f(x, y));
+ * Usage: `myTuple.unpack!((x, y) => f(x, y));`
  *
  * Arguments are bound by order; names are irrelevant.
  *
- * See_Also: $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, Based on `tupArg` by Dukc).
+ * See_Also:
+ *   Based on `tupArg` by Dukc: $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc).
+ *   `packWith`.
  */
 template unpack(alias func)
 {
@@ -364,6 +366,60 @@ unittest
         .each!((x) scope => i = x);
     
     assert(i == 2);
+}
+
+/** 
+ * Attaches values to a range. Usefull to avoid GC allocation of closure.
+ * Params:
+ *   r = An `InputRange`.
+ *   args = Values that would be attached to each entry of `r`.
+ *
+ * See_Also:
+ *   $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc).
+ *   `unpack`.
+ */
+auto packWith(R, Args...)(R r, Args args)
+{
+    import std.range : zip, repeat;
+
+    string constructMixin() pure nothrow @safe
+    {
+        import std.range : iota, join, repeat;
+        import std.algorithm : map;
+        import std.conv : to;
+
+        string res = "return r.zip(";
+        res ~= iota(0, Args.length)
+            .map!(i => "args[" ~ i.to!string ~ "].repeat")
+            .join(",");
+        res ~= ");";
+        return res;
+    }
+
+    mixin(constructMixin());
+}
+///
+@nogc
+unittest
+{
+    import std.range : zip, repeat;
+    import std.algorithm : filter, map, each;
+    
+    const int j = 2;
+    const int k = 2;
+    int i = 0;
+    const int[3] tmp = [1, 2, 3];
+
+    // tmp[]
+    //     .filter!((x)scope => x == j) // lambda closes over variable j
+    //     .each!((x)scope => i = x);
+    tmp[]
+    	.packWith(j, k)
+    	.filter!(unpack!((x, j, k) => x * k == j))
+        .map!(unpack!((x, j, k) => x))
+        .each!((x) scope => i = x);
+    
+    assert(i == 1);
 }
 
 version(unittest)

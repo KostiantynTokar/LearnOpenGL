@@ -68,15 +68,15 @@ $('#symbolSearchPane').show();</script>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
 			<br/>
 			<br/>
-			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result) <span class="pln">opIndex</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @safe const</span><span class="pun">;</span>
+			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.util.unpack!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2).unpack,std.range.ZipShortest!(1,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result,std.range.Take!(std.range.Repeat!(const(glsu.objects.VertexBufferLayout)*).Repeat).Take).ZipShortest) <span class="pln">opIndex</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
 			<br/>
 			<br/>
-			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result) <span class="pln">opIndex</span>
+			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.util.unpack!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2).unpack,std.range.ZipShortest!(1,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result,std.range.Take!(std.range.Repeat!(const(glsu.objects.VertexBufferLayout)*).Repeat).Take).ZipShortest) <span class="pln">opIndex</span>
 			<span class="pun">(</span>
 			<br/>
 			&nbsp;&nbsp;<span class="typ">ulong</span><span class="pun">[</span><span class="lit">2</span><span class="pun">]</span> <span class="pln">slice</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @safe const</span><span class="pun">;</span>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>

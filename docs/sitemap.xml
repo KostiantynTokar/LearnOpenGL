@@ -128,9 +128,9 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.unbind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout._base.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout._elements.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.calcAttrib.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.calcPointer.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.calcStride.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.elemToAttrib.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.normalized.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.size.html</loc></url>
@@ -161,6 +161,7 @@
 <url><loc>http://127.0.0.1/glsu/util/assertNoError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/assertNoGLErrors.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/clearGLErrors.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/debugHack.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/errorDescription.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/from.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/GLFW.html</loc></url>
@@ -175,8 +176,11 @@
 <url><loc>http://127.0.0.1/glsu/util/GLFW.initLib.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/isIntegral.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/isVertexBufferLayout.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/packWith.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/ScopedBind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/sizeOfGLType.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/unpack.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/util/unpack.unpack.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
@@ -186,7 +190,6 @@
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/valueOfGLType.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/debugHack.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/UDA.html</loc></url>
 <url><loc>http://127.0.0.1/glsu.html</loc></url>
 </urlset>

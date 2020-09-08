@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.elemToAttrib</title>
+		<title>Function unpack.unpack</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -41,12 +41,12 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
 				<li>
-					<div class="module ">
+					<div class="module selected">
 						<a href="../../glsu/util.html">util</a>
 					</div>
 				</li>
@@ -55,16 +55,18 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.elemToAttrib</h1><p></p>
+			<h1>Function unpack.unpack</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a> <span class="pln">elemToAttrib</span>
+			<span class="kwd">auto</span> <span class="pln">unpack</span>(TupleType)
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
+			&nbsp;&nbsp;<span class="typ">TupleType</span> <span class="pln">tup</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
+			<span class="pun">)</span>
+			<br/>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isTuple</span><span class="pun">!</span><span class="typ">TupleType</span><span class="pun">);</span>
 					</div>
 				</code>
 			</div>

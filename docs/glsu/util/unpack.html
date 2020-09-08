@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Template unpack</title>
+		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
+		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/abstractions.html">abstractions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/objects.html">objects</a>
+					</div>
+				</li>
+				<li>
+					<div class="module selected">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Template unpack</h1><p>Tuple unpacker
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="kwd">template</span> <span class="pln">unpack</span>(alias func)
+			;
+					</div>
+				</code>
+			</div>
+			<section></section>
+
+			<section><h2>Contained Functions</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/util/unpack.unpack.html">unpack</a>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Usage</h2>
+<p><code class="lang-d"><span class="pln">myTuple<wbr/></span><span class="pun">.</span><span class="pln">unpack</span><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">y</span><span class="pun">) =&gt; </span><span class="pln">f</span><span class="pun">(</span><span class="pln">x</span><span class="pun">, </span><span class="pln">y</span><span class="pun">));</span></code>
+</p>
+
+<p> Arguments are bound by order; names are irrelevant.
+</p>
+</section>
+<section><h2>See Also</h2>
+<p>Based on <code class="lang-d"><span class="pln">tupArg</span></code> by Dukc: <a href="https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org">An (old/new?) pattern to utilize phobos better with @nogc</a>.
+   <code class="lang-d"><a href="../../glsu/util/packWith.html"><span class="pln">packWith</span></a></code>.
+</p>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">range </span><span class="pun">: </span><span class="pln">zip</span><span class="pun">, </span><span class="pln">repeat</span><span class="pun">;
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm </span><span class="pun">: </span><span class="pln">filter</span><span class="pun">, </span><span class="pln">map</span><span class="pun">, </span><span class="pln">each</span><span class="pun">;
+
+</span><span class="kwd">const </span><span class="typ">int </span><span class="pln">j </span><span class="pun">= </span><span class="lit">2</span><span class="pun">;
+</span><span class="typ">int </span><span class="pln">i </span><span class="pun">= </span><span class="lit">0</span><span class="pun">;
+</span><span class="kwd">const </span><span class="typ">int</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">tmp </span><span class="pun">= [</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">];
+
+</span><span class="com">// tmp[]
+//     .filter!((x)scope =&gt; x == j) // lambda closes over variable j
+//     .each!((x)scope =&gt; i = x);
+</span><span class="pln">tmp</span><span class="pun">[]
+	<wbr/>.</span><span class="pln">zip</span><span class="pun">(</span><span class="pln">repeat</span><span class="pun">(</span><span class="pln">j</span><span class="pun">))
+	<wbr/>.</span><span class="pln">filter</span><span class="pun">!(<a href="../../glsu/util/unpack.unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">) =&gt; </span><span class="pln">x </span><span class="pun">== </span><span class="pln">j</span><span class="pun">))
+    <wbr/>.</span><span class="pln">map</span><span class="pun">!(<a href="../../glsu/util/unpack.unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">) =&gt; </span><span class="pln">x</span><span class="pun">))
+    <wbr/>.</span><span class="pln">each</span><span class="pun">!((</span><span class="pln">x</span><span class="pun">) </span><span class="kwd">scope </span><span class="pun">=&gt; </span><span class="pln">i </span><span class="pun">= </span><span class="pln">x</span><span class="pun">);
+
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">i </span><span class="pun">== </span><span class="lit">2</span><span class="pun">);
+</span></code></pre>
+</section>
+
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							<p>Kostiantyn Tokar
+</p>
+
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

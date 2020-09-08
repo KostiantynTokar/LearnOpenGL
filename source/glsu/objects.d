@@ -473,7 +473,7 @@ public:
         import std.algorithm : map;
            
         return iota(slice[0], slice[1])
-            .zip(repeat(&this))
+            .packWith(&this)
             .map!(unpack!((i, layout) => layout.calcAttrib(i)));
     }
     /// ditto
