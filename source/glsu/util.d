@@ -324,6 +324,48 @@ unittest
     }
 }
 
+/**
+ * Tuple unpacker
+ *
+ * Usage: myTuple.unpack!((x, y) => f(x, y));
+ *
+ * Arguments are bound by order; names are irrelevant.
+ *
+ * See_Also: $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, Based on `tupArg` by Dukc).
+ */
+template unpack(alias func)
+{
+	import std.typecons: isTuple;
+
+	auto unpack(TupleType)(TupleType tup)
+		if (isTuple!TupleType)
+	{
+		return func(tup.expand);
+	}
+}
+///
+@nogc
+unittest
+{
+    import std.range : zip, repeat;
+    import std.algorithm : filter, map, each;
+    
+    const int j = 2;
+    int i = 0;
+    const int[3] tmp = [1, 2, 3];
+
+    // tmp[]
+    //     .filter!((x)scope => x == j) // lambda closes over variable j
+    //     .each!((x)scope => i = x);
+    tmp[]
+    	.zip(repeat(j))
+    	.filter!(unpack!((x, j) => x == j))
+        .map!(unpack!((x, j) => x))
+        .each!((x) scope => i = x);
+    
+    assert(i == 2);
+}
+
 version(unittest)
 {
     import bindbc.glfw;

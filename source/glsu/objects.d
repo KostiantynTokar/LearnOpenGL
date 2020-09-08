@@ -462,17 +462,19 @@ public:
         return calcAttrib(index);
     }
     /// ditto
-    auto opIndex() const pure nothrow
+    auto opIndex() const pure nothrow @nogc
     {
         return this[0 .. $];
     }
     /// ditto
-    auto opIndex(size_t[2] slice) const pure nothrow
+    auto opIndex(size_t[2] slice) const pure nothrow @nogc
     {
-        import std.range : iota;
+        import std.range : iota, zip, repeat;
         import std.algorithm : map;
-        
-        return iota(slice[0], slice[1]).map!(i => calcAttrib(i))();        
+           
+        return iota(slice[0], slice[1])
+            .zip(repeat(&this))
+            .map!(unpack!((i, layout) => layout.calcAttrib(i)));
     }
     /// ditto
     size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
