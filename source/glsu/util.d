@@ -332,7 +332,7 @@ unittest
  * Arguments are bound by order; names are irrelevant.
  *
  * See_Also:
- *   Based on `tupArg` by Dukc: $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc).
+ *   Based on `tupArg` by Dukc: $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc),
  *   `packWith`.
  */
 template unpack(alias func)
@@ -375,7 +375,7 @@ unittest
  *   args = Values that would be attached to each entry of `r`.
  *
  * See_Also:
- *   $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc).
+ *   $(LINK2 https://forum.dlang.org/thread/rkfezigmrvuzkztxqqxy@forum.dlang.org, An (old/new?) pattern to utilize phobos better with @nogc),
  *   `unpack`.
  */
 auto packWith(R, Args...)(R r, Args args)

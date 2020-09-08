@@ -681,6 +681,9 @@ private:
 
     enum attrsCount = attrs.length;
 
+    /** 
+     * Size of vertex attribute in bytes.
+     */
     size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
     {
         static if (is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
@@ -694,6 +697,9 @@ private:
         }
     }
 
+    /** 
+     * Sum of sizes of all atributes with indices less then `index`.
+     */
     size_t sizeOfAllAttributesBefore(size_t index)() const pure nothrow @nogc @safe
     {
         size_t res = 0;
@@ -704,6 +710,9 @@ private:
         return res;
     }
 
+    /** 
+     * Calculates stride of the attribute located on `index`.
+     */
     size_t calcStride(size_t index)() const pure nothrow @nogc @safe
     {
         if(batchCount == 1)
@@ -716,10 +725,37 @@ private:
         }
     }
 
+    /** 
+     * Calculates pointer of the attribute located on `index`.
+     */
     size_t calcPointer(size_t index)() const pure nothrow @nogc @safe
     {
         return batchCount * sizeOfAllAttributesBefore!index;
     }
+}
+///
+unittest
+{
+    setupOpenGLContext();
+
+    struct Pattern
+    {
+        @VertexAttrib(0)
+        float[3] position;
+
+        @VertexAttrib(1, true)
+        int[2] someVals;
+    }
+
+    VertexBufferLayoutFromPattern!Pattern layout1;
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt, true, 3 * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+    ];
+
+    import std.algorithm : equal;
+    assert(layout1[].equal(layout2));
 }
 
 /** 
