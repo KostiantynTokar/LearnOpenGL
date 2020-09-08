@@ -313,6 +313,19 @@ public:
 private:
     size_t _batchCount = 1;
     invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
+
+    /** 
+     * Internally used instead of `AttribPointer`.
+     *
+     * Index of an attribute is an index of the entry in `_elements`,
+     * and stride and pointer is calculated according to `batchCount`.
+     */
+    struct LayoutElement
+    {
+        int size; // actually count
+        GLType type;
+        bool normalized;
+    }
 }
 
 /**
@@ -494,19 +507,7 @@ private:
     alias _base this;
 
     import std.container.array : Array;
-
-    /** 
-     * Internally used instead of `AttribPointer`.
-     *
-     * Index of an attribute is an index of the entry in `_elements`,
-     * and stride and pointer is calculated according to `batchCount`.
-     */
-    struct LayoutElement
-    {
-        int size; // actually count
-        GLType type;
-        bool normalized;
-    }
+    alias LayoutElement = VertexBufferLayoutBase.LayoutElement;
 
     Array!LayoutElement _elements;
 
@@ -554,6 +555,11 @@ private:
             .sum(ptrdiff_t.init);
     }
 
+    /** 
+     * Calculates actual `AttribPointer` with specified index.
+     * Params:
+     *   index = Index of attribute to get.
+     */
     AttribPointer calcAttrib(size_t index) const pure nothrow @nogc
     in(index < uint.max)
     in(calcStride(index) <= int.max)do
@@ -619,16 +625,9 @@ public:
     void bind() const nothrow @nogc
     {
         static foreach (i; 0 .. attrsCount)
-        {{
-            void worker(U, int N)(VertexBufferLayoutFromPattern layout)
-            {
-                enum type = valueOfGLType!U;
-                glVertexAttribPointer(sortedAttrs[i].index, N, type, sortedAttrs[i].normalized,
-                                      cast(int) layout.calcStride!i(), cast(const(void)*) layout.calcPointer!i());
-                glEnableVertexAttribArray(sortedAttrs[i].index);
-            }
-            applyToAttribute!(i, worker)(this);
-        }}
+        {
+            calcAttrib!i().bind();
+        }
     }
 
     /** 
@@ -642,6 +641,37 @@ public:
         }
     }
 
+    /** 
+     * Range interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     */
+    AttribPointer opIndex(size_t index) const pure nothrow @nogc
+    {
+        return this[][index];
+    }
+    /// ditto
+    auto opIndex() const pure nothrow @nogc @safe
+    {
+        import std.range : only;
+        import std.meta : staticMap;
+
+        return only(staticMap!(calcAttrib, staticIota!(size_t, 0, attrsCount)));
+    }
+    /// ditto
+    auto opIndex(size_t[2] slice) const pure nothrow @nogc
+    {
+        return this[][slice[0] .. slice[1]];
+    }
+    /// ditto
+    size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
+    {
+        return [start, end];
+    }
+    /// ditto
+    size_t opDollar(size_t dim : 0)() const pure nothrow @nogc @safe
+    {
+        return _elements.length;
+    }
+
 private:
     /// Extended object.
     VertexBufferLayoutBase _base;
@@ -653,6 +683,8 @@ private:
     import std.range : only, enumerate;
     import std.algorithm.searching : all;
     import gfm.math.vector : Vector;
+
+    alias LayoutElement = VertexBufferLayoutBase.LayoutElement;
 
     alias markedSymbols = getSymbolsByUDA!(T, VertexAttrib);
 
@@ -669,6 +701,12 @@ private:
     alias sortedMarkedSymbols = staticSort!(compSymbols, markedSymbols);
 
     enum attrsCount = attrs.length;
+
+    enum getElement(size_t index) = LayoutElement(sizeAttributeParam!index,
+                                                  typeAttributeParam!index,
+                                                  sortedAttrs[index].normalized);
+
+    alias _elements = staticMap!(getElement, staticIota!(size_t, 0, attrsCount));
 
     /** 
      * Applies supplied function to attribute type ans size.
@@ -697,6 +735,26 @@ private:
         {
             static assert(0, "Vertex attribute should be a static array or gfm.math.vector.Vector.");
         }
+    }
+
+    /// Returns size (i.e. count of values) of attribute with specified index.
+    static int sizeAttributeParam(size_t index)() pure nothrow @nogc @safe
+    {
+        auto worker(U, int N)()
+        {
+            return N;
+        }
+        return applyToAttribute!(index, worker)();
+    }
+
+    /// Returns GLType of attribute with specified index.
+    static GLType typeAttributeParam(size_t index)() pure nothrow @nogc @safe
+    {
+        auto worker(U, int N)()
+        {
+            return valueOfGLType!U;
+        }
+        return applyToAttribute!(index, worker)();
     }
 
     /** 
@@ -746,6 +804,20 @@ private:
     {
         return batchCount * sizeOfAllAttributesBefore!index;
     }
+
+    /** 
+     * Calculates actual `AttribPointer` with specified index.
+     * Params:
+     *   index = Index of attribute to get.
+     */
+    AttribPointer calcAttrib(size_t index)() const pure nothrow @nogc @safe
+        if(index <= uint.max)
+    in(calcStride!(index) <= int.max)
+    {
+        return AttribPointer(cast(uint) index, _elements[index].size,
+                             _elements[index].type, _elements[index].normalized,
+                             cast(int) calcStride!(index), calcPointer!(index));
+    }
 }
 ///
 unittest
@@ -770,6 +842,9 @@ unittest
 
     import std.algorithm : equal;
     assert(layout1[].equal(layout2));
+    assert(layout1[0] == layout2[0]);
+    assert(layout1[$ - 1] == layout2[$ - 1]);
+    assert(layout1[0 .. $].equal(layout2[0 .. $]));
 }
 
 /** 

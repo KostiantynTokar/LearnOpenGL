@@ -5,6 +5,8 @@
  */
 module glsu.util;
 
+import std.traits : isIntegral;
+
 import glsu.enums : GLType, GLError;
 import glsu.objects : VertexBufferLayout, VertexBufferLayoutFromPattern;
 
@@ -422,6 +424,22 @@ unittest
         .each!((x) scope => i = x);
     
     assert(i == 1);
+}
+
+/// Static iota.
+template staticIota(T, T from, T to, T step = 1)
+    if(isIntegral!T && step != 0)
+{
+    import std.meta : AliasSeq;
+    
+    static if(step > 0 && from >= to || step < 0 && from <= to)
+    {
+        alias staticIota = AliasSeq!();
+    }
+    else
+    {
+        alias staticIota = AliasSeq!(from, staticIota!(T, from + step, to, step));
+    }
 }
 
 version(unittest)

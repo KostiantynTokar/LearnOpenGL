@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Struct VertexBufferLayout.LayoutElement</title>
+		<title>Alias VertexBufferLayout.LayoutElement</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,47 +55,28 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct VertexBufferLayout.LayoutElement</h1><p>Internally used instead of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>.
-</p>
+			<h1>Alias VertexBufferLayout.LayoutElement</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <span class="typ">LayoutElement</span>
-			<span class="pun">;</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a>
+			<br/>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">LayoutElement</span>
+			 <span class="pun">=</span> <a href="../../glsu/objects/VertexBufferLayoutBase.LayoutElement.html"><span class="typ">VertexBufferLayoutBase<wbr/></span><span class="pun">.<wbr/></span><span class="typ">LayoutElement</span></a><span class="pun">;</span>
+			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>
-			<section><p>Index of an attribute is an index of the entry in <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout._elements.html"><span class="pln">_elements</span></a></code>,
- and stride and pointer is calculated according to <code class="lang-d"><span class="pln">batchCount</span></code>.
-</p>
-</section>
-
-			<section><h2>Fields</h2>
-				<table>
-					<col class="caption"/>
-					<tr>
-						<th>Name</th><th>Type</th><th>Description</th>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.LayoutElement.normalized.html" class="public"><code>normalized</code></a>
-						</td>
-						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">bool</span></code></td><td></td>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.LayoutElement.size.html" class="public"><code>size</code></a>
-						</td>
-						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">int</span></code></td><td></td>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayout.LayoutElement.type.html" class="public"><code>type</code></a>
-						</td>
-						<td class="typecol"><code class="prettyprint lang-d"><a href="../../glsu/enums/GLType.html"><span class="typ">GLType</span></a></code></td><td></td>
-					</tr>
-				</table>
-			</section>
+			
 			
 			<footer>
 				<table class="license-info">

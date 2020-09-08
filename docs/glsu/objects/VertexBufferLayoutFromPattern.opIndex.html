@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Variable VertexBufferLayout.LayoutElement.size</title>
+		<title>Function VertexBufferLayoutFromPattern.opIndex</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,24 +55,28 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Variable VertexBufferLayout.LayoutElement.size</h1><p></p>
+			<h1>Function VertexBufferLayoutFromPattern.opIndex</h1><p>Range interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayout.LayoutElement.html"><span class="typ">VertexBufferLayout.LayoutElement</span></a>
+			<a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a> <span class="pln">opIndex</span>
+			<span class="pun">(</span>
 			<br/>
-			<span class="pun">
-				{
-				<br/>
-			</span>
-			&nbsp;&nbsp;<span class="com">// ...</span>
+			&nbsp;&nbsp;<span class="pln">size_t</span> <span class="pln">index</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">size</span>
-			<span class="pun">;</span>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">const pure nothrow @nogc</span><span class="pun">;</span>
 			<br/>
-			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="pun">}</span>
+			<span class="kwd">auto</span> <span class="pln">opIndex</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">const pure nothrow @nogc @safe</span><span class="pun">;</span>
+			<br/>
+			<br/>
+			<span class="kwd">auto</span> <span class="pln">opIndex</span>
+			<span class="pun">(</span>
+			<br/>
+			&nbsp;&nbsp;<span class="pln">size_t</span><span class="pun">[</span><span class="lit">2</span><span class="pun">]</span> <span class="pln">slice</span>
+			<br/>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">const pure nothrow @nogc</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>

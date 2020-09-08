@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.sizeOfAttribute</title>
+		<title>Function VertexBufferLayoutFromPattern.applyToAttribute</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,30 +55,36 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.sizeOfAttribute</h1><p>Size of vertex attribute in bytes.
+			<h1>Function VertexBufferLayoutFromPattern.applyToAttribute</h1><p>Applies supplied function to attribute type ans size.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
+			<span class="kwd">auto</span> <span class="pln">applyToAttribute</span>(<span class="pln">size_t</span> index, alias funcTemplate, Args...)
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/VertexBufferLayoutBase.LayoutElement.html"><span class="typ">VertexBufferLayoutBase<wbr/></span><span class="pun">.<wbr/></span><span class="typ">LayoutElement</span></a> <span class="pln">elem</span>
+			&nbsp;&nbsp;<span class="typ">Args</span> <span class="pln">args</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
-			<br/>
-			<br/>
-			<span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="pun">)</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
-			
-			
+			<section><p>Allows to abstract from error handling and fetching attribute type and size.
+</p>
+</section>
+
+			<section><h2>Parameters</h2>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="index">index</td><td> Index of the attribute to look over.</td></tr>
+<tr><td id="funcTemplate">funcTemplate</td><td> Function template that takes two template parameters: type U of attribute values and size of the attribute int N.</td></tr>
+<tr><td id="args">args</td><td> Arguments to forward to funcTemplate.</td></tr>
+</table>
+</section>
+<section><h2>Returns</h2>
+<p>Return value of funcTemplate.
+</p>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

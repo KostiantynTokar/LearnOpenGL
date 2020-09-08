@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.sizeOfAttribute</title>
+		<title>Function VertexBufferLayoutFromPattern.sizeAttributeParam</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,25 +55,12 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.sizeOfAttribute</h1><p>Size of vertex attribute in bytes.
+			<h1>Function VertexBufferLayoutFromPattern.sizeAttributeParam</h1><p>Returns size (i.e. count of values) of attribute with specified index.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/VertexBufferLayoutBase.LayoutElement.html"><span class="typ">VertexBufferLayoutBase<wbr/></span><span class="pun">.<wbr/></span><span class="typ">LayoutElement</span></a> <span class="pln">elem</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
-			<br/>
-			<br/>
-			<span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="typ">int</span> <span class="pln">sizeAttributeParam</span>(<span class="pln">size_t</span> index)<span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>

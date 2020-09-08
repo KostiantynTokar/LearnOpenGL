@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.sizeOfAttribute</title>
+		<title>Function VertexBufferLayoutFromPattern.calcAttrib</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,30 +55,24 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.sizeOfAttribute</h1><p>Size of vertex attribute in bytes.
+			<h1>Function VertexBufferLayoutFromPattern.calcAttrib</h1><p>Calculates actual <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code> with specified index.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
+			<a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a> <span class="pln">calcAttrib</span>(<span class="pln">size_t</span> index)<span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">const pure nothrow @nogc @safe</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/VertexBufferLayoutBase.LayoutElement.html"><span class="typ">VertexBufferLayoutBase<wbr/></span><span class="pun">.<wbr/></span><span class="typ">LayoutElement</span></a> <span class="pln">elem</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
-			<br/>
-			<br/>
-			<span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">index </span><span class="pun">&lt;= (</span><span class="typ">uint</span><span class="pun">)<wbr/>.</span><span class="pln">max</span><span class="pun">);</span>
 					</div>
 				</code>
 			</div>
 			
-			
+			<section><h2>Parameters</h2>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="index">index</td><td> Index of attribute to get.</td></tr>
+</table>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

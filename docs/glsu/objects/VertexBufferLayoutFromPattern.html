@@ -125,6 +125,16 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.applyToAttribute.html" class="public">
+								<code>applyToAttribute</code>
+							</a>
+							<span class="tableEntryAnnotation">(args)</span>
+						</td>
+						<td>Applies supplied function to attribute type ans size.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.bind.html" class="public">
 								<code>bind</code>
 							</a>
@@ -135,12 +145,23 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.calcAttrib.html" class="public">
+								<code>calcAttrib</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Calculates actual <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code> with specified index.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.calcPointer.html" class="public">
 								<code>calcPointer</code>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Calculates pointer of the attribute located on <code class="lang-d"><span class="pln">index</span></code>.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -149,7 +170,48 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Calculates stride of the attribute located on <code class="lang-d"><span class="pln">index</span></code>.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.opDollar.html" class="public">
+								<code>opDollar</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Range interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.opIndex.html" class="public">
+								<code>opIndex</code>
+							</a>
+							<span class="tableEntryAnnotation">(index)</span>
+						</td>
+						<td>Range interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.opSlice.html" class="public">
+								<code>opSlice</code>
+							</a>
+							<span class="tableEntryAnnotation">(start, end)</span>
+						</td>
+						<td>Range interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sizeAttributeParam.html" class="public">
+								<code>sizeAttributeParam</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Returns size (i.e. count of values) of attribute with specified index.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -158,7 +220,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Sum of sizes of all atributes with indices less then <code class="lang-d"><span class="pln">index</span></code>.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -167,7 +230,18 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Size of vertex attribute in bytes.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.typeAttributeParam.html" class="public">
+								<code>typeAttributeParam</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Returns GLType of attribute with specified index.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -189,8 +263,24 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern._elements.html" class="public">
+								<code>_elements</code>
+							</a>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.attrs.html" class="public">
 								<code>attrs</code>
+							</a>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.LayoutElement.html" class="public">
+								<code>LayoutElement</code>
 							</a>
 						</td>
 						<td></td>
@@ -224,6 +314,33 @@ $('#symbolSearchPane').show();</script>
 			<section><h2>See Also</h2>
 <p><code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
 </p>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+
+</span><span class="kwd">struct </span><span class="typ">Pattern
+</span><span class="pun">{
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">position</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
+    </span><span class="typ">int</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">someVals</span><span class="pun">;
+}
+
+</span><span class="typ">VertexBufferLayoutFromPattern</span><span class="pun">!</span><span class="typ">Pattern </span><span class="pln">layout1</span><span class="pun">;
+
+</span><span class="kwd">auto </span><span class="pln">layout2 </span><span class="pun">= [
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">0</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glInt</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">),
+];
+
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm </span><span class="pun">: </span><span class="pln">equal</span><span class="pun">;
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[$ - </span><span class="lit">1</span><span class="pun">] == </span><span class="pln">layout2</span><span class="pun">[$ - </span><span class="lit">1</span><span class="pun">]);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0 </span><span class="pun">.. $]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">0 </span><span class="pun">.. $]));
+</span></code></pre>
 </section>
 
 			<footer>
