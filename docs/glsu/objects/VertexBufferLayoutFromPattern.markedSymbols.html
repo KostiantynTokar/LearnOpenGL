@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.calcStride</title>
+		<title>Alias VertexBufferLayoutFromPattern.markedSymbols</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,17 +55,24 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.calcStride</h1><p>Calculates stride of the attribute located on <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.calcStride.html#index"><span class="pln">index</span></a></code>.
-</p>
+			<h1>Alias VertexBufferLayoutFromPattern.markedSymbols</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="typ">ulong</span> <span class="pln">calcStride</span>
-			<span class="pun">(</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">markedSymbols</span>
+			 <span class="pun">=</span> <span class="pln">getSymbolsByUDA</span>!(T,VertexAttrib)<span class="pun">;</span>
+			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>

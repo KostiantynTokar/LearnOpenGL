@@ -454,6 +454,37 @@ public:
         }
     }
 
+    /** 
+     * Range interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     */
+    AttribPointer opIndex(size_t index) const pure nothrow @nogc
+    {
+        return elemToAttrib(index);
+    }
+    /// ditto
+    auto opIndex() const pure nothrow
+    {
+        return this[0 .. $];
+    }
+    /// ditto
+    auto opIndex(size_t[2] slice) const pure nothrow
+    {
+        import std.range : iota;
+        import std.algorithm : map;
+        
+        return iota(slice[0], slice[1]).map!(i => elemToAttrib(i))();        
+    }
+    /// ditto
+    size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
+    {
+        return [start, end];
+    }
+    /// ditto
+    size_t opDollar(size_t dim : 0)() const pure nothrow @nogc @safe
+    {
+        return _elements.length;
+    }
+
 private:
     /// Extended object.
     VertexBufferLayoutBase _base;
@@ -517,6 +548,30 @@ private:
             .map!(sizeOfAttribute)
             .sum(ptrdiff_t.init);
     }
+
+    AttribPointer elemToAttrib(size_t index) const pure nothrow @nogc
+    {
+        return AttribPointer(cast(uint) index, _elements[index].size,
+                             _elements[index].type, _elements[index].normalized,
+                             cast(int) calcStride(index), calcPointer(index));
+    }
+}
+///
+unittest
+{
+    setupOpenGLContext();
+
+    VertexBufferLayout layout1;
+    layout1.push!float(3);
+    layout1.push!int(2, true);
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt, true, 3 * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+    ];
+
+    import std.algorithm : equal;
+    assert(layout1[].equal(layout2));
 }
 
 /** 
