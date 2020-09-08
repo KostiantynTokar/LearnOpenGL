@@ -618,16 +618,6 @@ public:
      */
     void bind() const nothrow @nogc
     {
-        // string calcStrideBuilder(size_t i) pure nothrow @safe
-        // {
-        //     import std.conv : to;
-        //     return "() => cast(int) arg0.calcStride!(" ~ i.to!string ~ ")";
-        // }
-        // string calcPointerBuilder(size_t i) pure nothrow @safe
-        // {
-        //     import std.conv : to;
-        //     return "() => cast(const(void)*) arg0.calcPointer!(" ~ i.to!string ~ ")";
-        // }
         static foreach (i; 0 .. attrsCount)
         {{
             void worker(U, int N)(VertexBufferLayoutFromPattern layout)
@@ -644,7 +634,7 @@ public:
     /** 
      * Disables all of the attributes represented by this object.
      */
-    void unbind() const nothrow @nogc
+    static void unbind() nothrow @nogc
     {
         static foreach (attr; sortedAttrs)
         {
@@ -701,7 +691,7 @@ private:
     /** 
      * Size of vertex attribute in bytes.
      */
-    size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
+    static size_t sizeOfAttribute(size_t index)() pure nothrow @nogc @safe
     {
         auto worker(U, int N)()
         {
@@ -713,7 +703,7 @@ private:
     /** 
      * Sum of sizes of all atributes with indices less then `index`.
      */
-    size_t sizeOfAllAttributesBefore(size_t index)() const pure nothrow @nogc @safe
+    static size_t sizeOfAllAttributesBefore(size_t index)() pure nothrow @nogc @safe
     {
         size_t res = 0;
         static foreach(i; 0 .. index)
