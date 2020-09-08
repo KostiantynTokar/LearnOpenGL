@@ -93,6 +93,9 @@ string errorDescription(GLError e)
 }
 //dfmt on
 
+/** 
+ * Checks if GLType is integral.
+ */
 bool isIntegral(GLType type) pure nothrow @nogc @safe
 {
     final switch(type)
@@ -348,28 +351,6 @@ template unpack(alias func)
 		return func(tup.expand);
 	}
 }
-///
-@nogc
-unittest
-{
-    import std.range : zip, repeat;
-    import std.algorithm : filter, map, each;
-    
-    const int j = 2;
-    int i = 0;
-    const int[3] tmp = [1, 2, 3];
-
-    // tmp[]
-    //     .filter!((x)scope => x == j) // lambda closes over variable j
-    //     .each!((x)scope => i = x);
-    tmp[]
-    	.zip(repeat(j))
-    	.filter!(unpack!((x, j) => x == j))
-        .map!(unpack!((x, j) => x))
-        .each!((x) scope => i = x);
-    
-    assert(i == 2);
-}
 
 /** 
  * Attaches values to a range. Usefull to avoid GC allocation of closure.
@@ -403,27 +384,31 @@ auto packWith(R, Args...)(R r, Args args)
     mixin(constructMixin());
 }
 ///
-@nogc
 unittest
 {
     import std.range : zip, repeat;
     import std.algorithm : filter, map, each;
     
-    const int j = 2;
-    const int k = 2;
-    int i = 0;
-    const int[3] tmp = [1, 2, 3];
+    void foo() @nogc
+    {
+        const int j = 2;
+        const int k = 2;
+        int i = 0;
+        const int[3] tmp = [1, 2, 3];
 
-    // tmp[]
-    //     .filter!((x)scope => x == j) // lambda closes over variable j
-    //     .each!((x)scope => i = x);
-    tmp[]
-    	.packWith(j, k)
-    	.filter!(unpack!((x, j, k) => x * k == j))
-        .map!(unpack!((x, j, k) => x))
-        .each!((x) scope => i = x);
-    
-    assert(i == 1);
+        // tmp[]
+        //     .filter!((x)scope => x == j) // lambda closes over variable j
+        //     .each!((x)scope => i = x);
+        tmp[]
+            .packWith(j, k)
+            .filter!(unpack!((x, j, k) => x * k == j))
+            .map!(unpack!((x, j, k) => x))
+            .each!((x) scope => i = x);
+        
+        assert(i == 1);
+    }
+
+    foo();
 }
 
 /// Static iota.
@@ -440,6 +425,19 @@ template staticIota(T, T from, T to, T step = 1)
     {
         alias staticIota = AliasSeq!(from, staticIota!(T, from + step, to, step));
     }
+}
+///
+unittest
+{
+    import std.meta : AliasSeq;
+
+    static assert(staticIota!(int, 0, 5) == AliasSeq!(0, 1, 2, 3, 4));
+    static assert(staticIota!(size_t, 0, 5, 2) == AliasSeq!(size_t(0), size_t(2), size_t(4)));
+    static assert(staticIota!(int, 100, 50) == AliasSeq!());
+    static assert(staticIota!(int, 10, 5, -1) == AliasSeq!(10, 9, 8, 7, 6));
+    static assert(staticIota!(int, 10, 5, -3) == AliasSeq!(10, 7));
+    static assert(staticIota!(int, 50, 100, -10) == AliasSeq!());
+    static assert(staticIota!(int, -3, 3, 2) == AliasSeq!(-3, -1, 1));
 }
 
 version(unittest)

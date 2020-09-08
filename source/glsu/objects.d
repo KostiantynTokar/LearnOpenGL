@@ -370,75 +370,6 @@ public:
         push(size, valueOfGLType!T, normalized);
     }
 
-    // ///
-    // unittest
-    // {
-    //     // Pattern.
-    //     struct Vertex
-    //     {
-    //         @VertexAttrib(0)
-    //         float[2] position;
-
-    //         @VertexAttrib(1)
-    //         float[3] color;
-
-    //         // @VertexAttrib(42) // Error, indices should ascend by 1.
-    //         // float[4] somethingElse;
-    //     }
-
-    //     VertexBufferLayout layout1;
-    //     layout1.pushUsingPattern!Vertex();
-
-    //     VertexBufferLayout layout2;
-    //     layout2.push!float(2);
-    //     layout2.push!float(3);
-
-    //     assert(layout1 == layout2);
-    // }
-    // ///
-    // unittest
-    // {
-    //     // Pattern is used to partially specify layout.
-    //     struct PartialVertex1
-    //     {
-    //         @VertexAttrib(0)
-    //         float[3] color;
-
-    //         @VertexAttrib(1)
-    //         float[2] textureCoord;
-    //     }
-    //     struct PartialVertex2
-    //     {
-    //         @VertexAttrib(0)
-    //         float[2] normal;
-
-    //         @VertexAttrib(1, true)
-    //         ubyte[1] size;
-    //     }
-
-    //     VertexBufferLayout layout1;
-    //     layout1.push!int(3);
-    //     layout1.pushUsingPattern!PartialVertex1();
-    //     layout1.push!uint(2, true);
-    //     layout1.pushUsingPattern!PartialVertex2();
-    //     layout1.push!byte(1);
-
-    //     VertexBufferLayout layout2;
-    //     layout2.push(3, GLType.glInt);
-    //     // PartialVertex1
-    //     layout2.push(3, GLType.glFloat);
-    //     layout2.push(2, GLType.glFloat);
-
-    //     layout2.push(2, GLType.glUInt, true);
-    //     // PartialVertex2
-    //     layout2.push(2, GLType.glFloat);
-    //     layout2.push(1, GLType.glUByte, true);
-
-    //     layout2.push(1, GLType.glByte);
-
-    //     assert(layout1 == layout2);
-    // }
-
     /** 
      * Enables and sets all of the attributes represented by this object.
      */
@@ -575,16 +506,36 @@ unittest
     setupOpenGLContext();
 
     VertexBufferLayout layout1;
-    layout1.push!float(3);
-    layout1.push!int(2, true);
+    layout1.push(3, GLType.glFloat);
+    layout1.push(2, GLType.glInt, true);
+    layout1.push!float(4);
 
     auto layout2 = [
-        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof + 2 * int.sizeof, 0),
-        AttribPointer(1, 2, GLType.glInt, true, 3 * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof + 2 * int.sizeof)
     ];
 
     import std.algorithm : equal;
     assert(layout1[].equal(layout2));
+    assert(layout1[0] == layout2[0]);
+    assert(layout1[$ - 1] == layout2[$ - 1]);
+    assert(layout1[0 .. 2].equal(layout2[0 .. 2]));
+
+    // Now change batch size and reorganize layout.
+    layout1.batchCount = 100;
+
+    // Pay attention to stride and pointer.
+    auto layout3 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  2 * int.sizeof,   100 * 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, 4 * float.sizeof, 100 * 3 * float.sizeof + 100 * 2 * int.sizeof)
+    ];
+
+    assert(layout1[].equal(layout3));
+    assert(layout1[0] == layout3[0]);
+    assert(layout1[$ - 1] == layout3[$ - 1]);
+    assert(layout1[0 .. 2].equal(layout3[0 .. 2]));
 }
 
 /** 
@@ -824,27 +775,51 @@ unittest
 {
     setupOpenGLContext();
 
+    import gfm.math : vec4f;
+
     struct Pattern
     {
         @VertexAttrib(0)
         float[3] position;
 
+        @VertexAttrib(2) // Possible to specify attributes not in order.
+        vec4f attrib2;
+
         @VertexAttrib(1, true)
-        int[2] someVals;
+        int[2] textureCoords;
+
+        // @VertexAttrib(42) // Error, indices should ascend by 1.
+        // float[4] somethingElse;
     }
 
     VertexBufferLayoutFromPattern!Pattern layout1;
 
     auto layout2 = [
-        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof + 2 * int.sizeof, 0),
-        AttribPointer(1, 2, GLType.glInt, true, 3 * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof + 2 * int.sizeof)
     ];
 
     import std.algorithm : equal;
     assert(layout1[].equal(layout2));
     assert(layout1[0] == layout2[0]);
     assert(layout1[$ - 1] == layout2[$ - 1]);
-    assert(layout1[0 .. $].equal(layout2[0 .. $]));
+    assert(layout1[0 .. 2].equal(layout2[0 .. 2]));
+
+    // Now change batch size and reorganize layout.
+    layout1.batchCount = 100;
+
+    // Pay attention to stride and pointer.
+    auto layout3 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  2 * int.sizeof,   100 * 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, 4 * float.sizeof, 100 * 3 * float.sizeof + 100 * 2 * int.sizeof)
+    ];
+
+    assert(layout1[].equal(layout3));
+    assert(layout1[0] == layout3[0]);
+    assert(layout1[$ - 1] == layout3[$ - 1]);
+    assert(layout1[0 .. 2].equal(layout3[0 .. 2]));
 }
 
 /** 

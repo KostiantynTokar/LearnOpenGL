@@ -89,21 +89,26 @@ $('#symbolSearchPane').show();</script>
 <pre class="code"><code class="lang-d"><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">range </span><span class="pun">: </span><span class="pln">zip</span><span class="pun">, </span><span class="pln">repeat</span><span class="pun">;
 </span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm </span><span class="pun">: </span><span class="pln">filter</span><span class="pun">, </span><span class="pln">map</span><span class="pun">, </span><span class="pln">each</span><span class="pun">;
 
-</span><span class="kwd">const </span><span class="typ">int </span><span class="pln">j </span><span class="pun">= </span><span class="lit">2</span><span class="pun">;
-</span><span class="kwd">const </span><span class="typ">int </span><span class="pln">k </span><span class="pun">= </span><span class="lit">2</span><span class="pun">;
-</span><span class="typ">int </span><span class="pln">i </span><span class="pun">= </span><span class="lit">0</span><span class="pun">;
-</span><span class="kwd">const </span><span class="typ">int</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">tmp </span><span class="pun">= [</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">];
+</span><span class="typ">void </span><span class="pln">foo</span><span class="pun">() </span><span class="kwd">@nogc
+</span><span class="pun">{
+    </span><span class="kwd">const </span><span class="typ">int </span><span class="pln">j </span><span class="pun">= </span><span class="lit">2</span><span class="pun">;
+    </span><span class="kwd">const </span><span class="typ">int </span><span class="pln">k </span><span class="pun">= </span><span class="lit">2</span><span class="pun">;
+    </span><span class="typ">int </span><span class="pln">i </span><span class="pun">= </span><span class="lit">0</span><span class="pun">;
+    </span><span class="kwd">const </span><span class="typ">int</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">tmp </span><span class="pun">= [</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">];
 
-</span><span class="com">// tmp[]
-//     .filter!((x)scope =&gt; x == j) // lambda closes over variable j
-//     .each!((x)scope =&gt; i = x);
-</span><span class="pln">tmp</span><span class="pun">[]
-	<wbr/>.</span><span class="pln">packWith</span><span class="pun">(</span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">)
-	<wbr/>.</span><span class="pln">filter</span><span class="pun">!(<a href="../../glsu/util/unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">) =&gt; </span><span class="pln">x </span><span class="pun">* </span><span class="pln">k </span><span class="pun">== </span><span class="pln">j</span><span class="pun">))
-    <wbr/>.</span><span class="pln">map</span><span class="pun">!(<a href="../../glsu/util/unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">) =&gt; </span><span class="pln">x</span><span class="pun">))
-    <wbr/>.</span><span class="pln">each</span><span class="pun">!((</span><span class="pln">x</span><span class="pun">) </span><span class="kwd">scope </span><span class="pun">=&gt; </span><span class="pln">i </span><span class="pun">= </span><span class="pln">x</span><span class="pun">);
+    </span><span class="com">// tmp[]
+    //     .filter!((x)scope =&gt; x == j) // lambda closes over variable j
+    //     .each!((x)scope =&gt; i = x);
+    </span><span class="pln">tmp</span><span class="pun">[]
+        <wbr/>.</span><span class="pln">packWith</span><span class="pun">(</span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">)
+        <wbr/>.</span><span class="pln">filter</span><span class="pun">!(<a href="../../glsu/util/unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">) =&gt; </span><span class="pln">x </span><span class="pun">* </span><span class="pln">k </span><span class="pun">== </span><span class="pln">j</span><span class="pun">))
+        <wbr/>.</span><span class="pln">map</span><span class="pun">!(<a href="../../glsu/util/unpack.html"></span><span class="pln">unpack</span></a><span class="pun">!((</span><span class="pln">x</span><span class="pun">, </span><span class="pln">j</span><span class="pun">, </span><span class="pln">k</span><span class="pun">) =&gt; </span><span class="pln">x</span><span class="pun">))
+        <wbr/>.</span><span class="pln">each</span><span class="pun">!((</span><span class="pln">x</span><span class="pun">) </span><span class="kwd">scope </span><span class="pun">=&gt; </span><span class="pln">i </span><span class="pun">= </span><span class="pln">x</span><span class="pun">);
+    
+    </span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">i </span><span class="pun">== </span><span class="lit">1</span><span class="pun">);
+}
 
-</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">i </span><span class="pun">== </span><span class="lit">1</span><span class="pun">);
+</span><span class="pln">foo</span><span class="pun">();
 </span></code></pre>
 </section>
 
