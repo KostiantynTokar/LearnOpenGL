@@ -618,28 +618,27 @@ public:
      */
     void bind() const nothrow @nogc
     {
-        //dfmt off
+        // string calcStrideBuilder(size_t i) pure nothrow @safe
+        // {
+        //     import std.conv : to;
+        //     return "() => cast(int) arg0.calcStride!(" ~ i.to!string ~ ")";
+        // }
+        // string calcPointerBuilder(size_t i) pure nothrow @safe
+        // {
+        //     import std.conv : to;
+        //     return "() => cast(const(void)*) arg0.calcPointer!(" ~ i.to!string ~ ")";
+        // }
         static foreach (i; 0 .. attrsCount)
         {{
-            static if (is(typeof(sortedMarkedSymbols[i]) == Vector!(U, N), U, int N) ||
-                       is(typeof(sortedMarkedSymbols[i]) == U[N], U, int N))
+            void worker(U, int N)(VertexBufferLayoutFromPattern layout)
             {
-                static assert(0 < N && N < 5,
-                              "Size (dimension of vector) should be in range from 1 to 4.");
-                static assert(!sortedAttrs[i].normalized || isIntegral!U,
-                              "Normalized may be set only for integer types.");
-
                 enum type = valueOfGLType!U;
                 glVertexAttribPointer(sortedAttrs[i].index, N, type, sortedAttrs[i].normalized,
-                                      cast(int) calcStride!i, cast(const(void)*) calcPointer!i);
+                                      cast(int) layout.calcStride!i(), cast(const(void)*) layout.calcPointer!i());
                 glEnableVertexAttribArray(sortedAttrs[i].index);
             }
-            else
-            {
-                static assert(0, "Vertex attribute should be a static array or gfm.math.vector.Vector.");
-            }
+            applyToAttribute!(i, worker)(this);
         }}
-        //dfmt on
     }
 
     /** 
@@ -681,20 +680,34 @@ private:
 
     enum attrsCount = attrs.length;
 
-    /** 
-     * Size of vertex attribute in bytes.
-     */
-    size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
+    static auto applyToAttribute(size_t index, alias funcTemplate, Args...)(Args args)
     {
-        static if (is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
-                   is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
+        static if(is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
+                  is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
         {
-            return N * U.sizeof;
+            static assert(0 < N && N < 5,
+                            "Size (dimension of vector) should be in range from 1 to 4.");
+            static assert(!sortedAttrs[index].normalized || isIntegral!U,
+                          "Normalized may be set only for integer types.");
+
+            return funcTemplate!(U, N)(args);
         }
         else
         {
             static assert(0, "Vertex attribute should be a static array or gfm.math.vector.Vector.");
         }
+    }
+
+    /** 
+     * Size of vertex attribute in bytes.
+     */
+    size_t sizeOfAttribute(size_t index)() const pure nothrow @nogc @safe
+    {
+        auto worker(U, int N)()
+        {
+            return N * U.sizeof;
+        }
+        return applyToAttribute!(index, worker)();
     }
 
     /** 
