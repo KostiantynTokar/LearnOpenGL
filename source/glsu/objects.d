@@ -459,7 +459,7 @@ public:
      */
     AttribPointer opIndex(size_t index) const pure nothrow @nogc
     {
-        return elemToAttrib(index);
+        return calcAttrib(index);
     }
     /// ditto
     auto opIndex() const pure nothrow
@@ -472,7 +472,7 @@ public:
         import std.range : iota;
         import std.algorithm : map;
         
-        return iota(slice[0], slice[1]).map!(i => elemToAttrib(i))();        
+        return iota(slice[0], slice[1]).map!(i => calcAttrib(i))();        
     }
     /// ditto
     size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
@@ -508,11 +508,14 @@ private:
 
     Array!LayoutElement _elements;
 
+    /** 
+     * Size of vertex attribute in bytes.
+     */
     static size_t sizeOfAttribute(LayoutElement elem) pure nothrow @nogc @safe
     {
         return elem.size * elem.type.sizeOfGLType;
     }
-
+    /// ditto
     size_t sizeOfAttribute(size_t index) const pure nothrow @nogc @safe
     {
         return sizeOfAttribute(_elements[index]);
@@ -528,7 +531,7 @@ private:
         if(batchCount == 1)
         {
             return _elements[]
-                .map!(x => sizeOfAttribute(x))
+                .map!(sizeOfAttribute)()
                 .sum(size_t.init);
         }
         else
@@ -549,7 +552,9 @@ private:
             .sum(ptrdiff_t.init);
     }
 
-    AttribPointer elemToAttrib(size_t index) const pure nothrow @nogc
+    AttribPointer calcAttrib(size_t index) const pure nothrow @nogc
+    in(index < uint.max)
+    in(calcStride(index) <= int.max)do
     {
         return AttribPointer(cast(uint) index, _elements[index].size,
                              _elements[index].type, _elements[index].normalized,
