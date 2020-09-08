@@ -670,13 +670,24 @@ private:
 
     enum attrsCount = attrs.length;
 
+    /** 
+     * Applies supplied function to attribute type ans size.
+     *
+     * Allows to abstract from error handling and fetching attribute type and size.
+     * Params:
+     *   index = Index of the attribute to look over.
+     *   funcTemplate = Function template that takes two template parameters: type U of attribute values and size of the attribute int N.
+     *   args = Arguments to forward to funcTemplate.
+     *
+     * Returns: Return value of funcTemplate.
+     */
     static auto applyToAttribute(size_t index, alias funcTemplate, Args...)(Args args)
     {
         static if(is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
                   is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
         {
             static assert(0 < N && N < 5,
-                            "Size (dimension of vector) should be in range from 1 to 4.");
+                          "Size (dimension of vector) should be in range from 1 to 4.");
             static assert(!sortedAttrs[index].normalized || isIntegral!U,
                           "Normalized may be set only for integer types.");
 
