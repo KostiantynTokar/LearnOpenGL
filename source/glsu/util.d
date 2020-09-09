@@ -180,7 +180,7 @@ T assertNoError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothro
 {
     import std.stdio : stderr, writeln;
 
-    T res;
+    // T res;
     try
     {
         if (string* error = valueOrError.peek!string)
@@ -188,13 +188,14 @@ T assertNoError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothro
             stderr.writeln(*error);
             assert(0);
         }
-        res = valueOrError.get!T;
+        // res = valueOrError.get!T;
+        return valueOrError.get!T;
     }
     catch (Exception e)
     {
         assert(0, "Exeption was thrown while writing error message.");
     }
-    return res;
+    assert(0);
 }
 ///
 unittest

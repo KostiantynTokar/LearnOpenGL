@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>AttribPointer.this - multiple declarations</title>
+		<title>Texture.this - multiple declarations</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,21 +55,21 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>AttribPointer.this - multiple declarations</h1>
+			<h1>Texture.this - multiple declarations</h1>
 			<nav class="page-nav">
 				<ul>
 					<li>
 						<a href="#0">
-							Function <code>AttribPointer.this</code>
+							Function <code>Texture.this</code>
 						</a>
 					</li>
 					<li>
 						<a href="#1">
-							Function <code>AttribPointer.this</code>
+							Function <code>Texture.this</code>
 						</a>
 					</li>
 				</ul>
-			</nav><h2 id="0">Function AttribPointer.this</h2><p></p>
+			</nav><h2 id="0">Function Texture.this</h2><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -78,49 +78,21 @@ $('#symbolSearchPane').show();</script>
 				</code>
 			</div>
 			
-			<h2 id="1">Function AttribPointer.this</h2><p>Constructor that sets arguments for <code class="lang-d"><span class="pln">glVertexAttribPointer</span></code> (doesn't do anything else).
-</p>
+			<h2 id="1">Function Texture.this</h2><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
 			<span class="kwd">ref </span><span class="pln">this</span>
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">index</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">size</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/enums/GLType.html"><span class="typ">GLType</span></a> <span class="pln">type</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">stride</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">long</span> <span class="pln">pointer</span>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">id</span>
 			<br/>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h3>Parameters</h3>
-<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
-<tr><td id="index">index</td><td> Specifies the index of the generic vertex attribute to be modified
-           and location of the attribute in a vertex shader.</td></tr>
-<tr><td id="size">size</td><td> Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.</td></tr>
-<tr><td id="type">type</td><td> Specifies the data type of each component in the array.</td></tr>
-<tr><td id="normalized">normalized</td><td> specifies whether fixed-point data values should be normalized (true) or
-                converted directly as fixed-point values (false) when they are accessed.
-                If <code class="lang-d"><a href="../../glsu/objects/AttribPointer.this.html#normalized"><span class="pln">normalized</span></a></code> is set to true, it indicates that values stored in an integer format
-                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
-                when they are accessed and converted to floating point.
-                Otherwise, values will be converted to floats directly without normalization.</td></tr>
-<tr><td id="stride">stride</td><td> Specifies the byte offset between consecutive generic vertex attributes.
-            If stride is 0, the generic vertex attributes are understood to be tightly packed in the array.</td></tr>
-<tr><td id="pointer">pointer</td><td> Specifies an offset of the first component of the first generic vertex attribute in the <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>.</td></tr>
-</table>
-</section>
-
+			
 			<footer>
 				<table class="license-info">
 					<tr>

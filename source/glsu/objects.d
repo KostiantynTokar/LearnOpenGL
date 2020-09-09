@@ -16,6 +16,8 @@ import glsu.gl_funcs;
  */
 struct BufferObejct(BufferType type)
 {
+    @disable this();
+
     /** 
      * Constructor that transfer data to GPU memory.
      * Params:
@@ -163,6 +165,8 @@ alias ElementBufferArray = BufferObejct!(BufferType.element);
  */
 struct AttribPointer
 {
+    @disable this();
+
     /** 
      * Constructor that sets arguments for `glVertexAttribPointer` (doesn't do anything else).
      * Params:
@@ -832,6 +836,8 @@ unittest
  */
 struct VertexArrayObject
 {
+    @disable this();
+
     /** 
      * Constructor that binds `VertexBufferObject` with a layout specified by an array of `AttribPointer`'s.
      * Params:
@@ -999,6 +1005,8 @@ unittest
  */
 struct IndexedVertexArrayObject
 {
+    @disable this();
+    
     /** 
      * Constructor that binds `ElementBufferArray` to `VertexArrayObject`.
      */
@@ -1086,6 +1094,8 @@ unittest
 /// Represents OpenGL shader program.
 struct ShaderProgram
 {
+    @disable this();
+
     /// Shader type
     enum ShaderType
     {
@@ -1283,6 +1293,11 @@ struct ShaderProgram
 private:
     uint _id;
 
+    this(uint id) pure nothrow @nogc @safe
+    {
+        _id = id;
+    }
+
     alias ShaderOrError = from!"std.variant".Algebraic!(uint, string);
 
     /** 
@@ -1396,6 +1411,8 @@ private:
 /// 2D texture.
 struct Texture
 {
+    @disable this();
+
     /// `Texture` on success, message string on failure.
     alias TextureOrError = from!"std.variant".Algebraic!(Texture, string);
     /** 
@@ -1638,4 +1655,9 @@ struct Texture
 
 private:
     uint _id;
+
+    this(uint id) pure nothrow @nogc @safe
+    {
+        _id = id;
+    }
 }
