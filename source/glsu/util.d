@@ -1,7 +1,9 @@
 /**
  * Utility functions and tempaltes.
  *
- * Authors: Kostiantyn Tokar
+ * Authors: Kostiantyn Tokar.
+ * Copyright: (c) 2020 Kostiantyn Tokar.
+ * License: MIT License.
  */
 module glsu.util;
 

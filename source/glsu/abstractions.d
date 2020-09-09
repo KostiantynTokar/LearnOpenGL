@@ -1,7 +1,9 @@
 /**
  * High-level graphics abstractions.
  *
- * Authors: Kostiantyn Tokar
+ * Authors: Kostiantyn Tokar.
+ * Copyright: (c) 2020 Kostiantyn Tokar.
+ * License: MIT License.
  */
 module glsu.abstractions;
 

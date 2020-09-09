@@ -1,4 +1,10 @@
-/// Package specific exceptions.
+/** 
+ * Package specific exceptions.
+ * 
+ * Authors: Kostiantyn Tokar.
+ * Copyright: (c) 2020 Kostiantyn Tokar.
+ * License: MIT License.
+ */
 module glsu.exceptions;
 
 import std.exception : basicExceptionCtors;
