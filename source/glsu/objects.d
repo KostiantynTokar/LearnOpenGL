@@ -1511,6 +1511,8 @@ struct Texture
 
     /** 
      * Sets the wrap parameter for specified texture coordinate.
+     *
+     * Default: `WrapMode.repeat`.
      */
     void setWrapMode(Coord coord, WrapMode wrap) nothrow @nogc
     in(isValid)
@@ -1530,6 +1532,20 @@ struct Texture
 
         bind();
         glTexParameteri(GL_TEXTURE_2D, glCoord, wrap);
+    }
+
+    /** 
+     * Sets a border color of a texture (used if WrapMode.clampToBorder is set).
+     *
+     * Default: `[0.0f, 0.0f, 0.0f, 0.0f]`.
+     * Params:
+     *   color = RGBA color with values from interval [0,1];
+     *   if the texture contains depth components, the first component is interpreted as a depth value.
+     */
+    void setBorderColor(float[4] color) nothrow @nogc
+    {
+        import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR;
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color.ptr);
     }
 
     /// Filter type for minifying and magnifying functions.
@@ -1577,6 +1593,8 @@ struct Texture
 
     /** 
      * Sets minifying filter.
+     *
+     * Default: `Filter.nearestMipmapLinear`.
      */
     void setMinFilter(Filter filter) nothrow @nogc
     in(isValid)
@@ -1591,6 +1609,8 @@ struct Texture
      * Sets magnifying filter.
      *
      * Could be either Filter.nearest or Filter.linear.
+     *
+     * Default: `Filter.linear`.
      */
     void setMagFilter(Filter filter) nothrow @nogc
     in(isValid)

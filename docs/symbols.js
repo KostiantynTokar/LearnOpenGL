@@ -144,6 +144,7 @@ var symbols = [
 {name: 'glsu.objects.Texture.Filter.nearestMipmapNearest', kind: "enummemberdeclaration", path: './glsu/objects/Texture.Filter.html#nearestMipmapNearest', attributes: []},
 {name: 'glsu.objects.Texture.id', kind: "functiondeclaration", path: './glsu/objects/Texture.id.html', attributes: ["pure", "nothrow", "nogc", "safe", "const"]},
 {name: 'glsu.objects.Texture.isValid', kind: "functiondeclaration", path: './glsu/objects/Texture.isValid.html', attributes: ["pure", "nothrow", "nogc", "safe", "const"]},
+{name: 'glsu.objects.Texture.setBorderColor', kind: "functiondeclaration", path: './glsu/objects/Texture.setBorderColor.html', attributes: ["nothrow", "nogc"]},
 {name: 'glsu.objects.Texture.setMagFilter', kind: "functiondeclaration", path: './glsu/objects/Texture.setMagFilter.html', attributes: ["nothrow", "nogc"]},
 {name: 'glsu.objects.Texture.setMinFilter', kind: "functiondeclaration", path: './glsu/objects/Texture.setMinFilter.html', attributes: ["nothrow", "nogc"]},
 {name: 'glsu.objects.Texture.setWrapMode', kind: "functiondeclaration", path: './glsu/objects/Texture.setWrapMode.html', attributes: ["nothrow", "nogc"]},

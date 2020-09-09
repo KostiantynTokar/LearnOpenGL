@@ -105,6 +105,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/Texture.Filter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.id.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.isValid.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/Texture.setBorderColor.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setMagFilter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setMinFilter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setWrapMode.html</loc></url>

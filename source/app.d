@@ -153,17 +153,9 @@ void main()
     scope(exit) VAO.destroy();
 
     auto texture1 = Texture.create("resources\\container.jpg");
-    texture1.setWrapMode(Texture.Coord.s, Texture.WrapMode.clampToBorder);
-    texture1.setWrapMode(Texture.Coord.t, Texture.WrapMode.clampToBorder);
-    texture1.setMinFilter(Texture.Filter.linearMipmapLinear);
-    texture1.setMagFilter(Texture.Filter.linear);
     scope(exit) texture1.destroy();
 
     auto texture2 = Texture.create("resources\\awesomeface.png");
-    texture2.setWrapMode(Texture.Coord.s, Texture.WrapMode.repeat);
-    texture2.setWrapMode(Texture.Coord.t, Texture.WrapMode.repeat);
-    texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
-    texture2.setMagFilter(Texture.Filter.linear);
     scope(exit) texture2.destroy();
 
     auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag");

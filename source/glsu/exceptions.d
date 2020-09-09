@@ -1,3 +1,4 @@
+/// Package specific exceptions.
 module glsu.exceptions;
 
 import std.exception : basicExceptionCtors;

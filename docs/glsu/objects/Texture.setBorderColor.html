@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function Texture.setWrapMode</title>
+		<title>Function Texture.setBorderColor</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,17 +60,15 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function Texture.setWrapMode</h1><p>Sets the wrap parameter for specified texture coordinate.
+			<h1>Function Texture.setBorderColor</h1><p>Sets a border color of a texture (used if WrapMode.clampToBorder is set).
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="typ">void</span> <span class="pln">setWrapMode</span>
+			<span class="typ">void</span> <span class="pln">setBorderColor</span>
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/Texture.Coord.html"><span class="typ">Texture<wbr/></span><span class="pun">.<wbr/></span><span class="typ">Coord</span></a> <span class="pln">coord</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/Texture.WrapMode.html"><span class="typ">Texture<wbr/></span><span class="pun">.<wbr/></span><span class="typ">WrapMode</span></a> <span class="pln">wrap</span>
+			&nbsp;&nbsp;<span class="typ">float</span><span class="pun">[</span><span class="lit">4</span><span class="pun">]</span> <span class="pln">color</span>
 			<br/>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow @nogc</span><span class="pun">;</span>
 					</div>
@@ -79,8 +77,14 @@ $('#symbolSearchPane').show();</script>
 			<section></section>
 
 			<section><h2>Default</h2>
-<p><code class="lang-d"><a href="../../glsu/objects/Texture.WrapMode.html#repeat"><span class="typ">WrapMode<wbr/></span><span class="pun">.</span><span class="pln">repeat</span></a></code>.
+<p><code class="lang-d"><span class="pun">[</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">]</span></code>.
 </p>
+</section>
+<section><h2>Parameters</h2>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="color">color</td><td> RGBA color with values from interval [0,1];
+   if the texture contains depth components, the first component is interpreted as a depth value.</td></tr>
+</table>
 </section>
 
 			<footer>
