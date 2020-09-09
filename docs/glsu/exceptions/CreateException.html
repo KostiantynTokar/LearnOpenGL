@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Alias Texture.TextureOrError</title>
+		<title>Class CreateException</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -36,12 +36,17 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</li>
 				<li>
+					<div class="module selected">
+						<a href="../../glsu/exceptions.html">exceptions</a>
+					</div>
+				</li>
+				<li>
 					<div class="module ">
 						<a href="../../glsu/gl_funcs.html">gl_funcs</a>
 					</div>
 				</li>
 				<li>
-					<div class="module selected">
+					<div class="module ">
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
@@ -55,25 +60,14 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Alias Texture.TextureOrError</h1><p><code class="lang-d"><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a></code> on success, message string on failure.
+			<h1>Class CreateException</h1><p>Exception type raised on failed loading of data and constructing objects with loaded data.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">struct</span> <a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a>
-			<br/>
-			<span class="pun">
-				{
-				<br/>
-			</span>
-			&nbsp;&nbsp;<span class="com">// ...</span>
-			<br/>
-			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">TextureOrError</span>
-			 <span class="pun">=</span> <span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">variant<wbr/></span><span class="pun">.</span><span class="typ">VariantN</span>!(16L,glsu.objects.Texture,string)<span class="pun">;</span>
-			<br/>
-			&nbsp;&nbsp;<span class="com">// ...</span>
-			<br/>
-			<span class="pun">}</span>
+			<span class="kwd">class</span> <span class="typ">CreateException</span>
+			<br>&nbsp;&nbsp;: <span class="pln">object<wbr/></span><span class="pun">.</span><span class="typ">Exception</span>
+			<span class="pun">;</span>
 					</div>
 				</code>
 			</div>
@@ -84,9 +78,7 @@ $('#symbolSearchPane').show();</script>
 					<tr>
 						<th>Authors</th>
 						<td>
-							<p>Kostiantyn Tokar
-</p>
-
+							
 						</td>
 					</tr>
 					<tr>

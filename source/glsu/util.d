@@ -157,53 +157,15 @@ void assertNoGLErrors(string message = "",
         }
         for(; e != 0; e = glGetError())
         {
-            stderr.writefln!"\tError 0x%X: %s"(e, errorDescription(cast(GLError) e));
+            stderr.writefln!"\tError %#X: %s"(e, errorDescription(cast(GLError) e));
         }
     }
     catch (Exception e)
     {
         assert(0, "Exeption was thrown while writing error message.");
     }
-    
 
     assert(!flag);
-}
-
-/** 
- * If `valueOrError` holds `string`, then `stderr` it and commits `assert(0)`;
- * else returns first component of `valueOrError` `Algebraic`.
- * Params:
- *   valueOrError = Argument to check.
- * Returns: Value (i.e. first component of `Algebraic`) if `valueOrError` doesn't hold string.
- */
-T assertNoError(T)(from!"std.variant".Algebraic!(T, string) valueOrError) nothrow
-{
-    import std.stdio : stderr, writeln;
-
-    // T res;
-    try
-    {
-        if (string* error = valueOrError.peek!string)
-        {
-            stderr.writeln(*error);
-            assert(0);
-        }
-        // res = valueOrError.get!T;
-        return valueOrError.get!T;
-    }
-    catch (Exception e)
-    {
-        assert(0, "Exeption was thrown while writing error message.");
-    }
-    assert(0);
-}
-///
-unittest
-{
-    import std.variant : Algebraic;
-
-    auto a = Algebraic!(int, string)(42);
-    assert(assertNoError!int(a) == 42);
 }
 
 /** 

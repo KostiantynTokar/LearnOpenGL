@@ -1103,17 +1103,15 @@ struct ShaderProgram
         fragment = from!"glad.gl.enums".GL_FRAGMENT_SHADER,
     }
 
-    /// `ShaderProgram` on success, message string on failure.
-    alias ShaderProgramOrError = from!"std.variant".Algebraic!(ShaderProgram, string);
-
     /** 
      * Compiles and links `ShaderProgram`.
      * Params:
      *   vertexShaderPath = Path to vertex shader source.
      *   fragmentShaderPath = Path to fragment shader source.
-     * Returns: `ShaderProgram` on success, message string on failure.
+     * Returns: Ready to use `ShaderProgram` instance.
+     * Throws: `CreateException` if compilation or linking failed.
      */
-    static ShaderProgramOrError create(string vertexShaderPath, string fragmentShaderPath)()
+    static ShaderProgram create(string vertexShaderPath, string fragmentShaderPath)()
     {
         uint[2] shaders = compileAllShaders(import(vertexShaderPath), import(fragmentShaderPath),
                                             vertexShaderPath, fragmentShaderPath);
@@ -1130,9 +1128,10 @@ struct ShaderProgram
      * Params:
      *   vertexShaderSource = Source code of vertex shader.
      *   fragmentShaderSource = Source code of fragment shader.
-     * Returns: `ShaderProgram` on success, message string on failure.
+     * Returns: Ready to use `ShaderProgram` instance.
+     * Throws: `CreateException` if compilation or linking failed.
      */
-    static ShaderProgramOrError createFromString(string vertexShaderSource, string fragmentShaderSource)
+    static ShaderProgram createFromString(string vertexShaderSource, string fragmentShaderSource)
     {
         uint[2] shaders = compileAllShaders(vertexShaderSource, fragmentShaderSource);
         scope(exit)
@@ -1298,8 +1297,6 @@ private:
         _id = id;
     }
 
-    alias ShaderOrError = from!"std.variant".Algebraic!(uint, string);
-
     /** 
      * Compiles shader from a source string.
      * Params:
@@ -1307,8 +1304,9 @@ private:
      *   type = Type of a shader.
      *   shaderPath = Path to a shader source file; should be provided if available for better error message.
      * Returns: OpenGL ID of a shader on succes, error message on failure.
+     * Throws: `CreateException` if error occured while compiling.
      */
-    static ShaderOrError compileShader(string shaderSource, ShaderType type, string shaderPath = "")
+    static uint compileShader(string shaderSource, ShaderType type, string shaderPath = "")
     {
         import std.string : toStringz, empty;
         import std.uni : toUpper;
@@ -1318,8 +1316,8 @@ private:
         import std.format : format;
 
         import glad.gl.enums : GL_COMPILE_STATUS, GL_INFO_LOG_LENGTH;
+        import glsu.exceptions : CreateException;
 
-        ShaderOrError res;
         int success;
         int infoLogLength;
 
@@ -1333,20 +1331,24 @@ private:
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
             char[] infoLog = new char[infoLogLength];
             glGetShaderInfoLog(shader, infoLogLength, null, infoLog.ptr);
-            res = "ERROR::SHADER::" ~ type.stringof.toUpper ~
-                        "::COMPILATION_FAILED\n" ~
-                        (shaderPath.empty ? 
-                            repeat('-', 80).array.idup ~ "\n" ~ 
-                            shaderSource.split("\n").enumerate(1).map!(t => format!"%4d:\t%s"(t.expand)).join("\n") ~ 
-                            "\n" ~ repeat('-', 80).array.idup : 
-                            shaderPath) ~ "\n" ~ 
-                        infoLog.idup;
             glDeleteShader(shader);
-            return res;
+
+            string message = "ERROR::SHADER::" ~ type.stringof.toUpper ~ "::COMPILATION_FAILED\n";
+            if(shaderPath.empty)
+            {
+                message ~= repeat('-', 80).array.idup ~ "\n" ~ 
+                           shaderSource.split("\n").enumerate(1).map!(t => format!"%4d:\t%s"(t.expand)).join("\n") ~ 
+                           "\n" ~ repeat('-', 80).array.idup;
+            }
+            else
+            {
+                message ~= shaderPath;
+            }
+            message ~= "\n" ~ infoLog.idup;
+            throw new CreateException(message);
         }
 
-        res = shader;
-        return res;
+        return shader;
     }
 
     /** 
@@ -1357,20 +1359,15 @@ private:
      *   vertexShaderPath = Path to a vertex shader source file; should be provided if available for better error message.
      *   fragmentShaderPath = Path to a fragment shader source file; should be provided if available for better error message.
      * Returns: OpenGL IDs of a vertex shader and fragment shader.
-     *
-     * Note: Asserts on compilation error.
+     * Throws: `CreateException` if error occured while compiling.
      */
     static uint[2] compileAllShaders(string vertexShaderSource, string fragmentShaderSource,
                                      string vertexShaderPath = "", string fragmentShaderPath = "")
     {
-        uint[2] shaders;
-
-        ShaderOrError vertexShaderOrError = compileShader(vertexShaderSource, ShaderType.vertex, vertexShaderPath);
-        shaders[0] = assertNoError!uint(vertexShaderOrError);
-
-        ShaderOrError fragmentShaderOrError = compileShader(fragmentShaderSource, ShaderType.fragment, fragmentShaderPath);
-        shaders[1] = assertNoError!uint(fragmentShaderOrError);
-
+        uint[2] shaders = [
+            compileShader(vertexShaderSource, ShaderType.vertex, vertexShaderPath),
+            compileShader(fragmentShaderSource, ShaderType.fragment, fragmentShaderPath)
+        ];
         return shaders;
     }
 
@@ -1379,13 +1376,14 @@ private:
      * Params:
      *   vertexShader = ID of a vertex shader.
      *   fragmentShader = ID of a fragment shader.
-     * Returns: OpenGL ID of a shader program on succes, error message on failure.
+     * Returns: Ready to use `ShaderProgram` instance.
+     * Throws: `CreateException` if error occured while linking.
      */
-    static ShaderProgramOrError linkProgram(uint vertexShader, uint fragmentShader)
+    static ShaderProgram linkProgram(uint vertexShader, uint fragmentShader)
     {
         import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_LINK_STATUS;
+        import glsu.exceptions : CreateException;
 
-        ShaderProgramOrError res;
         int success;
         int infoLogLength;
 
@@ -1399,12 +1397,10 @@ private:
             glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
             char[] infoLog = new char[infoLogLength];
             glGetProgramInfoLog(shaderProgram, infoLogLength, null, infoLog.ptr);
-            res = "ERROR::SHADER::PROGRAM::LINK_FAILED\n" ~ infoLog.idup;
-            return res;
+            throw new CreateException("ERROR::SHADER::PROGRAM::LINK_FAILED\n" ~ infoLog.idup);
         }
 
-        res = ShaderProgram(shaderProgram);
-        return res;
+        return ShaderProgram(shaderProgram);
     }
 }
 
@@ -1413,29 +1409,24 @@ struct Texture
 {
     @disable this();
 
-    /// `Texture` on success, message string on failure.
-    alias TextureOrError = from!"std.variant".Algebraic!(Texture, string);
     /** 
      * Loads an image and creates OpenGL texture with it.
      * Params:
      *   imageFileName = File name of an image to be used as a texture.
      * Returns: `Texture` on success, message string on failure.
+     * Throws: `CreateException` if image load fail.
      */
-    static TextureOrError create(string imageFileName) nothrow
+    static Texture create(string imageFileName)
     {
         import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
         import glad.gl.enums : GL_RED, GL_RG, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
             GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
-
-        TextureOrError res;
+        import glsu.exceptions : CreateException;
+        import std.exception : enforce;
 
         set_yaxis_up_on_load(true);
         auto image = read_image(imageFileName);
-        if (image.e)
-        {
-            res = "ERROR::TEXTURE::READ_FAILED\n" ~ IF_ERROR[image.e];
-            return res;
-        }
+        enforce!CreateException(!image.e, "ERROR::TEXTURE::READ_FAILED\n" ~ IF_ERROR[image.e]);
 
         uint format;
         switch (image.c)
@@ -1476,8 +1467,7 @@ struct Texture
                 format, type, image.buf8.ptr);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        res = Texture(texture);
-        return res;
+        return Texture(texture);
     }
 
     /// `Texture` coordinates.

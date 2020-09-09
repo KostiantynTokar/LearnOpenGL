@@ -152,22 +152,21 @@ void main()
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
-    auto texture1 = Texture.create("resources\\container.jpg").assertNoError!Texture();
+    auto texture1 = Texture.create("resources\\container.jpg");
     texture1.setWrapMode(Texture.Coord.s, Texture.WrapMode.clampToBorder);
     texture1.setWrapMode(Texture.Coord.t, Texture.WrapMode.clampToBorder);
     texture1.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture1.setMagFilter(Texture.Filter.linear);
     scope(exit) texture1.destroy();
 
-    auto texture2 = Texture.create("resources\\awesomeface.png").assertNoError!Texture();
+    auto texture2 = Texture.create("resources\\awesomeface.png");
     texture2.setWrapMode(Texture.Coord.s, Texture.WrapMode.repeat);
     texture2.setWrapMode(Texture.Coord.t, Texture.WrapMode.repeat);
     texture2.setMinFilter(Texture.Filter.linearMipmapLinear);
     texture2.setMagFilter(Texture.Filter.linear);
     scope(exit) texture2.destroy();
 
-    auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag")
-        .assertNoError!ShaderProgram();
+    auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag");
     scope(exit) shaderProgram.destroy();
 
     float deltaTime = 0.0f;

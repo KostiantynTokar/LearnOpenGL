@@ -33,6 +33,8 @@
 <url><loc>http://127.0.0.1/glsu/enums/GLError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/enums/GLType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/enums/RenderMode.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/exceptions.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/exceptions/CreateException.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/gl_funcs.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/gl_funcs/allNames.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/gl_funcs/anotherNames.html</loc></url>
@@ -87,7 +89,6 @@
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.setTextures.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.setUniform.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.setUniform.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderProgramOrError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.unbind.html</loc></url>
@@ -95,7 +96,6 @@
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.compileAllShaders.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.compileShader.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.linkProgram.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderOrError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.bind.html</loc></url>
@@ -108,7 +108,6 @@
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setMagFilter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setMinFilter.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.setWrapMode.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/Texture.TextureOrError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.WrapMode.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture._id.html</loc></url>
@@ -184,7 +183,6 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.size.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.type.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/util/assertNoError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/assertNoGLErrors.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/clearGLErrors.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util/debugHack.html</loc></url>

@@ -37,6 +37,11 @@ $('#symbolSearchPane').show();</script>
 				</li>
 				<li>
 					<div class="module ">
+						<a href="../../glsu/exceptions.html">exceptions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
 						<a href="../../glsu/gl_funcs.html">gl_funcs</a>
 					</div>
 				</li>
@@ -60,7 +65,7 @@ $('#symbolSearchPane').show();</script>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<a href="../../glsu/objects/ShaderProgram.ShaderProgramOrError.html"><span class="typ">ShaderProgram<wbr/></span><span class="pun">.<wbr/></span><span class="typ">ShaderProgramOrError</span></a> <span class="pln">create</span>(<span class="typ">string</span> vertexShaderPath, <span class="typ">string</span> fragmentShaderPath)<span class="pun">(</span><span class="pun">)</span><span class="pun">;</span>
+			<a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a> <span class="pln">create</span>(<span class="typ">string</span> vertexShaderPath, <span class="typ">string</span> fragmentShaderPath)<span class="pun">(</span><span class="pun">)</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
@@ -72,7 +77,11 @@ $('#symbolSearchPane').show();</script>
 </table>
 </section>
 <section><h2>Returns</h2>
-<p><code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code> on success, message string on failure.
+<p>Ready to use <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code> instance.
+</p>
+</section>
+<section><h2>Throws</h2>
+<p><code class="lang-d"><span class="typ">CreateException</span></code> if compilation or linking failed.
 </p>
 </section>
 
