@@ -79,6 +79,20 @@ $('#symbolSearchPane').show();</script>
 <p>Value in interval [-PI, PI).
 </p>
 </section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(</span><span class="lit">0.0f</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(</span><span class="lit">0.0f</span><span class="pun">));
+
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(</span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(</span><span class="pln">PI_2</span><span class="pun">));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(</span><span class="pln">PI </span><span class="pun">+ </span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(-</span><span class="pln">PI_2</span><span class="pun">));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(</span><span class="lit">2 </span><span class="pun">* </span><span class="pln">PI </span><span class="pun">+ </span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(</span><span class="pln">PI_2</span><span class="pun">));
+
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(-</span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(-</span><span class="pln">PI_2</span><span class="pun">));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(-</span><span class="pln">PI </span><span class="pun">- </span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(</span><span class="pln">PI_2</span><span class="pun">));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="typ">Camera<wbr/></span><span class="pun">.</span><span class="pln">constrainAngle</span><span class="pun">(-</span><span class="lit">2 </span><span class="pun">* </span><span class="pln">PI </span><span class="pun">- </span><span class="pln">PI_2</span><span class="pun">)<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">(-</span><span class="pln">PI_2</span><span class="pun">));
+}
+</span></code></pre>
+</section>
 
 			<footer>
 				<table class="license-info">

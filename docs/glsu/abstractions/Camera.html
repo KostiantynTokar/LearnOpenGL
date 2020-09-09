@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Struct Camera</h1><p></p>
+			<h1>Struct Camera</h1><p>Camera abstraction. Simplifies work with view matrix.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -64,7 +65,10 @@ $('#symbolSearchPane').show();</script>
 					</div>
 				</code>
 			</div>
-			
+			<section><p>Do not support roll Euler angle.
+</p>
+</section>
+
 			<section><h2>Constructors</h2>
 				<table>
 					<col class="caption"/>
@@ -78,7 +82,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(position, yaw, pitch, worldUp)</span>
 						</td>
-						<td></td>
+						<td>Constructor of the camera.
+</td>
 					</tr>
 				</table>
 			</section>
@@ -145,7 +150,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Angle that determines camera orientation.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -154,7 +160,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Calculates view matrix of the camera.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -163,7 +170,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(offset)</span>
 						</td>
-						<td></td>
+						<td>Change position of the camera by specified offset.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -172,7 +180,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(offset)</span>
 						</td>
-						<td></td>
+						<td>Change position of the camera in front direction.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -181,7 +190,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(offset)</span>
 						</td>
-						<td></td>
+						<td>Change position of the camera in right direction.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -190,7 +200,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(offset)</span>
 						</td>
-						<td></td>
+						<td>Change position of the camera in up direction.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -199,7 +210,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Pitch Euler angle in radians. Clamped to interval [-radians(89.0f), radians(89.0f)].
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -208,7 +220,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>3D position coordinates of the camera.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -217,7 +230,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Angle that determines camera orientation.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -226,7 +240,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(yawOffset, pitchOffset)</span>
 						</td>
-						<td></td>
+						<td>Rotates using Euler angles in radians.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -235,7 +250,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Angle that determines camera orientation.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -244,7 +260,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Constant world up direction.
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -253,7 +270,8 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td></td>
+						<td>Yaw Euler angle in radians. Wrapped to interval [-PI, PI).
+</td>
 					</tr>
 					<tr>
 						<td>
@@ -285,7 +303,42 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 				</table>
 			</section>
-			
+			<section><h2>Note</h2>
+<p>All angles are specified in radians.
+</p>
+
+<p>   Uses right-handed coordinate system (as in OpenGL),
+   so that negative Z should point into the screen (positive to the user);
+   positive Y should be "up", and positive X should be to the right.
+</p>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="kwd">import </span><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math </span><span class="pun">: </span><span class="pln">vec3f</span><span class="pun">, </span><span class="pln">vec4f</span><span class="pun">;
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">math </span><span class="pun">: </span><span class="pln">PI_2</span><span class="pun">, </span><span class="pln">approxEqual</span><span class="pun">;
+
+</span><span class="pln">vec3f fromHomogeneous</span><span class="pun">(</span><span class="pln">vec4f v</span><span class="pun">)
+{
+    </span><span class="kwd">return </span><span class="pln">v<wbr/></span><span class="pun">.</span><span class="pln">xyz </span><span class="pun">/ </span><span class="pln">v<wbr/></span><span class="pun">.</span><span class="pln">w</span><span class="pun">;
+}
+</span><span class="pln">vec3f applyView</span><span class="pun">(</span><span class="typ">Camera </span><span class="pln">camera</span><span class="pun">, </span><span class="pln">vec3f v</span><span class="pun">)
+{
+    </span><span class="kwd">return </span><span class="pln">fromHomogeneous</span><span class="pun">(</span><span class="pln">camera<wbr/></span><span class="pun">.</span><span class="pln">getView</span><span class="pun">() * </span><span class="pln">vec4f</span><span class="pun">(</span><span class="pln">v</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">));
+}
+
+</span><span class="kwd">auto </span><span class="pln">origin </span><span class="pun">= </span><span class="pln">vec3f</span><span class="pun">(</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">);
+</span><span class="kwd">auto </span><span class="pln">camera </span><span class="pun">= </span><span class="typ">Camera</span><span class="pun">(</span><span class="pln">vec3f</span><span class="pun">(</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">));
+
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">applyView</span><span class="pun">(</span><span class="pln">camera</span><span class="pun">, </span><span class="pln">origin</span><span class="pun">)[]<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">([</span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, -</span><span class="lit">1.0f</span><span class="pun">]));
+
+</span><span class="pln">camera<wbr/></span><span class="pun">.</span><span class="pln">rotate</span><span class="pun">(</span><span class="pln">PI_2</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">applyView</span><span class="pun">(</span><span class="pln">camera</span><span class="pun">, </span><span class="pln">origin</span><span class="pun">)[]<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">([-</span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">]));
+
+</span><span class="pln">camera<wbr/></span><span class="pun">.</span><span class="pln">moveFront</span><span class="pun">(</span><span class="lit">1.0f</span><span class="pun">);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">applyView</span><span class="pun">(</span><span class="pln">camera</span><span class="pun">, </span><span class="pln">origin</span><span class="pun">)[]<wbr/>.</span><span class="pln">approxEqual</span><span class="pun">([-</span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">]));
+</span></code></pre>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

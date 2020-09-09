@@ -55,7 +55,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function Camera.this</h1><p></p>
+			<h1>Function Camera.this</h1><p>Constructor of the camera.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -75,7 +76,17 @@ $('#symbolSearchPane').show();</script>
 				</code>
 			</div>
 			
-			
+			<section><h2>Parameters</h2>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="position">position</td><td> 3D position coordinates of the camera.</td></tr>
+<tr><td id="yaw">yaw</td><td> Yaw Euler angle in radians, default is <code class="lang-d"><span class="pun">-</span><span class="pln">PI</span><span class="pun">/</span><span class="lit">2</span></code> (so camera looks at negative z-axis).
+         Wrapped to interval [-PI, PI).</td></tr>
+<tr><td id="pitch">pitch</td><td> Pitch Euler angle in radians, default is <code class="lang-d"><span class="lit">0</span></code> (so camera looks perpendicularly y-axis).
+           Clamped to interval [-radians(89.0f), radians(89.0f)].</td></tr>
+<tr><td id="worldUp">worldUp</td><td> Constant to determine camera orientation angles.</td></tr>
+</table>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>
