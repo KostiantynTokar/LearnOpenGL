@@ -108,6 +108,16 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/ShaderProgram.createFromString.html" class="public">
+								<code>createFromString</code>
+							</a>
+							<span class="tableEntryAnnotation">(vertexShaderSource, fragmentShaderSource)</span>
+						</td>
+						<td>Compiles and links <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/ShaderProgram.destroy.html" class="public">
 								<code>destroy</code>
 							</a>
@@ -187,6 +197,36 @@ $('#symbolSearchPane').show();</script>
 						<td>Deactivate program, if debug=glChecks.
 </td>
 					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/ShaderProgram.compileAllShaders.html" class="private">
+								<code>compileAllShaders</code>
+							</a>
+							<span class="tableEntryAnnotation">(vertexShaderSource, fragmentShaderSource, vertexShaderPath, fragmentShaderPath)</span>
+						</td>
+						<td>Compiles vertex and fragment shaders from a source strings.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/ShaderProgram.compileShader.html" class="private">
+								<code>compileShader</code>
+							</a>
+							<span class="tableEntryAnnotation">(shaderSource, type, shaderPath)</span>
+						</td>
+						<td>Compiles shader from a source string.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/ShaderProgram.linkProgram.html" class="private">
+								<code>linkProgram</code>
+							</a>
+							<span class="tableEntryAnnotation">(vertexShader, fragmentShader)</span>
+						</td>
+						<td>Links vertex and fragment shader into a shader program.
+</td>
+					</tr>
 				</table>
 			</section>
 			<section><h2>Enums</h2>
@@ -197,8 +237,8 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
-							<a href="../../glsu/objects/ShaderProgram.Type.html" class="public">
-								<code>Type</code>
+							<a href="../../glsu/objects/ShaderProgram.ShaderType.html" class="public">
+								<code>ShaderType</code>
 							</a>
 						</td>
 						<td>Shader type
@@ -220,6 +260,14 @@ $('#symbolSearchPane').show();</script>
 						</td>
 						<td><code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code> on success, message string on failure.
 </td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/ShaderProgram.ShaderOrError.html" class="private">
+								<code>ShaderOrError</code>
+							</a>
+						</td>
+						<td></td>
 					</tr>
 				</table>
 			</section>

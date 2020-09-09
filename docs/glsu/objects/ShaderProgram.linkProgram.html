@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Enum ShaderProgram.Type</title>
+		<title>Function ShaderProgram.linkProgram</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -55,38 +55,34 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Enum ShaderProgram.Type</h1><p>Shader type
+			<h1>Function ShaderProgram.linkProgram</h1><p>Links vertex and fragment shader into a shader program.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">enum</span> <span class="typ">Type</span>
-			 <span class="pun">:</span> <span class="typ">uint</span> <span class="pun">{ ... }</span>
+			<span class="kwd">static </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">variant<wbr/></span><span class="pun">.</span><span class="typ">VariantN</span>!(16L,glsu.objects.ShaderProgram,string) <span class="pln">linkProgram</span>
+			<span class="pun">(</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">vertexShader</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">fragmentShader</span>
+			<br/>
+			<span class="pun">)</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Enum members</h2>
-				<table>
-					<col class="caption"/>
-					<tr>
-						<th>Name</th><th>Description</th>
-					</tr>
-					<tr>
-						<td id="fragment">
-							<code>fragment</code>
-						</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td id="vertex">
-							<code>vertex</code>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</section>
-			
+			<section><h2>Parameters</h2>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="vertexShader">vertexShader</td><td> ID of a vertex shader.</td></tr>
+<tr><td id="fragmentShader">fragmentShader</td><td> ID of a fragment shader.</td></tr>
+</table>
+</section>
+<section><h2>Returns</h2>
+<p>OpenGL ID of a shader program on succes, error message on failure.
+</p>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

@@ -76,6 +76,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.bind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.create.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.createFromString.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.destroy.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.getUniformLocation.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.id.html</loc></url>
@@ -84,9 +85,13 @@
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.setUniform.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.setUniform.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderProgramOrError.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.Type.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderType.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.unbind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/ShaderProgram._id.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.compileAllShaders.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.compileShader.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.linkProgram.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/ShaderProgram.ShaderOrError.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.bind.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.Coord.html</loc></url>

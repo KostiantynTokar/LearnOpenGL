@@ -1087,7 +1087,7 @@ unittest
 struct ShaderProgram
 {
     /// Shader type
-    enum Type
+    enum ShaderType
     {
         vertex = from!"glad.gl.enums".GL_VERTEX_SHADER,
         fragment = from!"glad.gl.enums".GL_FRAGMENT_SHADER,
@@ -1095,6 +1095,7 @@ struct ShaderProgram
 
     /// `ShaderProgram` on success, message string on failure.
     alias ShaderProgramOrError = from!"std.variant".Algebraic!(ShaderProgram, string);
+
     /** 
      * Compiles and links `ShaderProgram`.
      * Params:
@@ -1104,76 +1105,32 @@ struct ShaderProgram
      */
     static ShaderProgramOrError create(string vertexShaderPath, string fragmentShaderPath)()
     {
-        import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_FRAGMENT_SHADER, GL_LINK_STATUS;
-
-        ShaderProgramOrError res;
-
-        alias ShaderOrError = from!"std.variant".Algebraic!(uint, string);
-
-        ShaderOrError compileShader(string shaderPath)(Type type)
+        uint[2] shaders = compileAllShaders(import(vertexShaderPath), import(fragmentShaderPath),
+                                            vertexShaderPath, fragmentShaderPath);
+        scope(exit)
         {
-            import std.string : toStringz;
-            import std.uni : toUpper;
-
-            import glad.gl.enums : GL_COMPILE_STATUS;
-
-            ShaderOrError resInner;
-
-            int success;
-            int infoLogLength;
-
-            const(char)* shaderSource = import(shaderPath).toStringz;
-            uint shader = glCreateShader(type);
-            glShaderSource(shader, 1, &shaderSource, null);
-            glCompileShader(shader);
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-            if (!success)
-            {
-                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-                char[] infoLog = new char[infoLogLength];
-                glGetShaderInfoLog(shader, infoLogLength, null, infoLog.ptr);
-                resInner = "ERROR::SHADER::" ~ type.stringof.toUpper ~
-                           "::COMPILATION_FAILED\n" ~ shaderPath ~ "\n" ~ infoLog.idup;
-                glDeleteShader(shader);
-                return resInner;
-            }
-
-            resInner = shader;
-            return resInner;
+            glDeleteShader(shaders[0]);
+            glDeleteShader(shaders[1]);
         }
+        return linkProgram(shaders[0], shaders[1]);
+    }
 
-        ShaderOrError vertexShaderOrError = compileShader!vertexShaderPath(Type.vertex);
-        immutable vertexShader = assertNoError!uint(vertexShaderOrError);
-        scope (exit)
-            glDeleteShader(vertexShader);
-
-        ShaderOrError fragmentShaderOrError = compileShader!fragmentShaderPath(Type.fragment);
-        immutable fragmentShader = assertNoError!uint(fragmentShaderOrError);
-        scope (exit)
-            glDeleteShader(fragmentShader);
-
-        int success;
-        int infoLogLength;
-
-        immutable shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-        if (!success)
+    /** 
+     * Compiles and links `ShaderProgram`.
+     * Params:
+     *   vertexShaderSource = Source code of vertex shader.
+     *   fragmentShaderSource = Source code of fragment shader.
+     * Returns: `ShaderProgram` on success, message string on failure.
+     */
+    static ShaderProgramOrError createFromString(string vertexShaderSource, string fragmentShaderSource)
+    {
+        uint[2] shaders = compileAllShaders(vertexShaderSource, fragmentShaderSource);
+        scope(exit)
         {
-            glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
-            char[] infoLog = new char[infoLogLength];
-            glGetProgramInfoLog(shaderProgram, infoLogLength, null, infoLog.ptr);
-            res = "ERROR::SHADER::PROGRAM::LINK_FAILED\n" ~ infoLog.idup;
-            return res;
+            glDeleteShader(shaders[0]);
+            glDeleteShader(shaders[1]);
         }
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-
-        res = ShaderProgram(shaderProgram);
-        return res;
+        return linkProgram(shaders[0], shaders[1]);
     }
 
     /** 
@@ -1325,6 +1282,115 @@ struct ShaderProgram
 
 private:
     uint _id;
+
+    alias ShaderOrError = from!"std.variant".Algebraic!(uint, string);
+
+    /** 
+     * Compiles shader from a source string.
+     * Params:
+     *   shaderSource = Source code to compile.
+     *   type = Type of a shader.
+     *   shaderPath = Path to a shader source file; should be provided if available for better error message.
+     * Returns: OpenGL ID of a shader on succes, error message on failure.
+     */
+    static ShaderOrError compileShader(string shaderSource, ShaderType type, string shaderPath = "")
+    {
+        import std.string : toStringz, empty;
+        import std.uni : toUpper;
+        import std.range : repeat, enumerate;
+        import std.algorithm : map;
+        import std.array : array, split, join;
+        import std.format : format;
+
+        import glad.gl.enums : GL_COMPILE_STATUS, GL_INFO_LOG_LENGTH;
+
+        ShaderOrError res;
+        int success;
+        int infoLogLength;
+
+        uint shader = glCreateShader(type);
+        const(char)* shaderStringz = shaderSource.toStringz();
+        glShaderSource(shader, 1, &shaderStringz, null);
+        glCompileShader(shader);
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+            char[] infoLog = new char[infoLogLength];
+            glGetShaderInfoLog(shader, infoLogLength, null, infoLog.ptr);
+            res = "ERROR::SHADER::" ~ type.stringof.toUpper ~
+                        "::COMPILATION_FAILED\n" ~
+                        (shaderPath.empty ? 
+                            repeat('-', 80).array.idup ~ "\n" ~ 
+                            shaderSource.split("\n").enumerate(1).map!(t => format!"%4d:\t%s"(t.expand)).join("\n") ~ 
+                            "\n" ~ repeat('-', 80).array.idup : 
+                            shaderPath) ~ "\n" ~ 
+                        infoLog.idup;
+            glDeleteShader(shader);
+            return res;
+        }
+
+        res = shader;
+        return res;
+    }
+
+    /** 
+     * Compiles vertex and fragment shaders from a source strings.
+     * Params:
+     *   vertexShaderSource = Vertex shader source code to compile.
+     *   fragmentShaderSource = Fragment shader source code to compile.
+     *   vertexShaderPath = Path to a vertex shader source file; should be provided if available for better error message.
+     *   fragmentShaderPath = Path to a fragment shader source file; should be provided if available for better error message.
+     * Returns: OpenGL IDs of a vertex shader and fragment shader.
+     *
+     * Note: Asserts on compilation error.
+     */
+    static uint[2] compileAllShaders(string vertexShaderSource, string fragmentShaderSource,
+                                     string vertexShaderPath = "", string fragmentShaderPath = "")
+    {
+        uint[2] shaders;
+
+        ShaderOrError vertexShaderOrError = compileShader(vertexShaderSource, ShaderType.vertex, vertexShaderPath);
+        shaders[0] = assertNoError!uint(vertexShaderOrError);
+
+        ShaderOrError fragmentShaderOrError = compileShader(fragmentShaderSource, ShaderType.fragment, fragmentShaderPath);
+        shaders[1] = assertNoError!uint(fragmentShaderOrError);
+
+        return shaders;
+    }
+
+    /** 
+     * Links vertex and fragment shader into a shader program.
+     * Params:
+     *   vertexShader = ID of a vertex shader.
+     *   fragmentShader = ID of a fragment shader.
+     * Returns: OpenGL ID of a shader program on succes, error message on failure.
+     */
+    static ShaderProgramOrError linkProgram(uint vertexShader, uint fragmentShader)
+    {
+        import glad.gl.enums : GL_INFO_LOG_LENGTH, GL_LINK_STATUS;
+
+        ShaderProgramOrError res;
+        int success;
+        int infoLogLength;
+
+        immutable shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        if (!success)
+        {
+            glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
+            char[] infoLog = new char[infoLogLength];
+            glGetProgramInfoLog(shaderProgram, infoLogLength, null, infoLog.ptr);
+            res = "ERROR::SHADER::PROGRAM::LINK_FAILED\n" ~ infoLog.idup;
+            return res;
+        }
+
+        res = ShaderProgram(shaderProgram);
+        return res;
+    }
 }
 
 /// 2D texture.
