@@ -7,10 +7,10 @@
  */
 module glsu.util;
 
-import std.traits : isIntegral;
+import std.traits : isIntegral, ForeachType;
 
 import glsu.enums : GLType, GLError;
-import glsu.objects : VertexBufferLayout, VertexBufferLayoutFromPattern;
+import glsu.objects : AttribPointer;
 
 /// Determine GL enum value that corresponds to D type.
 template valueOfGLType(T)
@@ -114,8 +114,14 @@ bool isIntegral(GLType type) pure nothrow @nogc @safe
     }
 }
 
-/// Trait to determine vertex buffer layouts.
-enum isVertexBufferLayout(T) = is(T : VertexBufferLayout) || is(T : VertexBufferLayoutFromPattern!(U), U);
+/**
+ * Trait to determine vertex buffer layouts.
+ *
+ * Layout object is such an object that can be iterated in foreach loop as range of `glsu.objects.AttribPointer`'s.
+ *
+ * See_Also: `glsu.objects.AttribPointer`, `glsu.objects.VertexBufferLayout`, `glsu.objects.VertexBufferLayoutFromPattern`.
+ */
+enum isVertexBufferLayout(T) = is(ForeachType!T == AttribPointer);
 
 /** 
  * Repeatedly calls `glGetError`, clearing all GL error flags.

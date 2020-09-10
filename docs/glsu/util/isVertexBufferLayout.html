@@ -66,12 +66,19 @@ $('#symbolSearchPane').show();</script>
 				<code class="lang-d">
 					<div class="single-prototype">
 			<span class="kwd">enum</span> <span class="pln">isVertexBufferLayout</span>(T)
-			 <span class="pun">=</span> <span class="kwd">is</span><span class="pun">(</span><span class="pln">T </span><span class="pun">: </span><span class="typ">VertexBufferLayout</span><span class="pun">) || </span><span class="kwd">is</span><span class="pun">(</span><span class="pln">T </span><span class="pun">: </span><span class="typ">VertexBufferLayoutFromPattern</span><span class="pun">!</span><span class="pln">U</span><span class="pun">, </span><span class="pln">U</span><span class="pun">)</span><span class="pun">;</span>
+			 <span class="pun">=</span> <span class="kwd">is</span><span class="pun">(</span><span class="typ">ForeachType</span><span class="pun">!</span><span class="pln">T </span><span class="pun">== </span><span class="typ">AttribPointer</span><span class="pun">)</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
-			
-			
+			<section><p>Layout object is such an object that can be iterated in foreach loop as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html" title="glsu.objects.AttribPointer"><span class="typ">AttribPointer</span></a></code>'s.
+</p>
+</section>
+
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><a href="../../glsu/objects/AttribPointer.html" title="glsu.objects.AttribPointer"><span class="typ">AttribPointer</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html" title="glsu.objects.VertexBufferLayout"><span class="typ">VertexBufferLayout</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutFromPattern.html" title="glsu.objects.VertexBufferLayoutFromPattern"><span class="typ">VertexBufferLayoutFromPattern</span></a></code>.
+</p>
+</section>
+
 			<footer>
 				<table class="license-info">
 					<tr>

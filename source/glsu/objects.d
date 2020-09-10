@@ -819,32 +819,12 @@ struct VertexArrayObject
     @disable this();
 
     /** 
-     * Constructor that binds `VertexBufferObject` with a layout specified by an array of `AttribPointer`'s.
-     * Params:
-     *   VBO = Buffer to bind with this VAO.
-     *   attrs = Array of attributes that specifies a layout of the `VBO`.
-     *
-     * See_Also: `VertexBufferObject`, `AttribPointer`.
-     */
-    this(VertexBufferObject VBO, AttribPointer[] attrs) nothrow @nogc
-    {
-        glGenVertexArrays(1, &_id);
-        mixin(ScopedBind!this);
-
-        VBO.bind();
-        foreach (ref attr; attrs)
-        {
-            attr.bind();
-        }
-    }
-
-    /** 
      * Constructor that binds `VertexBufferObject` with a layout object.
      * Params:
      *   VBO = Buffer to bind with this VAO.
      *   layout = Layout of the `VBO`.
      *
-     * See_Also: `VertexBufferObject`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
+     * See_Also: `VertexBufferObject`, `AttribPointer`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
      */
     this(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
         if(isVertexBufferLayout!Layout)
@@ -853,7 +833,57 @@ struct VertexArrayObject
         mixin(ScopedBind!this);
 
         VBO.bind();
-        layout.bind();
+
+        static if(is(typeof((Layout l) => l.bind())))
+        {
+            layout.bind();
+        }
+        else
+        {
+            foreach (ref attr; layout)
+            {
+                attr.bind();
+            }
+        }
+    }
+    ///
+    unittest
+    {
+        setupOpenGLContext();
+
+        struct Vertex
+        {
+            @VertexAttrib(0)
+            float[2] position;
+
+            @VertexAttrib(1)
+            float[2] textureCoord;
+        }
+
+        float[] vertices = [
+            -0.5f, -0.5f, 0.0f, 0.0f,
+             0.5f, -0.5f, 1.0f, 0.0f,
+             0.0f,  0.5f, 0.5f, 1.0f,
+        ];
+        auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+
+
+        // Constructing with AttribPointer[].
+        AttribPointer[] layout1 = [
+            AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 0),
+            AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 2 * float.sizeof),
+        ];
+        auto VAO1 = VertexArrayObject(VBO, layout1);
+
+        // Constructing with VertexBufferLayout.
+        VertexBufferLayout layout2;
+        layout2.push!float(2);
+        layout2.push!float(2);
+        auto VAO2 = VertexArrayObject(VBO, layout2);
+
+        // Constructing with VertexBufferLayoutFromPattern.
+        VertexBufferLayoutFromPattern!Vertex layout3;
+        auto VAO3 = VertexArrayObject(VBO, layout3);
     }
 
     /** 

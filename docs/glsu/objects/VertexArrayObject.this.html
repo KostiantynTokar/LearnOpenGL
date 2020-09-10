@@ -78,11 +78,6 @@ $('#symbolSearchPane').show();</script>
 							Function <code>VertexArrayObject.this</code>
 						</a>
 					</li>
-					<li>
-						<a href="#3">
-							Function <code>VertexArrayObject.this</code>
-						</a>
-					</li>
 				</ul>
 			</nav><h2 id="0">Function VertexArrayObject.this</h2><p></p>
 			<div class="prototype">
@@ -93,34 +88,7 @@ $('#symbolSearchPane').show();</script>
 				</code>
 			</div>
 			
-			<h2 id="1">Function VertexArrayObject.this</h2><p>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a layout specified by an array of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
-</p>
-			<div class="prototype">
-				<code class="lang-d">
-					<div class="single-prototype">
-			<span class="kwd">ref </span><span class="pln">this</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/BufferObejct.html"><span class="typ">BufferObejct</span></a>!(34962) <span class="pln">VBO</span><span class="pun">,</span>
-			<br/>
-			&nbsp;&nbsp;<a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a><span class="pun">[]</span> <span class="pln">attrs</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow @nogc</span><span class="pun">;</span>
-					</div>
-				</code>
-			</div>
-			
-			<section><h3>Parameters</h3>
-<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
-<tr><td id="VBO">VBO</td><td> Buffer to bind with this VAO.</td></tr>
-<tr><td id="attrs">attrs</td><td> Array of attributes that specifies a layout of the <code class="lang-d"><a href="../../glsu/objects/VertexArrayObject.this.html#VBO"><span class="pln">VBO</span></a></code>.</td></tr>
-</table>
-</section>
-<section><h3>See Also</h3>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>.
-</p>
-</section>
-<h2 id="2">Function VertexArrayObject.this</h2><p>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a layout object.
+			<h2 id="1">Function VertexArrayObject.this</h2><p>Constructor that binds <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> with a layout object.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
@@ -146,10 +114,50 @@ $('#symbolSearchPane').show();</script>
 </table>
 </section>
 <section><h3>See Also</h3>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a></code>.
+<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a></code>.
 </p>
 </section>
-<h2 id="3">Function VertexArrayObject.this</h2><p>Constructor that creates <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and automatically determines its layout using <code class="lang-d"><span class="pln">T</span></code> as pattern.
+<section><h3>Example</h3>
+
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+
+</span><span class="kwd">struct </span><span class="typ">Vertex
+</span><span class="pun">{
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">position</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">textureCoord</span><span class="pun">;
+}
+
+</span><span class="typ">float</span><span class="pun">[] </span><span class="pln">vertices </span><span class="pun">= [
+    -</span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">,
+     </span><span class="lit">0.5f</span><span class="pun">, -</span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">, </span><span class="lit">0.0f</span><span class="pun">,
+     </span><span class="lit">0.0f</span><span class="pun">,  </span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">0.5f</span><span class="pun">, </span><span class="lit">1.0f</span><span class="pun">,
+];
+</span><span class="kwd">auto <a href="../../glsu/objects/VertexArrayObject.this.html#VBO"></span><span class="pln">VBO</span></a><span class="pln"> </span><span class="pun">= <a href="../../glsu/objects/VertexBufferObject.html"></span><span class="typ">VertexBufferObject</span></a><span class="pun">(</span><span class="pln">vertices</span><span class="pun">, </span><span class="typ">DataUsage<wbr/></span><span class="pun">.</span><span class="pln">staticDraw</span><span class="pun">);
+
+
+</span><span class="com">// Constructing with AttribPointer[].
+<a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">[] </span><span class="pln">layout1 </span><span class="pun">= [
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">4 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">0</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">4 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">),
+];
+</span><span class="kwd">auto </span><span class="pln">VAO1 </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(<a href="../../glsu/objects/VertexArrayObject.this.html#VBO"></span><span class="pln">VBO</span></a><span class="pun">, </span><span class="pln">layout1</span><span class="pun">);
+
+</span><span class="com">// Constructing with VertexBufferLayout.
+<a href="../../glsu/objects/VertexBufferLayout.html"></span><span class="typ">VertexBufferLayout</span></a><span class="pln"> layout2</span><span class="pun">;
+</span><span class="pln">layout2<wbr/></span><span class="pun">.</span><span class="pln">push</span><span class="pun">!</span><span class="typ">float</span><span class="pun">(</span><span class="lit">2</span><span class="pun">);
+</span><span class="pln">layout2<wbr/></span><span class="pun">.</span><span class="pln">push</span><span class="pun">!</span><span class="typ">float</span><span class="pun">(</span><span class="lit">2</span><span class="pun">);
+</span><span class="kwd">auto </span><span class="pln">VAO2 </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(<a href="../../glsu/objects/VertexArrayObject.this.html#VBO"></span><span class="pln">VBO</span></a><span class="pun">, </span><span class="pln">layout2</span><span class="pun">);
+
+</span><span class="com">// Constructing with VertexBufferLayoutFromPattern.
+<a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"></span><span class="typ">VertexBufferLayoutFromPattern</span></a><span class="pun">!</span><span class="typ">Vertex </span><span class="pln">layout3</span><span class="pun">;
+</span><span class="kwd">auto </span><span class="pln">VAO3 </span><span class="pun">= <a href="../../glsu/objects/VertexArrayObject.html"></span><span class="typ">VertexArrayObject</span></a><span class="pun">(<a href="../../glsu/objects/VertexArrayObject.this.html#VBO"></span><span class="pln">VBO</span></a><span class="pun">, </span><span class="pln">layout3</span><span class="pun">);
+
+</span></code></pre>
+</section>
+<h2 id="2">Function VertexArrayObject.this</h2><p>Constructor that creates <code class="lang-d"><a href="../../glsu/objects/VertexBufferObject.html"><span class="typ">VertexBufferObject</span></a></code> and automatically determines its layout using <code class="lang-d"><span class="pln">T</span></code> as pattern.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
