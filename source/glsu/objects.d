@@ -407,7 +407,7 @@ public:
     }
 
     /** 
-     * Range interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
      */
     AttribPointer opIndex(size_t index) const pure nothrow @nogc
     {
@@ -602,7 +602,7 @@ public:
     }
 
     /** 
-     * Range interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
      */
     AttribPointer opIndex(size_t index) const pure nothrow @nogc
     {
