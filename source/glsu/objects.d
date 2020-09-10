@@ -614,7 +614,7 @@ public:
         import std.range : only;
         import std.meta : staticMap;
 
-        return only(staticMap!(calcAttrib, staticIota!(size_t, 0, attrsCount)));
+        return only(staticMap!(calcAttrib, staticIota!(size_t, attrsCount)));
     }
     /// ditto
     auto opIndex(size_t[2] slice) const pure nothrow @nogc
@@ -639,7 +639,7 @@ private:
     alias _base this;
 
     import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
-    import std.meta : staticMap, staticSort, ApplyRight, NoDuplicates;
+    import std.meta : AliasSeq, staticMap, staticSort, ApplyRight, NoDuplicates;
     import std.range : only, enumerate;
     import std.algorithm.searching : all;
     import gfm.math.vector : Vector;
@@ -663,23 +663,12 @@ private:
     enum attrsCount = attrs.length;
 
     enum getElement(size_t index) = LayoutElement(sizeAttributeParam!index,
-                                                  typeAttributeParam!index,
+                                                  valueOfGLType!(typeAttributeParam!index),
                                                   sortedAttrs[index].normalized);
 
-    alias _elements = staticMap!(getElement, staticIota!(size_t, 0, attrsCount));
+    alias _elements = staticMap!(getElement, staticIota!(size_t, attrsCount));
 
-    /** 
-     * Applies supplied function to attribute type ans size.
-     *
-     * Allows to abstract from error handling and fetching attribute type and size.
-     * Params:
-     *   index = Index of the attribute to look over.
-     *   funcTemplate = Function template that takes two template parameters: type U of attribute values and size of the attribute int N.
-     *   args = Arguments to forward to funcTemplate.
-     *
-     * Returns: Return value of funcTemplate.
-     */
-    static auto applyToAttribute(size_t index, alias funcTemplate, Args...)(Args args)
+    template typeAndSizeOfAttribute(size_t index)
     {
         static if(is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
                   is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
@@ -689,7 +678,7 @@ private:
             static assert(!sortedAttrs[index].normalized || isIntegral!U,
                           "Normalized may be set only for integer types.");
 
-            return funcTemplate!(U, N)(args);
+            alias typeAndSizeOfAttribute = AliasSeq!(U, N);
         }
         else
         {
@@ -697,49 +686,38 @@ private:
         }
     }
 
-    /// Returns size (i.e. count of values) of attribute with specified index.
-    static int sizeAttributeParam(size_t index)() pure nothrow @nogc @safe
-    {
-        auto worker(U, int N)()
-        {
-            return N;
-        }
-        return applyToAttribute!(index, worker)();
-    }
+    /// Type of attribute with specified index.
+    alias typeAttributeParam(size_t index) = typeAndSizeOfAttribute!index[0];
+    /// Size (i.e. count of values) of attribute with specified index.
+    enum sizeAttributeParam(size_t index) = typeAndSizeOfAttribute!index[1];
 
-    /// Returns GLType of attribute with specified index.
-    static GLType typeAttributeParam(size_t index)() pure nothrow @nogc @safe
-    {
-        auto worker(U, int N)()
-        {
-            return valueOfGLType!U;
-        }
-        return applyToAttribute!(index, worker)();
-    }
+    /// Size of vertex attribute in bytes.
+    enum sizeOfAttribute(size_t index) = sizeAttributeParam!index * typeAttributeParam!index.sizeof;
 
-    /** 
-     * Size of vertex attribute in bytes.
-     */
-    static size_t sizeOfAttribute(size_t index)() pure nothrow @nogc @safe
+    /// Sum of sizes in bytes of all attributes with indices less then `index`.
+    template sizeOfAllAttributesBefore(size_t index)
     {
-        auto worker(U, int N)()
+        static string generate(size_t i) pure nothrow @safe
         {
-            return N * U.sizeof;
-        }
-        return applyToAttribute!(index, worker)();
-    }
+            import std.string : join;
+            import std.conv : to;
+            import std.range : iota;
+            import std.algorithm : map;
 
-    /** 
-     * Sum of sizes of all atributes with indices less then `index`.
-     */
-    static size_t sizeOfAllAttributesBefore(size_t index)() pure nothrow @nogc @safe
-    {
-        size_t res = 0;
-        static foreach(i; 0 .. index)
-        {
-            res += sizeOfAttribute!i;
+            string res = "enum sizeOfAllAttributesBefore = ";
+            if(i == 0)
+            {
+                res ~= "0";
+            }
+            else
+            {
+                res ~= iota(i).map!(j => "sizeOfAttribute!" ~ j.to!string).join("+");
+            }
+            res ~= ";";
+            return res;
         }
-        return res;
+
+        mixin(generate(index));
     }
 
     /** 

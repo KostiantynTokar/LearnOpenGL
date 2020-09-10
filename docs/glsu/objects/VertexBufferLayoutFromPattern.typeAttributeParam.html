@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayoutFromPattern.typeAttributeParam</title>
+		<title>Alias VertexBufferLayoutFromPattern.typeAttributeParam</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,12 +60,25 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayoutFromPattern.typeAttributeParam</h1><p>Returns GLType of attribute with specified index.
+			<h1>Alias VertexBufferLayoutFromPattern.typeAttributeParam</h1><p>Type of attribute with specified index.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<a href="../../glsu/enums/GLType.html"><span class="typ">GLType</span></a> <span class="pln">typeAttributeParam</span>(<span class="pln">size_t</span> index)<span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
+			<br/>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">typeAttributeParam</span>(<span class="pln">size_t</span> index)
+			 <span class="pun">=</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.typeAndSizeOfAttribute.html"><span class="typ">VertexBufferLayoutFromPattern<wbr/></span><span class="pun">.<wbr/></span><span class="pln">typeAndSizeOfAttribute</span></a>!index<span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pun">;</span>
+			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>
