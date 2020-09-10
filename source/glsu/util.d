@@ -374,21 +374,13 @@ unittest
     foo();
 }
 
+import std.range : iota;
+import std.meta : aliasSeqOf;
+
 /// Static iota.
-template staticIota(T, T from, T to, T step = 1)
-    if(isIntegral!T && step != 0)
-{
-    import std.meta : AliasSeq;
-    
-    static if((step > 0 && from >= to) || (step < 0 && from <= to))
-    {
-        alias staticIota = AliasSeq!();
-    }
-    else
-    {
-        alias staticIota = AliasSeq!(from, staticIota!(T, from + step, to, step));
-    }
-}
+alias staticIota(T, T begin, T end, T step = 1) = aliasSeqOf!(iota(begin, end, step));
+/// ditto
+alias staticIota(T, T end) = aliasSeqOf!(iota(end));
 ///
 unittest
 {
@@ -396,11 +388,14 @@ unittest
 
     static assert(staticIota!(int, 0, 5) == AliasSeq!(0, 1, 2, 3, 4));
     static assert(staticIota!(size_t, 0, 5, 2) == AliasSeq!(size_t(0), size_t(2), size_t(4)));
-    static assert(staticIota!(int, 100, 50) == AliasSeq!());
+    static assert(typeof(staticIota!(int, 100, 50)) == AliasSeq!());
     static assert(staticIota!(int, 10, 5, -1) == AliasSeq!(10, 9, 8, 7, 6));
     static assert(staticIota!(int, 10, 5, -3) == AliasSeq!(10, 7));
-    static assert(staticIota!(int, 50, 100, -10) == AliasSeq!());
+    static assert(typeof(staticIota!(int, 50, 100, -10)) == AliasSeq!());
     static assert(staticIota!(int, -3, 3, 2) == AliasSeq!(-3, -1, 1));
+
+    static assert(staticIota!(int, 5) == AliasSeq!(0, 1, 2, 3, 4));
+    static assert(staticIota!(double, 0.0, 1.0, 0.5) == AliasSeq!(0.0, 0.5));
 }
 
 version(unittest)
