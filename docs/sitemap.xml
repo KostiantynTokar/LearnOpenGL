@@ -112,6 +112,8 @@
 <url><loc>http://127.0.0.1/glsu/objects/Texture.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.WrapMode.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture._id.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/Texture.createImpl.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/Texture.readImage.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/Texture.this.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexArrayObject.bind.html</loc></url>

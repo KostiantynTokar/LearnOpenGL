@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function Texture.create</title>
+		<title>Function Texture.createImpl</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,17 +60,19 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function Texture.create</h1><p>Loads an image and creates OpenGL texture with it.
+			<h1>Function Texture.createImpl</h1><p>Implementation of <code class="lang-d"><a href="../../glsu/objects/Texture.create.html"><span class="pln">create</span></a></code>.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a> <span class="pln">create</span>
+			<span class="kwd">static </span><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a> <span class="pln">createImpl</span>
 			<span class="pun">(</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">string</span> <span class="pln">imageFileName</span><span class="pun">,</span>
+			&nbsp;&nbsp;<span class="kwd">ref </span><span class="kwd">const</span><span class="pun">(</span><span class="pln">imagefmt<wbr/></span><span class="pun">.</span><span class="typ">IFImage</span><span class="pun">)</span> <span class="pln">image</span><span class="pun">,</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">numOfChannelsToStore</span> <span class="pun">=</span> <span class="lit">4u</span>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">internalFormat</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">format</span>
 			<br/>
 			<span class="pun">)</span><span class="pun">;</span>
 					</div>
@@ -79,13 +81,13 @@ $('#symbolSearchPane').show();</script>
 			
 			<section><h2>Parameters</h2>
 <table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
-<tr><td id="imageFileName">imageFileName</td><td> File name of an image to be used as a texture.</td></tr>
-<tr><td id="numOfChannelsToStore">numOfChannelsToStore</td><td> Specifies how many channels will be stored in GPU memory.
-                          If image contains less channels, then stored as many channels as image has.</td></tr>
+<tr><td id="image">image</td><td> Image to be used as a texture.</td></tr>
+<tr><td id="internalFormat">internalFormat</td><td> May be one of following: <code class="lang-d"><span class="pln">GL_RED</span></code>, <code class="lang-d"><span class="pln">GL_RG</span></code>, <code class="lang-d"><span class="pln">GL_RGB</span></code>, <code class="lang-d"><span class="pln">GL_RGBA</span></code>.</td></tr>
+<tr><td id="format">format</td><td> May be one of following: <code class="lang-d"><span class="pln">GL_RED</span></code>, <code class="lang-d"><span class="pln">GL_RG</span></code>, <code class="lang-d"><span class="pln">GL_RGB</span></code>, <code class="lang-d"><span class="pln">GL_RGBA</span></code>.</td></tr>
 </table>
 </section>
-<section><h2>Throws</h2>
-<p><code class="lang-d"><a href="../../glsu/exceptions/CreateException.html" title="glsu.exceptions.CreateException"><span class="typ">CreateException</span></a></code> if image load failed.
+<section><h2>Returns</h2>
+<p>Ready to use <code class="lang-d"><a href="../../glsu/objects/Texture.html"><span class="typ">Texture</span></a></code> object.
 </p>
 </section>
 

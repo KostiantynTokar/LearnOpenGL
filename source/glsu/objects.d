@@ -1423,61 +1423,23 @@ struct Texture
      * Loads an image and creates OpenGL texture with it.
      * Params:
      *   imageFileName = File name of an image to be used as a texture.
-     * Returns: `Texture` on success, message string on failure.
-     * Throws: `CreateException` if image load fail.
+     *   numOfChannelsToStore = Specifies how many channels will be stored in GPU memory.
+     *                          If image contains less channels, then stored as many channels as image has.
+     * Throws: `glsu.exceptions.CreateException` if image load failed.
      */
-    static Texture create(string imageFileName)
+    static Texture create(string imageFileName, uint numOfChannelsToStore = 4)
+    in(0 < numOfChannelsToStore && numOfChannelsToStore < 5)
     {
-        import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
-        import glad.gl.enums : GL_RED, GL_RG, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
-            GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
-        import glsu.exceptions : CreateException;
-        import std.exception : enforce;
-
-        set_yaxis_up_on_load(true);
-        auto image = read_image(imageFileName);
-        enforce!CreateException(!image.e, "ERROR::TEXTURE::READ_FAILED\n" ~ IF_ERROR[image.e]);
-
-        uint format;
-        switch (image.c)
-        {
-        case 1:
-            format = GL_RED;
-            break;
-        case 2:
-            format = GL_RG;
-            break;
-        case 3:
-            format = GL_RGB;
-            break;
-        case 4:
-            format = GL_RGBA;
-            break;
-        default:
-            assert(0);
-        }
-
-        uint type;
-        switch (image.bpc)
-        {
-        case 8:
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case 16:
-            type = GL_UNSIGNED_SHORT;
-            break;
-        default:
-            assert(0);
-        }
-
-        uint texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, cast(int) GL_RGB, image.w, image.h, 0,
-                format, type, image.buf8.ptr);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        return Texture(texture);
+        import std.algorithm : min;
+        import glad.gl.enums : GL_RED, GL_RG, GL_RGB, GL_RGBA;
+        
+        static immutable uint[4] formats = [GL_RED, GL_RG, GL_RGB, GL_RGBA];
+        
+        auto image = readImage(imageFileName);
+        scope(exit) image.free();
+        immutable internalFormat = formats[min(numOfChannelsToStore, image.c) - 1];
+        immutable format = formats[image.c - 1];
+        return createImpl(image, internalFormat, format);
     }
 
     /// `Texture` coordinates.
@@ -1679,5 +1641,57 @@ private:
     this(uint id) pure nothrow @nogc @safe
     {
         _id = id;
+    }
+
+    /** 
+     * Reads image from memory.
+     *
+     * Throws: `CreateException` if image load failed.
+     */
+    static auto readImage(string imageFileName)
+    {
+        import std.exception : enforce;
+        import imagefmt : set_yaxis_up_on_load, read_image, IF_ERROR;
+        import glsu.exceptions : CreateException;
+
+        set_yaxis_up_on_load(true);
+        auto image = read_image(imageFileName);
+        enforce!CreateException(!image.e, "ERROR::TEXTURE::READ_FAILED\n" ~ IF_ERROR[image.e]);
+        return image;
+    }
+
+    /** 
+     * Implementation of `create`.
+     * Params:
+     *   image = Image to be used as a texture.
+     *   internalFormat = May be one of following: `GL_RED`, `GL_RG`, `GL_RGB`, `GL_RGBA`.
+     *   format = May be one of following: `GL_RED`, `GL_RG`, `GL_RGB`, `GL_RGBA`.
+     * Returns: Ready to use `Texture` object.
+     */
+    static Texture createImpl(in ref from!"imagefmt".IFImage image, uint internalFormat, uint format)
+    {
+        import glad.gl.enums : GL_TEXTURE_2D, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
+
+        uint type;
+        switch (image.bpc)
+        {
+        case 8:
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case 16:
+            type = GL_UNSIGNED_SHORT;
+            break;
+        default:
+            assert(0);
+        }
+
+        uint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, cast(int) internalFormat, image.w, image.h, 0,
+                     format, type, image.buf8.ptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        return Texture(texture);
     }
 }

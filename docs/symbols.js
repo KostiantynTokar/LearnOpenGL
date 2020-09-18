@@ -155,6 +155,8 @@ var symbols = [
 {name: 'glsu.objects.Texture.WrapMode.mirroredRepeat', kind: "enummemberdeclaration", path: './glsu/objects/Texture.WrapMode.html#mirroredRepeat', attributes: []},
 {name: 'glsu.objects.Texture.WrapMode.repeat', kind: "enummemberdeclaration", path: './glsu/objects/Texture.WrapMode.html#repeat', attributes: []},
 {name: 'glsu.objects.Texture._id', kind: "variabledeclaration", path: './glsu/objects/Texture._id.html', attributes: []},
+{name: 'glsu.objects.Texture.createImpl', kind: "functiondeclaration", path: './glsu/objects/Texture.createImpl.html', attributes: ["static"]},
+{name: 'glsu.objects.Texture.readImage', kind: "functiondeclaration", path: './glsu/objects/Texture.readImage.html', attributes: ["auto", "static"]},
 {name: 'glsu.objects.VertexArrayObject', kind: "structdeclaration", path: './glsu/objects/VertexArrayObject.html', attributes: []},
 {name: 'glsu.objects.VertexArrayObject.bind', kind: "functiondeclaration", path: './glsu/objects/VertexArrayObject.bind.html', attributes: ["nothrow", "nogc", "const"]},
 {name: 'glsu.objects.VertexArrayObject.bindElementBufferArray', kind: "functiondeclaration", path: './glsu/objects/VertexArrayObject.bindElementBufferArray.html', attributes: ["nothrow", "nogc", "const"]},

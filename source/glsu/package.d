@@ -8,6 +8,7 @@
 module glsu;
 
 public import glsu.util;
+public import glsu.exceptions;
 public import glsu.gl_funcs;
 public import glsu.enums;
 public import glsu.objects;
