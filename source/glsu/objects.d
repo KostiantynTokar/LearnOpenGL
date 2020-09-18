@@ -708,9 +708,9 @@ private:
     alias _base this;
 
     import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
-    import std.meta : AliasSeq, staticMap, staticSort, ApplyRight, NoDuplicates;
+    import std.meta : AliasSeq, staticMap, staticSort, ApplyRight, NoDuplicates, staticIndexOf;
     import std.range : only, enumerate;
-    import std.algorithm.searching : all;
+    import std.algorithm : all, sum;
     import gfm.math.vector : Vector;
 
     alias LayoutElement = VertexBufferLayoutBase.LayoutElement;
@@ -729,11 +729,15 @@ private:
     enum compSymbols(alias s1, alias s2) = comp!(getUDAs!(s1, VertexAttrib)[0], getUDAs!(s2, VertexAttrib)[0]);
     alias sortedMarkedSymbols = staticSort!(compSymbols, markedSymbols);
 
+    enum compSymbolsByOffset(alias s1, alias s2) = s1.offsetof < s2.offsetof;
+    alias sortedByOffsetMarkedSymbols = staticSort!(compSymbolsByOffset, markedSymbols);
+
     enum attrsCount = attrs.length;
 
     enum getElement(size_t index) = LayoutElement(sizeAttributeParam!index,
                                                   valueOfGLType!(typeAttributeParam!index),
-                                                  sortedAttrs[index].normalized);
+                                                  sortedAttrs[index].normalized,
+                                                  paddingOfElement!index);
 
     alias _elements = staticMap!(getElement, staticIota!(size_t, attrsCount));
 
@@ -760,33 +764,45 @@ private:
     /// Size (i.e. count of values) of attribute with specified index.
     enum sizeAttributeParam(size_t index) = typeAndSizeOfAttribute!index[1];
 
+    /// Padding of an element with specified index.
+    template paddingOfElement(size_t index)
+    {
+        alias curSymb = sortedMarkedSymbols[index];
+        enum indexByOffset = staticIndexOf!(curSymb, sortedByOffsetMarkedSymbols);
+        
+        static if(indexByOffset == 0)
+        {
+            enum paddingOfElement = sortedMarkedSymbols[index].offsetof;
+        }
+        else
+        {
+            alias prevSymb = sortedByOffsetMarkedSymbols[indexByOffset - 1];
+            enum paddingOfElement = curSymb.offsetof - (prevSymb.offsetof + prevSymb.sizeof);
+        }
+    }
+
     /// Size of vertex attribute in bytes.
     enum sizeOfAttribute(size_t index) = sizeAttributeParam!index * typeAttributeParam!index.sizeof;
 
-    /// Sum of sizes in bytes of all attributes with indices less then `index`.
-    template sizeOfAllAttributesBefore(size_t index)
+    /// Size of vertex attribute in bytes (with padding).
+    enum sizeOfPaddedAttribute(size_t index) = _elements[index].padding + sizeOfAttribute!index;
+
+    /// Sum of sizes in bytes of all attributes (with paddings) with indices less then `index`.
+    enum sizeOfAllPaddedAttributesBefore(size_t index) = [staticMap!(sizeOfPaddedAttribute, staticIota!(size_t, index))].sum(size_t.init);
+
+    /** 
+     * Size of attribute batch in bytes.
+     */
+    size_t sizeOfBatch(size_t index)() const pure nothrow @nogc @safe
     {
-        static string generate(size_t i) pure nothrow @safe
+        if(batchCount == 1)
         {
-            import std.string : join;
-            import std.conv : to;
-            import std.range : iota;
-            import std.algorithm : map;
-
-            string res = "enum sizeOfAllAttributesBefore = ";
-            if(i == 0)
-            {
-                res ~= "0";
-            }
-            else
-            {
-                res ~= iota(i).map!(j => "sizeOfAttribute!" ~ j.to!string).join("+");
-            }
-            res ~= ";";
-            return res;
+            return sizeOfPaddedAttribute!index;
         }
-
-        mixin(generate(index));
+        else
+        {
+            return _elements[index].padding + batchCount * sizeOfAttribute!index;
+        }
     }
 
     /** 
@@ -796,7 +812,7 @@ private:
     {
         if(batchCount == 1)
         {
-            return sizeOfAllAttributesBefore!attrsCount;
+            return sizeOfAllPaddedAttributesBefore!attrsCount;
         }
         else
         {
@@ -809,7 +825,12 @@ private:
      */
     size_t calcPointer(size_t index)() const pure nothrow @nogc @safe
     {
-        return batchCount * sizeOfAllAttributesBefore!index;
+        size_t res = _elements[index].padding;
+        static foreach(i; 0 .. index)
+        {
+            res += sizeOfBatch!i();
+        }
+        return res;
     }
 
     /** 
@@ -877,6 +898,55 @@ unittest
     assert(layout1[0] == layout3[0]);
     assert(layout1[$ - 1] == layout3[$ - 1]);
     assert(layout1[0 .. 2].equal(layout3[0 .. 2]));
+}
+///
+unittest
+{
+    // Example with paddings.
+
+    setupOpenGLContext();
+
+    struct Vertex
+    {
+        byte[4] padding0;
+
+        @VertexAttrib(0)
+        float[3] attr0;
+
+        @VertexAttrib(1)
+        byte[2] attr1;
+
+        // Here padding2 is not necessary since int.alignof == 4 and field automatically padded by compiler.
+        byte[2] padding2;
+
+        @VertexAttrib(2, true)
+        int[3] attr2;
+    }
+
+    VertexBufferLayoutFromPattern!Vertex layout1;
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4),
+        AttribPointer(1, 2, GLType.glByte,  false, 4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4 + 3 * float.sizeof),
+        AttribPointer(2, 3, GLType.glInt,   true,  4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4 + 3 * float.sizeof + 2 * byte.sizeof + 2)
+    ];
+
+    import std.algorithm : equal;
+    assert(layout1[].equal(layout2));
+
+    layout1.batchCount = 100;
+
+    auto layout3 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 4),
+        AttribPointer(1, 2, GLType.glByte,  false, 2 * byte.sizeof,  4 + 100 * 3 * float.sizeof),
+        AttribPointer(2, 3, GLType.glInt,   true,  3 * int.sizeof,   4 + 100 * 3 * float.sizeof + 
+                                                                         100 * 2 * byte.sizeof + 2)
+    ];
+
+    assert(layout1[].equal(layout3));
 }
 
 /** 

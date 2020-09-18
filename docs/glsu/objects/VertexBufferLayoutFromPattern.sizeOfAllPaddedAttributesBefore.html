@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Enum member VertexBufferLayoutFromPattern.getElement</title>
+		<title>Enum member VertexBufferLayoutFromPattern.sizeOfAllPaddedAttributesBefore</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,7 +60,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Enum member VertexBufferLayoutFromPattern.getElement</h1><p></p>
+			<h1>Enum member VertexBufferLayoutFromPattern.sizeOfAllPaddedAttributesBefore</h1><p>Sum of sizes in bytes of all attributes (with paddings) with indices less then <code class="lang-d"><span class="pln">index</span></code>.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -72,8 +73,8 @@ $('#symbolSearchPane').show();</script>
 			</span>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">getElement</span>(<span class="pln">size_t</span> index)
-			 <span class="pun">=</span> <span class="typ">LayoutElement</span><span class="pun">(</span><span class="pln">sizeAttributeParam</span><span class="pun">!</span><span class="pln">index</span><span class="pun">, </span><span class="pln">valueOfGLType</span><span class="pun">!(</span><span class="pln">typeAttributeParam</span><span class="pun">!</span><span class="pln">index</span><span class="pun">), </span><span class="pln">sortedAttrs</span><span class="pun">[</span><span class="pln">index</span><span class="pun">]<wbr/>.</span><span class="pln">normalized</span><span class="pun">, </span><span class="pln">paddingOfElement</span><span class="pun">!</span><span class="pln">index</span><span class="pun">)</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">sizeOfAllPaddedAttributesBefore</span>(<span class="pln">size_t</span> index)
+			 <span class="pun">=</span> <span class="pun">[</span><span class="pln">staticMap</span><span class="pun">!(</span><span class="pln">sizeOfPaddedAttribute</span><span class="pun">, </span><span class="pln">staticIota</span><span class="pun">!(</span><span class="pln">size_t</span><span class="pun">, </span><span class="pln">index</span><span class="pun">))]<wbr/>.</span><span class="pln">sum</span><span class="pun">(</span><span class="pln">size_t<wbr/></span><span class="pun">.</span><span class="pln">init</span><span class="pun">)</span><span class="pun">;</span>
 			<br/>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>

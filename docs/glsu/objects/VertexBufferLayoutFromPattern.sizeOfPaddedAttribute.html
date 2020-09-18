@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Template VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore</title>
+		<title>Enum member VertexBufferLayoutFromPattern.sizeOfPaddedAttribute</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,31 +60,29 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Template VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore</h1><p>Sum of sizes in bytes of all attributes with indices less then <code class="lang-d"><span class="pln">index</span></code>.
+			<h1>Enum member VertexBufferLayoutFromPattern.sizeOfPaddedAttribute</h1><p>Size of vertex attribute in bytes (with padding).
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">template</span> <span class="pln">sizeOfAllAttributesBefore</span>(<span class="pln">size_t</span> index)
-			;
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
+			<br/>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">sizeOfPaddedAttribute</span>(<span class="pln">size_t</span> index)
+			 <span class="pun">=</span> <span class="pln">_elements</span><span class="pun">[</span><span class="pln">index</span><span class="pun">]<wbr/>.</span><span class="pln">padding </span><span class="pun">+ </span><span class="pln">sizeOfAttribute</span><span class="pun">!</span><span class="pln">index</span><span class="pun">;</span>
+			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>
 			
-			<section><h2>Contained Functions</h2>
-				<table>
-					<col class="caption"/>
-					<tr>
-						<th>Name</th><th>Description</th>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.generate.html">generate</a>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</section>
 			
 			<footer>
 				<table class="license-info">

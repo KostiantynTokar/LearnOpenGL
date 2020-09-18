@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Enum member VertexBufferLayoutFromPattern.getElement</title>
+		<title>Enum member VertexBufferLayoutFromPattern.paddingOfElement</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,7 +60,8 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Enum member VertexBufferLayoutFromPattern.getElement</h1><p></p>
+			<h1>Enum member VertexBufferLayoutFromPattern.paddingOfElement</h1><p>Padding of an element with specified index.
+</p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
@@ -72,8 +73,8 @@ $('#symbolSearchPane').show();</script>
 			</span>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">getElement</span>(<span class="pln">size_t</span> index)
-			 <span class="pun">=</span> <span class="typ">LayoutElement</span><span class="pun">(</span><span class="pln">sizeAttributeParam</span><span class="pun">!</span><span class="pln">index</span><span class="pun">, </span><span class="pln">valueOfGLType</span><span class="pun">!(</span><span class="pln">typeAttributeParam</span><span class="pun">!</span><span class="pln">index</span><span class="pun">), </span><span class="pln">sortedAttrs</span><span class="pun">[</span><span class="pln">index</span><span class="pun">]<wbr/>.</span><span class="pln">normalized</span><span class="pun">, </span><span class="pln">paddingOfElement</span><span class="pun">!</span><span class="pln">index</span><span class="pun">)</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">paddingOfElement</span>(<span class="pln">size_t</span> index)
+			 <span class="pun">=</span> <span class="pln">sortedMarkedSymbols</span><span class="pun">[</span><span class="pln">index</span><span class="pun">]<wbr/>.</span><span class="pln">offsetof</span><span class="pun">;</span>
 			<br/>
 			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
