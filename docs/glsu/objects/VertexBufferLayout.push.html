@@ -72,7 +72,9 @@ $('#symbolSearchPane').show();</script>
 			<br/>
 			&nbsp;&nbsp;<a href="../../glsu/enums/GLType.html"><span class="typ">GLType</span></a> <span class="pln">type</span><span class="pun">,</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span>
+			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">padding</span> <span class="pun">=</span> <span class="lit">0u</span>
 			<br/>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc</span><span class="pun">;</span>
 			<br/>
@@ -82,7 +84,9 @@ $('#symbolSearchPane').show();</script>
 			<br/>
 			&nbsp;&nbsp;<span class="typ">int</span> <span class="pln">size</span><span class="pun">,</span>
 			<br/>
-			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span>
+			&nbsp;&nbsp;<span class="typ">bool</span> <span class="pln">normalized</span> <span class="pun">=</span> <span class="kwd">false</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">uint</span> <span class="pln">padding</span> <span class="pun">=</span> <span class="lit">0</span>
 			<br/>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc</span><span class="pun">;</span>
 					</div>
@@ -100,6 +104,8 @@ $('#symbolSearchPane').show();</script>
                 are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
                 when they are accessed and converted to floating point.
                 Otherwise, values will be converted to floats directly without normalization.</td></tr>
+<tr><td id="padding">padding</td><td> number of padding bytes to insert before attribute (if <code class="lang-d"><span class="pln">batchCount </span><span class="pun">== </span><span class="lit">1</span></code>)
+             or before batch of attributes (if <code class="lang-d"><span class="pln">batchCount </span><span class="pun">&gt; </span><span class="lit">1</span></code>).</td></tr>
 </table>
 </section>
 

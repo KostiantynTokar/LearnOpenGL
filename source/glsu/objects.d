@@ -326,13 +326,14 @@ private:
      * Internally used instead of `AttribPointer`.
      *
      * Index of an attribute is an index of the entry in `_elements`,
-     * and stride and pointer is calculated according to `batchCount`.
+     * and stride and pointer is calculated according to `batchCount` and `padding`.
      */
     struct LayoutElement
     {
         int size; // actually count
         GLType type;
         bool normalized;
+        uint padding;
     }
 }
 
@@ -362,20 +363,22 @@ public:
      *                are to be mapped to the range [-1,1] (for signed values) or [0,1] (for unsigned values)
      *                when they are accessed and converted to floating point.
      *                Otherwise, values will be converted to floats directly without normalization.
+     *   padding = number of padding bytes to insert before attribute (if `batchCount == 1`)
+     *             or before batch of attributes (if `batchCount > 1`).
      */
-    void push(int size, GLType type, bool normalized = false) pure nothrow @nogc
+    void push(int size, GLType type, bool normalized = false, uint padding = 0) pure nothrow @nogc
     in(0 < size && size < 5)
     in(!normalized || isIntegral(type),
        "Normalized may be set only for integer types.")
     do
     {
-        _elements ~= LayoutElement(size, type, normalized);
+        _elements ~= LayoutElement(size, type, normalized, padding);
     }
     /// ditto
-    void push(T)(int size, bool normalized = false) pure nothrow @nogc
+    void push(T)(int size, bool normalized = false, uint padding = 0) pure nothrow @nogc
     in(0 < size && size < 5)
     {
-        push(size, valueOfGLType!T, normalized);
+        push(size, valueOfGLType!T, normalized, padding);
     }
 
     /** 
@@ -453,7 +456,7 @@ private:
     /** 
      * Size of vertex attribute in bytes.
      */
-    static size_t sizeOfAttribute(LayoutElement elem) pure nothrow @nogc @safe
+    static size_t sizeOfAttribute(in ref LayoutElement elem) pure nothrow @nogc @safe
     {
         return elem.size * elem.type.sizeOfGLType;
     }
@@ -461,6 +464,34 @@ private:
     size_t sizeOfAttribute(size_t index) const pure nothrow @nogc @safe
     {
         return sizeOfAttribute(_elements[index]);
+    }
+
+    /** 
+     * Size of vertex attribute in bytes (with padding).
+     */
+    static size_t sizeOfPaddedAttribute(in ref LayoutElement elem) pure nothrow @nogc @safe
+    {
+        return elem.padding + sizeOfAttribute(elem);
+    }
+    /// ditto
+    size_t sizeOfPaddedAttribute(size_t index) const pure nothrow @nogc @safe
+    {
+        return sizeOfPaddedAttribute(_elements[index]);
+    }
+
+    /** 
+     * Size of attribute batch in bytes.
+     */
+    size_t sizeOfBatch(size_t index) const pure nothrow @nogc @safe
+    {
+        if(batchCount == 1)
+        {
+            return sizeOfPaddedAttribute(index);
+        }
+        else
+        {
+            return _elements[index].padding + batchCount * sizeOfAttribute(index);
+        }
     }
 
     /** 
@@ -473,7 +504,7 @@ private:
         if(batchCount == 1)
         {
             return _elements[]
-                .map!(sizeOfAttribute)()
+                .map!(sizeOfPaddedAttribute)()
                 .sum(size_t.init);
         }
         else
@@ -488,9 +519,12 @@ private:
     ptrdiff_t calcPointer(size_t index) const pure nothrow @nogc
     {
         import std.algorithm.iteration : map, sum;
+        import std.range : iota;
 
-        return batchCount * _elements[0 .. index]
-            .map!(sizeOfAttribute)
+        return _elements[index].padding
+            + iota(index)
+            .packWith(&this)
+            .map!(unpack!((i, l) => l.sizeOfBatch(i)))()
             .sum(ptrdiff_t.init);
     }
 
@@ -545,6 +579,41 @@ unittest
     assert(layout1[0] == layout3[0]);
     assert(layout1[$ - 1] == layout3[$ - 1]);
     assert(layout1[0 .. 2].equal(layout3[0 .. 2]));
+}
+///
+unittest
+{
+    // Example with paddings.
+
+    setupOpenGLContext();
+
+    VertexBufferLayout layout1;
+    layout1.push(3, GLType.glFloat, false, 4);
+    layout1.push(2, GLType.glByte);
+    layout1.push(3, GLType.glInt, true, 2);
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4),
+        AttribPointer(1, 2, GLType.glByte,  false, 4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4 + 3 * float.sizeof),
+        AttribPointer(2, 3, GLType.glInt,   true,  4 + 3 * float.sizeof + 2 + 2 * byte.sizeof + 3 * int.sizeof,
+                                                                            4 + 3 * float.sizeof + 2 * byte.sizeof + 2)
+    ];
+
+    import std.algorithm : equal;
+    assert(layout1[].equal(layout2));
+
+    layout1.batchCount = 100;
+
+    auto layout3 = [
+        AttribPointer(0, 3, GLType.glFloat, false, 3 * float.sizeof, 4),
+        AttribPointer(1, 2, GLType.glByte,  false, 2 * byte.sizeof,  4 + 100 * 3 * float.sizeof),
+        AttribPointer(2, 3, GLType.glInt,   true,  3 * int.sizeof,   4 + 100 * 3 * float.sizeof + 
+                                                                         100 * 2 * byte.sizeof + 2)
+    ];
+
+    assert(layout1[].equal(layout3));
 }
 
 /** 

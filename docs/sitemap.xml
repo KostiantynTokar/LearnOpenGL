@@ -148,6 +148,9 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfAttribute.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfBatch.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfPaddedAttribute.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfPaddedAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern._base.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern._elements.html</loc></url>
@@ -183,6 +186,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase._batchCount.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.normalized.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.padding.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.size.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.type.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util.html</loc></url>
