@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayout.sizeOfAttribute</title>
+		<title>Enum member VertexBufferLayoutFromPattern.sizeOfAllPaddedAttributesBefore</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,25 +60,25 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.sizeOfAttribute</h1><p>Size of vertex attribute in bytes.
+			<h1>Enum member VertexBufferLayoutFromPattern.sizeOfAllPaddedAttributesBefore</h1><p>Sum of sizes in bytes of all attributes (with paddings) with indices less then <code class="lang-d"><span class="pln">index</span></code>.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
 			<br/>
-			&nbsp;&nbsp;<span class="kwd">ref </span><span class="kwd">const</span><span class="pun">(</span><a href="../../glsu/objects/VertexBufferLayoutBase.LayoutElement.html"><span class="typ">VertexBufferLayoutBase<wbr/></span><span class="pun">.<wbr/></span><span class="typ">LayoutElement</span></a><span class="pun">)</span> <span class="pln">elem</span>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">enum</span> <span class="pln">sizeOfAllPaddedAttributesBefore</span>(<span class="pln">size_t</span> index)
+			 <span class="pun">=</span> <span class="pun">[</span><span class="pln">staticMap</span><span class="pun">!(</span><span class="pln">sizeOfPaddedAttribute</span><span class="pun">, </span><span class="pln">staticIota</span><span class="pun">!(</span><span class="pln">size_t</span><span class="pun">, </span><span class="pln">index</span><span class="pun">))]<wbr/>.</span><span class="pln">sum</span><span class="pun">(</span><span class="pln">size_t<wbr/></span><span class="pun">.</span><span class="pln">init</span><span class="pun">)</span><span class="pun">;</span>
 			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="typ">ulong</span> <span class="pln">sizeOfAttribute</span>
-			<span class="pun">(</span>
-			<br/>
-			&nbsp;&nbsp;<span class="typ">ulong</span> <span class="pln">index</span>
-			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>

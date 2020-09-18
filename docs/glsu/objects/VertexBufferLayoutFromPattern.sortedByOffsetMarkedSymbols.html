@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Function VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.generate</title>
+		<title>Alias VertexBufferLayoutFromPattern.sortedByOffsetMarkedSymbols</title>
 		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
 		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
 		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
@@ -60,16 +60,24 @@ $('#symbolSearchPane').show();</script>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.generate</h1><p></p>
+			<h1>Alias VertexBufferLayoutFromPattern.sortedByOffsetMarkedSymbols</h1><p></p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
-			<span class="kwd">static </span><span class="typ">string</span> <span class="pln">generate</span>
-			<span class="pun">(</span>
+			<span class="kwd">struct</span> <a href="../../glsu/objects/VertexBufferLayoutFromPattern.html"><span class="typ">VertexBufferLayoutFromPattern</span></a>
 			<br/>
-			&nbsp;&nbsp;<span class="pln">size_t</span> <span class="pln">i</span>
+			<span class="pun">
+				{
+				<br/>
+			</span>
+			&nbsp;&nbsp;<span class="com">// ...</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @safe</span><span class="pun">;</span>
+			&nbsp;&nbsp;<span class="kwd">alias</span> <span class="pln">sortedByOffsetMarkedSymbols</span>
+			 <span class="pun">=</span> <span class="pln">staticSort</span>!(compSymbolsByOffset,markedSymbols)<span class="pun">;</span>
+			<br/>
+			&nbsp;&nbsp;<span class="com">// ...</span>
+			<br/>
+			<span class="pun">}</span>
 					</div>
 				</code>
 			</div>

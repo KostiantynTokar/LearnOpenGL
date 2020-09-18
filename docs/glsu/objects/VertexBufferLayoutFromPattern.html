@@ -200,6 +200,16 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sizeOfBatch.html" class="public">
+								<code>sizeOfBatch</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Size of attribute batch in bytes.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.unbind.html" class="public">
 								<code>unbind</code>
 							</a>
@@ -258,6 +268,14 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sortedByOffsetMarkedSymbols.html" class="public">
+								<code>sortedByOffsetMarkedSymbols</code>
+							</a>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sortedMarkedSymbols.html" class="public">
 								<code>sortedMarkedSymbols</code>
 							</a>
@@ -279,23 +297,6 @@ $('#symbolSearchPane').show();</script>
 							</a>
 						</td>
 						<td>Type of attribute with specified index.
-</td>
-					</tr>
-				</table>
-			</section>
-			<section><h2>Templates</h2>
-				<table>
-					<col class="caption"/>
-					<tr>
-						<th>Name</th><th>Description</th>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.html" class="public">
-								<code>sizeOfAllAttributesBefore</code>
-							</a>
-						</td>
-						<td>Sum of sizes in bytes of all attributes with indices less then <code class="lang-d"><span class="pln">index</span></code>.
 </td>
 					</tr>
 				</table>
@@ -354,6 +355,55 @@ $('#symbolSearchPane').show();</script>
 </span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="pln">layout3</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);
 </span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[$ - </span><span class="lit">1</span><span class="pun">] == </span><span class="pln">layout3</span><span class="pun">[$ - </span><span class="lit">1</span><span class="pun">]);
 </span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0 </span><span class="pun">.. </span><span class="lit">2</span><span class="pun">]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout3</span><span class="pun">[</span><span class="lit">0 </span><span class="pun">.. </span><span class="lit">2</span><span class="pun">]));
+</span></code></pre>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="com">// Example with paddings.
+
+</span><span class="pln">setupOpenGLContext</span><span class="pun">();
+
+</span><span class="kwd">struct </span><span class="typ">Vertex
+</span><span class="pun">{
+    </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">4</span><span class="pun">] </span><span class="pln">padding0</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">attr0</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">)
+    </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">attr1</span><span class="pun">;
+
+    </span><span class="com">// Here padding2 is not necessary since int.alignof == 4 and field automatically padded by compiler.
+    </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">padding2</span><span class="pun">;
+
+    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
+    </span><span class="typ">int</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">attr2</span><span class="pun">;
+}
+
+</span><span class="typ">VertexBufferLayoutFromPattern</span><span class="pun">!</span><span class="typ">Vertex </span><span class="pln">layout1</span><span class="pun">;
+
+</span><span class="kwd">auto </span><span class="pln">layout2 </span><span class="pun">= [
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">,
+                                                                        </span><span class="lit">4</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glByte</span><span class="pun">,  </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">,
+                                                                        </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glInt</span><span class="pun">,   </span><span class="kwd">true</span><span class="pun">,  </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">,
+                                                                        </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2</span><span class="pun">)
+];
+
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm </span><span class="pun">: </span><span class="pln">equal</span><span class="pun">;
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">));
+
+</span><span class="pln">layout1<wbr/></span><span class="pun">.</span><span class="pln">batchCount </span><span class="pun">= </span><span class="lit">100</span><span class="pun">;
+
+</span><span class="kwd">auto </span><span class="pln">layout3 </span><span class="pun">= [
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">4</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glByte</span><span class="pun">,  </span><span class="kwd">false</span><span class="pun">, </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">,  </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">100 </span><span class="pun">* </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glInt</span><span class="pun">,   </span><span class="kwd">true</span><span class="pun">,  </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">,   </span><span class="lit">4 </span><span class="pun">+ </span><span class="lit">100 </span><span class="pun">* </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ 
+                                                                     </span><span class="lit">100 </span><span class="pun">* </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">byte<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2</span><span class="pun">)
+];
+
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout3</span><span class="pun">));
 </span></code></pre>
 </section>
 

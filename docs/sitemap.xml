@@ -148,6 +148,9 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfAttribute.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfBatch.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfPaddedAttribute.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayout.sizeOfPaddedAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern._base.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern._elements.html</loc></url>
@@ -159,6 +162,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.calcStride.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.comp.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.compSymbols.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.compSymbolsByOffset.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.getElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.markedSymbols.html</loc></url>
@@ -167,11 +171,14 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.opIndex.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.opIndex.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.opSlice.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.paddingOfElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeAttributeParam.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.html</loc></url>
-<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfAllAttributesBefore.generate.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfAllPaddedAttributesBefore.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfAttribute.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfBatch.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sizeOfPaddedAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sortedAttrs.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sortedByOffsetMarkedSymbols.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.sortedMarkedSymbols.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.typeAndSizeOfAttribute.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutFromPattern.typeAttributeParam.html</loc></url>
@@ -183,6 +190,7 @@
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase._batchCount.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.normalized.html</loc></url>
+<url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.padding.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.size.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/objects/VertexBufferLayoutBase.LayoutElement.type.html</loc></url>
 <url><loc>http://127.0.0.1/glsu/util.html</loc></url>
