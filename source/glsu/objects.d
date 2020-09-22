@@ -186,17 +186,21 @@ struct AttribPointer
      *            If stride is 0, the generic vertex attributes are understood to be tightly packed in the array.
      *   pointer = Specifies an offset of the first component of the first generic vertex attribute in the `VertexBufferObject`.
      */
-    this(uint index, int size, GLType type, bool normalized, int stride, ptrdiff_t pointer) pure nothrow @nogc @safe
-    in(0 < size && size < 5)
+    this(size_t index, int size, GLType type, bool normalized,
+         size_t stride, ptrdiff_t pointer) pure nothrow @nogc @safe
+    in(index <= uint.max)
+    in(stride <= int.max)
+    in(0 < size && size < 5,
+        "Size (dimension of vector) should be in range from 1 to 4.")
     in(!normalized || isIntegral(type),
-       "normalized may be set only for integer types")
+       "Normalized may be set only for integer types.")
     do
     {
-        this._index = index;
+        this._index = cast(uint) index;
         this._size = size;
         this._type = type;
         this._normalized = normalized;
-        this._stride = stride;
+        this._stride = cast(int) stride;
         this._pointer = pointer;
     }
 
@@ -333,7 +337,7 @@ private:
         int size; // actually count
         GLType type;
         bool normalized;
-        uint padding;
+        size_t padding;
     }
 }
 
@@ -366,17 +370,18 @@ public:
      *   padding = number of padding bytes to insert before attribute (if `batchCount == 1`)
      *             or before batch of attributes (if `batchCount > 1`).
      */
-    void push(int size, GLType type, bool normalized = false, uint padding = 0) pure nothrow @nogc
-    in(0 < size && size < 5)
-    in(!normalized || isIntegral(type),
-       "Normalized may be set only for integer types.")
+    void push(int size, GLType type, bool normalized = false, size_t padding = 0) pure nothrow @nogc
+    in
+    {
+        immutable elem = LayoutElement(size, type, normalized, padding);
+        immutable attr = calcAttribForNewElement(elem);
+    }
     do
     {
         _elements ~= LayoutElement(size, type, normalized, padding);
     }
     /// ditto
-    void push(T)(int size, bool normalized = false, uint padding = 0) pure nothrow @nogc
-    in(0 < size && size < 5)
+    void push(T)(int size, bool normalized = false, size_t padding = 0) pure nothrow @nogc
     {
         push(size, valueOfGLType!T, normalized, padding);
     }
@@ -482,16 +487,21 @@ private:
     /** 
      * Size of attribute batch in bytes.
      */
-    size_t sizeOfBatch(size_t index) const pure nothrow @nogc @safe
+    size_t sizeOfBatch(in ref LayoutElement elem) const pure nothrow @nogc @safe
     {
         if(batchCount == 1)
         {
-            return sizeOfPaddedAttribute(index);
+            return sizeOfPaddedAttribute(elem);
         }
         else
         {
-            return _elements[index].padding + batchCount * sizeOfAttribute(index);
+            return elem.padding + batchCount * sizeOfAttribute(elem);
         }
+    }
+    /// ditto
+    size_t sizeOfBatch(size_t index) const pure nothrow @nogc @safe
+    {
+        return sizeOfBatch(_elements[index]);
     }
 
     /** 
@@ -513,6 +523,26 @@ private:
         }
     }
 
+    debug
+    {
+        size_t calcStrideForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
+        {
+            import std.algorithm.iteration : map, sum;
+
+            if(batchCount == 1)
+            {
+                return sizeOfPaddedAttribute(elem)
+                    + _elements[]
+                    .map!(sizeOfPaddedAttribute)()
+                    .sum(size_t.init);
+            }
+            else
+            {
+                return sizeOfAttribute(elem);
+            }
+        }
+    }
+
     /** 
      * Calculates pointer of the attribute located on `index`.
      */
@@ -528,18 +558,41 @@ private:
             .sum(ptrdiff_t.init);
     }
 
+    debug
+    {
+        ptrdiff_t calcPointerForNewElement(in ref LayoutElement elem) const pure nothrow @nogc @safe
+        {
+            import std.algorithm.iteration : map, sum;
+            import std.range : iota;
+
+            return elem.padding
+                + iota(_elements.length)
+                .packWith(&this)
+                .map!(unpack!((i, l) => l.sizeOfBatch(i)))()
+                .sum(ptrdiff_t.init);
+        }
+    }
+
     /** 
      * Calculates actual `AttribPointer` with specified index.
      * Params:
      *   index = Index of attribute to get.
      */
     AttribPointer calcAttrib(size_t index) const pure nothrow @nogc
-    in(index < uint.max)
-    in(calcStride(index) <= int.max)
     {
-        return AttribPointer(cast(uint) index, _elements[index].size,
+        return AttribPointer(index, _elements[index].size,
                              _elements[index].type, _elements[index].normalized,
-                             cast(int) calcStride(index), calcPointer(index));
+                             calcStride(index), calcPointer(index));
+    }
+
+    debug
+    {
+        AttribPointer calcAttribForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
+        {
+            return AttribPointer(_elements.length, elem.size,
+                                 elem.type, elem.normalized,
+                                calcStrideForNewElement(elem), calcPointerForNewElement(elem));
+        }
     }
 }
 ///
@@ -746,11 +799,6 @@ private:
         static if(is(typeof(sortedMarkedSymbols[index]) == Vector!(U, N), U, int N) ||
                   is(typeof(sortedMarkedSymbols[index]) == U[N], U, int N))
         {
-            static assert(0 < N && N < 5,
-                          "Size (dimension of vector) should be in range from 1 to 4.");
-            static assert(!sortedAttrs[index].normalized || isIntegral!U,
-                          "Normalized may be set only for integer types.");
-
             alias typeAndSizeOfAttribute = AliasSeq!(U, N);
         }
         else
@@ -839,12 +887,10 @@ private:
      *   index = Index of attribute to get.
      */
     AttribPointer calcAttrib(size_t index)() const pure nothrow @nogc @safe
-        if(index <= uint.max)
-    in(calcStride!(index) <= int.max)
     {
-        return AttribPointer(cast(uint) index, _elements[index].size,
+        return AttribPointer(index, _elements[index].size,
                              _elements[index].type, _elements[index].normalized,
-                             cast(int) calcStride!(index), calcPointer!(index));
+                             calcStride!(index), calcPointer!(index));
     }
 }
 ///
