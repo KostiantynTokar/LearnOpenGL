@@ -4,8 +4,8 @@
 		"bindbc-glfw": "0.10.1",
 		"bindbc-loader": "0.3.2",
 		"dlib": "0.19.1",
-		"gfm": "8.0.3",
+		"gfm": "8.0.4",
 		"imagefmt": "2.1.0",
-		"intel-intrinsics": "1.2.6"
+		"intel-intrinsics": "1.2.7"
 	}
 }

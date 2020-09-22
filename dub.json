@@ -2,7 +2,15 @@
 	"name": "learn-opengl",
     "platforms": [
         "windows"
-    ],
+	],
+	"sourcePaths": [
+		"source",
+		"dependencies\\source"
+	],
+	"importPaths": [
+		"source",
+		"dependencies\\source"
+	],
 	"dependencies": {
 		"gfm": "~>8.0.3",
 		"imagefmt": "~>2.1.0",
