@@ -373,6 +373,40 @@ public:
     void push(int size, GLType type, bool normalized = false, size_t padding = 0) pure nothrow @nogc
     in
     {
+        size_t calcStrideForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
+        {
+            import std.algorithm.iteration : map, sum;
+
+            if(batchCount == 1)
+            {
+                return sizeOfPaddedAttribute(elem)
+                    + _elements[]
+                    .map!(sizeOfPaddedAttribute)()
+                    .sum(size_t.init);
+            }
+            else
+            {
+                return sizeOfAttribute(elem);
+            }
+        }
+        ptrdiff_t calcPointerForNewElement(in ref LayoutElement elem) const pure nothrow @nogc @safe
+        {
+            import std.algorithm.iteration : map, sum;
+            import std.range : iota;
+
+            return elem.padding
+                + iota(_elements.length)
+                .packWith(&this)
+                .map!(unpack!((i, l) => l.sizeOfBatch(i)))()
+                .sum(ptrdiff_t.init);
+        }
+        AttribPointer calcAttribForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
+        {
+            return AttribPointer(_elements.length, elem.size,
+                                 elem.type, elem.normalized,
+                                 calcStrideForNewElement(elem), calcPointerForNewElement(elem));
+        }
+        
         immutable elem = LayoutElement(size, type, normalized, padding);
         immutable attr = calcAttribForNewElement(elem);
     }
@@ -517,26 +551,6 @@ private:
         }
     }
 
-    debug
-    {
-        size_t calcStrideForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
-        {
-            import std.algorithm.iteration : map, sum;
-
-            if(batchCount == 1)
-            {
-                return sizeOfPaddedAttribute(elem)
-                    + _elements[]
-                    .map!(sizeOfPaddedAttribute)()
-                    .sum(size_t.init);
-            }
-            else
-            {
-                return sizeOfAttribute(elem);
-            }
-        }
-    }
-
     /** 
      * Calculates pointer of the attribute located on `index`.
      */
@@ -552,21 +566,6 @@ private:
             .sum(ptrdiff_t.init);
     }
 
-    debug
-    {
-        ptrdiff_t calcPointerForNewElement(in ref LayoutElement elem) const pure nothrow @nogc @safe
-        {
-            import std.algorithm.iteration : map, sum;
-            import std.range : iota;
-
-            return elem.padding
-                + iota(_elements.length)
-                .packWith(&this)
-                .map!(unpack!((i, l) => l.sizeOfBatch(i)))()
-                .sum(ptrdiff_t.init);
-        }
-    }
-
     /** 
      * Calculates actual `AttribPointer` with specified index.
      * Params:
@@ -577,16 +576,6 @@ private:
         return AttribPointer(index, _elements[index].size,
                              _elements[index].type, _elements[index].normalized,
                              calcStride(index), calcPointer(index));
-    }
-
-    debug
-    {
-        AttribPointer calcAttribForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
-        {
-            return AttribPointer(_elements.length, elem.size,
-                                 elem.type, elem.normalized,
-                                 calcStrideForNewElement(elem), calcPointerForNewElement(elem));
-        }
     }
 }
 ///
