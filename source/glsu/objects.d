@@ -390,15 +390,10 @@ public:
      * Enables and sets all of the attributes represented by this object.
      */
     void bind() const nothrow @nogc
-    in(_elements.length <= uint.max)
     {
-        import std.range : enumerate;
-
-        foreach(i, ref elem; _elements[].enumerate)
+        foreach(i; 0 .. _elements.length)
         {
-            glVertexAttribPointer(cast(uint) i, elem.size, elem.type, elem.normalized,
-                                  cast(int) calcStride(i), cast(const(void)*) calcPointer(i));
-            glEnableVertexAttribArray(cast(uint) i);
+            calcAttrib(i).bind();
         }
     }
 
@@ -406,11 +401,10 @@ public:
      * Disables all of the attributes represented by this object.
      */
     void unbind() const nothrow @nogc
-    in(_elements.length <= uint.max)
     {
         foreach (i; 0 .. _elements.length)
         {
-            glDisableVertexAttribArray(cast(uint) i);
+            calcAttrib(i).unbind();
         }
     }
 
@@ -591,7 +585,7 @@ private:
         {
             return AttribPointer(_elements.length, elem.size,
                                  elem.type, elem.normalized,
-                                calcStrideForNewElement(elem), calcPointerForNewElement(elem));
+                                 calcStrideForNewElement(elem), calcPointerForNewElement(elem));
         }
     }
 }
@@ -715,11 +709,11 @@ public:
     /** 
      * Disables all of the attributes represented by this object.
      */
-    static void unbind() nothrow @nogc
+    void unbind() const nothrow @nogc
     {
-        static foreach (attr; sortedAttrs)
+        static foreach (i; 0 .. attrsCount)
         {
-            glDisableVertexAttribArray(attr.index);
+            calcAttrib!i().unbind();
         }
     }
 
