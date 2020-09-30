@@ -287,60 +287,6 @@ unittest
     bool normalized = false;
 }
 
-/** 
- * Basic functionality for vertex buffer layout objects.
- *
- * See_Also: `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
- */
-private struct VertexBufferLayoutBase
-{
-public:
-    /** 
-     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
-     *
-     * By default equals to 1.
-     *
-     * Batch is a consecutive sequence of the same attributes.
-     *
-     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
-     *
-     * 123412341234
-     *
-     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
-     * Example for `batchCount` equal to 3:
-     *
-     * 111222333444
-     *
-     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
-     */
-    size_t batchCount() const pure nothrow @nogc @safe
-    {
-        return _batchCount;
-    }
-    /// ditto
-    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
-    {
-        _batchCount = newBatchCount;
-    }
-private:
-    size_t _batchCount = 1;
-    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
-
-    /** 
-     * Internally used instead of `AttribPointer`.
-     *
-     * Index of an attribute is an index of the entry in `_elements`,
-     * and stride and pointer is calculated according to `batchCount` and `padding`.
-     */
-    struct LayoutElement
-    {
-        int size; // actually count
-        GLType type;
-        bool normalized;
-        size_t padding;
-    }
-}
-
 /**
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
@@ -682,12 +628,10 @@ unittest
  *
  * 6. pointer --- size of attributes and batchCount.
  *
- * Extends `VertexBufferLayoutBase`.
- *
- * See_Also: `VertexBufferLayoutBase`, `VertexBufferLayout`.
+ * See_Also: `VertexBufferLayout`.
  */
 struct VertexBufferLayoutFromPattern(T)
-    if(is(T == struct) || is(T == class))
+if(is(T == struct) || is(T == class))
 {
 public:
     /** 
@@ -710,6 +654,34 @@ public:
         {
             calcAttrib!i().unbind();
         }
+    }
+
+    /** 
+     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
+     *
+     * By default equals to 1.
+     *
+     * Batch is a consecutive sequence of the same attributes.
+     *
+     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
+     *
+     * 123412341234
+     *
+     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
+     * Example for `batchCount` equal to 3:
+     *
+     * 111222333444
+     *
+     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
+     */
+    size_t batchCount() const pure nothrow @nogc @safe
+    {
+        return _batchCount;
+    }
+    /// ditto
+    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
+    {
+        _batchCount = newBatchCount;
     }
 
     /** 
@@ -743,19 +715,38 @@ public:
         return _elements.length;
     }
 
+    invariant
+    {
+        static foreach(i; 0 .. attrsCount)
+        {{
+            immutable attr = calcAttrib!i;
+            assert(&attr);
+        }}
+    }
+
 private:
-    /// Extended object.
-    VertexBufferLayoutBase _base;
-    
-    alias _base this;
+    size_t _batchCount = 1;
+    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
+
+    /** 
+     * Internally used instead of `AttribPointer`.
+     *
+     * Index of an attribute is an index of the entry in `_elements`,
+     * and stride and pointer is calculated according to `batchCount` and `padding`.
+     */
+    struct LayoutElement
+    {
+        int size; // actually count
+        GLType type;
+        bool normalized;
+        size_t padding;
+    }
 
     import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
     import std.meta : AliasSeq, staticMap, staticSort, ApplyRight, NoDuplicates, staticIndexOf;
     import std.range : only, enumerate;
     import std.algorithm : all, sum;
     import gfm.math.vector : Vector;
-
-    alias LayoutElement = VertexBufferLayoutBase.LayoutElement;
 
     alias markedSymbols = getSymbolsByUDA!(T, VertexAttrib);
 
@@ -832,13 +823,13 @@ private:
      */
     size_t sizeOfBatch(size_t index)() const pure nothrow @nogc @safe
     {
-        if(batchCount == 1)
+        if(_batchCount == 1)
         {
             return sizeOfPaddedAttribute!index;
         }
         else
         {
-            return _elements[index].padding + batchCount * sizeOfAttribute!index;
+            return _elements[index].padding + _batchCount * sizeOfAttribute!index;
         }
     }
 
@@ -847,7 +838,7 @@ private:
      */
     size_t calcStride(size_t index)() const pure nothrow @nogc @safe
     {
-        if(batchCount == 1)
+        if(_batchCount == 1)
         {
             return sizeOfAllPaddedAttributesBefore!attrsCount;
         }
