@@ -277,11 +277,13 @@ unittest
  * Calls to `push` should be done accordingly to the offset of vertex attributes,
  * so that attributes with lesser offset should be pushed earlier.
  *
- * See_Also: `VertexBufferLayoutFromPattern`.
+ * See_Also: `glsu.util.behaviors.vertexbufferlayoutbase.VertexBufferLayoutBase`, `VertexBufferLayoutFromPattern`.
  */
 struct VertexBufferLayout
 {
 public:
+    mixin Behaviors!("VertexBufferLayoutBase");
+
     /** 
      * Pushes new attribute to the layout.
      * Params:
@@ -330,34 +332,6 @@ public:
     }
 
     /** 
-     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
-     *
-     * By default equals to 1.
-     *
-     * Batch is a consecutive sequence of the same attributes.
-     *
-     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
-     *
-     * 123412341234
-     *
-     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
-     * Example for `batchCount` equal to 3:
-     *
-     * 111222333444
-     *
-     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
-     */
-    size_t batchCount() const pure nothrow @nogc @safe
-    {
-        return _batchCount;
-    }
-    /// ditto
-    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
-    {
-        _batchCount = newBatchCount;
-    }
-
-    /** 
      * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
      */
     AttribPointer opIndex(size_t index) const pure nothrow @nogc
@@ -400,23 +374,6 @@ public:
     }
 
 private:
-    size_t _batchCount = 1;
-    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
-
-    /** 
-     * Internally used instead of `AttribPointer`.
-     *
-     * Index of an attribute is an index of the entry in `_elements`,
-     * and stride and pointer is calculated according to `batchCount` and `padding`.
-     */
-    struct LayoutElement
-    {
-        int size; // actually count
-        GLType type;
-        bool normalized;
-        size_t padding;
-    }
-
     import std.container.array : Array;
 
     Array!LayoutElement _elements;
@@ -611,12 +568,14 @@ unittest
  *
  * 6. pointer --- size of attributes and batchCount.
  *
- * See_Also: `VertexBufferLayout`.
+ * See_Also: `glsu.util.behaviors.vertexbufferlayoutbase.VertexBufferLayoutBase`, `VertexBufferLayout`.
  */
 struct VertexBufferLayoutFromPattern(T)
 if(is(T == struct) || is(T == class))
 {
 public:
+    mixin Behaviors!("VertexBufferLayoutBase");
+
     /** 
      * Enables and sets all of the attributes represented by this object.
      */
@@ -637,34 +596,6 @@ public:
         {
             calcAttrib!i().unbind();
         }
-    }
-
-    /** 
-     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
-     *
-     * By default equals to 1.
-     *
-     * Batch is a consecutive sequence of the same attributes.
-     *
-     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
-     *
-     * 123412341234
-     *
-     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
-     * Example for `batchCount` equal to 3:
-     *
-     * 111222333444
-     *
-     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
-     */
-    size_t batchCount() const pure nothrow @nogc @safe
-    {
-        return _batchCount;
-    }
-    /// ditto
-    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
-    {
-        _batchCount = newBatchCount;
     }
 
     /** 
@@ -708,23 +639,6 @@ public:
     }
 
 private:
-    size_t _batchCount = 1;
-    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
-
-    /** 
-     * Internally used instead of `AttribPointer`.
-     *
-     * Index of an attribute is an index of the entry in `_elements`,
-     * and stride and pointer is calculated according to `batchCount` and `padding`.
-     */
-    struct LayoutElement
-    {
-        int size; // actually count
-        GLType type;
-        bool normalized;
-        size_t padding;
-    }
-
     import std.traits : getSymbolsByUDA, getUDAs, isIntegral;
     import std.meta : AliasSeq, staticMap, staticSort, ApplyRight, NoDuplicates, staticIndexOf;
     import std.range : only, enumerate;

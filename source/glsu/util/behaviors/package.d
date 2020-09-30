@@ -1,7 +1,5 @@
 module glsu.util.behaviors;
 
-import std.string : toLower;
-
 /** 
  * Mixin template to add selected behaviors to a struct.
  *
@@ -9,9 +7,11 @@ import std.string : toLower;
  */
 mixin template Behaviors(Names...)
 {
+    import std.string : toLower;
+
     static foreach(name; Names)
     {
         mixin("import glsu.util.behaviors." ~ name.toLower ~ " : " ~ name ~ ";");
-        mixin("mixin glsu.util.behaviors." ~ name.toLower ~ " : " ~ name ~ ";");
+        mixin("mixin glsu.util.behaviors." ~ name.toLower ~ "." ~ name ~ "!();");
     }
 }
