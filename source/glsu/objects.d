@@ -587,25 +587,27 @@ unittest
     assert(layout1[].equal(layout3));
 }
 
+public import glsu.util.udas : VertexAttrib;
+
 /** 
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
  * Layout statically determined by the pattern specified by type `T`.
  *
  * `T` should be a struct or a class.
- * It can represent an `AttribPointer` by specifying a field by UDA `VertexAttrib`.
+ * It can represent an `AttribPointer` by specifying a field by UDA `glsu.util.udas.VertexAttrib`.
  * That field should be a static array or has a type `gfm.math.vector.Vector`.
- * `VertexAttrib`s' indices should start from 0 and ascend by 1, but can be specified not in order. 
+ * `glsu.util.udas.VertexAttrib`s' indices should start from 0 and ascend by 1, but can be specified not in order. 
  *
  * Parameters of the attribute determined by:
  *
- * 1. index --- `VertexAttrib.index` value;
+ * 1. index --- `glsu.util.udas.VertexAttrib.index` value;
  *
  * 2. size --- length of static array or Vector;
  *
  * 3. type --- type of elements of static array or Vector;
  *
- * 4. normalized --- `VertexAttrib.normalized` value;
+ * 4. normalized --- `glsu.util.udas.VertexAttrib.normalized` value;
  *
  * 5. stride --- size of attributes and batchCount;
  *
