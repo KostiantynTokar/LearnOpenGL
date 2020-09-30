@@ -8,6 +8,7 @@
 module glsu.util;
 
 public import glsu.util.udas;
+public import glsu.util.behaviors;
 
 import std.traits : isIntegral, ForeachType;
 
