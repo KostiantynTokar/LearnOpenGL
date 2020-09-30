@@ -7,6 +7,8 @@
  */
 module glsu.util;
 
+public import glsu.util.udas;
+
 import std.traits : isIntegral, ForeachType;
 
 import glsu.enums : GLType, GLError;
@@ -174,14 +176,6 @@ void assertNoGLErrors(string message = "",
     }
 
     assert(!flag);
-}
-
-/** 
- * UDA for UDAs.
- * All UDAs are attributed by this type.
- */
-package struct UDA
-{
 }
 
 /// Wraps some functionality of GLFW

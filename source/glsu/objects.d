@@ -270,23 +270,6 @@ unittest
     // layout (location = 1) in vec3 color;
 }
 
-/** 
- * UDA for fields of a struct that are to used as vertex in `VertexBufferArray`.
- *
- * See_Also: `VertexBufferLayout`.
- */
-@UDA struct VertexAttrib
-{
-    /// Layout position of the attribute in a shader.
-    uint index;
-
-    /** 
-     * Specifies whether fixed-point data values should be normalized or converted
-     * directly as fixed-point values when they are accessed.
-     */
-    bool normalized = false;
-}
-
 /**
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
