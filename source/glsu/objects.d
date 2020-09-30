@@ -345,12 +345,10 @@ private:
  * Represents `VertexBufferObject` layout. Works as an array of `AttribPointer`'s.
  *
  * Allows specifying a layout step-by-step.
- * Calls to `push` and should be done accordingly to the offset of vertex attributes,
+ * Calls to `push` should be done accordingly to the offset of vertex attributes,
  * so that attributes with lesser offset should be pushed earlier.
  *
- * Extends `VertexBufferLayoutBase`.
- *
- * See_Also: `VertexBufferLayoutBase`, `VertexBufferLayoutFromPattern`.
+ * See_Also: `VertexBufferLayoutFromPattern`.
  */
 struct VertexBufferLayout
 {
@@ -371,46 +369,6 @@ public:
      *             or before batch of attributes (if `batchCount > 1`).
      */
     void push(int size, GLType type, bool normalized = false, size_t padding = 0) pure nothrow @nogc
-    in
-    {
-        size_t calcStrideForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
-        {
-            import std.algorithm.iteration : map, sum;
-
-            if(batchCount == 1)
-            {
-                return sizeOfPaddedAttribute(elem)
-                    + _elements[]
-                    .map!(sizeOfPaddedAttribute)()
-                    .sum(size_t.init);
-            }
-            else
-            {
-                return sizeOfAttribute(elem);
-            }
-        }
-        ptrdiff_t calcPointerForNewElement(in ref LayoutElement elem) const pure nothrow @nogc @safe
-        {
-            import std.algorithm.iteration : map, sum;
-            import std.range : iota;
-
-            return elem.padding
-                + iota(_elements.length)
-                .packWith(&this)
-                .map!(unpack!((i, l) => l.sizeOfBatch(i)))()
-                .sum(ptrdiff_t.init);
-        }
-        AttribPointer calcAttribForNewElement(in ref LayoutElement elem) const pure nothrow @nogc
-        {
-            return AttribPointer(_elements.length, elem.size,
-                                 elem.type, elem.normalized,
-                                 calcStrideForNewElement(elem), calcPointerForNewElement(elem));
-        }
-        
-        immutable elem = LayoutElement(size, type, normalized, padding);
-        immutable attr = calcAttribForNewElement(elem);
-    }
-    do
     {
         _elements ~= LayoutElement(size, type, normalized, padding);
     }
@@ -436,10 +394,38 @@ public:
      */
     void unbind() const nothrow @nogc
     {
-        foreach (i; 0 .. _elements.length)
+        foreach(i; 0 .. _elements.length)
         {
             calcAttrib(i).unbind();
         }
+    }
+
+    /** 
+     * Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
+     *
+     * By default equals to 1.
+     *
+     * Batch is a consecutive sequence of the same attributes.
+     *
+     * If `batchCount` is equal to 1, then attributes located in an interleaved way like
+     *
+     * 123412341234
+     *
+     * If `batchCount` greater then 1, it means that the same attributes located consecutively.
+     * Example for `batchCount` equal to 3:
+     *
+     * 111222333444
+     *
+     * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices, Vertex Specification Best Practices)
+     */
+    size_t batchCount() const pure nothrow @nogc @safe
+    {
+        return _batchCount;
+    }
+    /// ditto
+    void batchCount(size_t newBatchCount) pure nothrow @nogc @safe
+    {
+        _batchCount = newBatchCount;
     }
 
     /** 
@@ -475,14 +461,34 @@ public:
         return _elements.length;
     }
 
+    invariant
+    {
+        foreach(i; 0 .. _elements.length)
+        {
+            immutable attr = calcAttrib(i);
+            assert(&attr);
+        }
+    }
+
 private:
-    /// Extended object.
-    VertexBufferLayoutBase _base;
-    
-    alias _base this;
+    size_t _batchCount = 1;
+    invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
+
+    /** 
+     * Internally used instead of `AttribPointer`.
+     *
+     * Index of an attribute is an index of the entry in `_elements`,
+     * and stride and pointer is calculated according to `batchCount` and `padding`.
+     */
+    struct LayoutElement
+    {
+        int size; // actually count
+        GLType type;
+        bool normalized;
+        size_t padding;
+    }
 
     import std.container.array : Array;
-    alias LayoutElement = VertexBufferLayoutBase.LayoutElement;
 
     Array!LayoutElement _elements;
 
@@ -517,13 +523,13 @@ private:
      */
     size_t sizeOfBatch(in ref LayoutElement elem) const pure nothrow @nogc @safe
     {
-        if(batchCount == 1)
+        if(_batchCount == 1)
         {
             return sizeOfPaddedAttribute(elem);
         }
         else
         {
-            return elem.padding + batchCount * sizeOfAttribute(elem);
+            return elem.padding + _batchCount * sizeOfAttribute(elem);
         }
     }
     /// ditto
@@ -539,7 +545,7 @@ private:
     {
         import std.algorithm.iteration : map, sum;
         
-        if(batchCount == 1)
+        if(_batchCount == 1)
         {
             return _elements[]
                 .map!(sizeOfPaddedAttribute)()
