@@ -282,7 +282,7 @@ unittest
 struct VertexBufferLayout
 {
 public:
-    mixin Behaviors!("VertexBufferLayoutBase");
+    mixin VertexBufferLayoutBase!();
 
     /** 
      * Pushes new attribute to the layout.
@@ -576,7 +576,7 @@ struct VertexBufferLayoutFromPattern(T)
 if(is(T == struct) || is(T == class))
 {
 public:
-    mixin Behaviors!("VertexBufferLayoutBase");
+    mixin VertexBufferLayoutBase!();
 
     /** 
      * Enables and sets all of the attributes represented by this object.

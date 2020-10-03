@@ -1,4 +1,9 @@
-module glsu.util.behaviors.vertexbufferlayoutbase;
+/** 
+ * Behaviors are a way to implement partial structs.
+ *
+ * See_Also: $(LINK2 https://youtu.be/rSY78Hu8DqI, Mad With Power - The Hunt for New Compile-Time Idioms)
+ */
+module glsu.util.behaviors;
 
 import glsu.util.udas : Behavior;
 
