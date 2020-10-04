@@ -356,10 +356,10 @@ void lighting(GLFWwindow* window)
 
     auto lightColor = vec3f(1.0f, 1.0f, 1.0f);
 
-    lightSourceSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
+    lightSourceSP.setUniform("lightColor", lightColor);
 
     lightingSP.setUniform("objectColor", 1.0f, 0.5f, 0.31f);
-    lightingSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
+    lightingSP.setUniform("lightColor", lightColor);
 
     auto lightPos = vec3f(1.2f, 1.0f, -1.0f);
 

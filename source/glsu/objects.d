@@ -1426,6 +1426,41 @@ struct ShaderProgram
         mixin(funcName ~ "(location, values);");
     }
 
+    import gfm.math : Vector;
+
+    /** 
+     * Sets uniform vector or uniform array of vectors.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     *   values = Vector or Vectors to transfer to GPU memory for the `ShaderProgram`.
+     */
+    void setUniform(T, int N)(string name, Vector!(T, N)[] values...) nothrow
+    if(0 < N && N < 5 && (is(T == bool) || is(T == int) || is(T == uint) || is(T == float)))
+    in(isValid)
+    in(values.length <= int.max)
+    {
+        import std.conv : to;
+
+        immutable location = getUniformLocation(name);
+
+        static if (is(T == bool) || is(T == int))
+        {
+            enum suffix = "i";
+        }
+        else static if (is(T == uint))
+        {
+            enum suffix = "ui";
+        }
+        else static if (is(T == float))
+        {
+            enum suffix = "f";
+        }
+        enum funcName = "glUniform" ~ to!string(N) ~ suffix ~ "v";
+
+        mixin(ScopedBind!this);
+        mixin(funcName ~ "(location, cast(int) values.length, values[0].ptr);");
+    }
+
     import gfm.math : Matrix;
 
     /** 
@@ -1435,8 +1470,9 @@ struct ShaderProgram
      *   values = Matrix or matrices to transfer to GPU memory for the `ShaderProgram`.
      */
     void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
-            if (2 <= R && R <= 4 && 2 <= C && C <= 4)
+    if (2 <= R && R <= 4 && 2 <= C && C <= 4)
     in(isValid)
+    in(values.length <= int.max)
     {
         import std.conv : to;
         import glad.gl.enums : GL_TRUE;
