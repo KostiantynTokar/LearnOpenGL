@@ -5,6 +5,7 @@
  */
 module glsu.util.behaviors;
 
+import glsu.util;
 import glsu.util.udas : Behavior;
 
 /** 
@@ -43,8 +44,96 @@ mixin template VertexBufferLayoutBase()
         _batchCount = newBatchCount;
     }
 
+    /** 
+     * Activates attributes with specified indices.
+     *
+     * Only active attributes of the layout are enabled in `bind` call.
+     * Range interface provides range only over active attributes.
+     * By default all atributes are active.
+     *
+     * Params:
+     *   indices = Attributes with these indices will be activated.
+     */
+    public void activate(size_t[] indices...) pure nothrow @nogc @safe
+    {
+        if(_deactivatedAttrs !is null)
+        {
+            _deactivatedAttrs.removeKey(indices);
+        }
+    }
+
+    /** 
+     * Activates all attributes of the layout.
+     *
+     * Only active attributes of the layout are enabled in `bind` call.
+     * Range interface provides range only over active attributes.
+     * By default all atributes are active.
+     */
+    public void activateAll() pure nothrow @nogc @safe
+    {
+        if(_deactivatedAttrs !is null)
+        {
+            _deactivatedAttrs.clear();
+        }
+    }
+
+    /** 
+     * Deactivates attributes with specified indices.
+     *
+     * Only active attributes of the layout are enabled in `bind` call.
+     * Range interface provides range only over active attributes.
+     * By default all atributes are active.
+     *
+     * Params:
+     *   indices = Attributes with these indices will be deactivated.
+     */
+    public void deactivate(size_t[] indices...) pure nothrow @safe
+    {
+        import std.algorithm : filter;
+        if(indices.length > 0)
+        {
+            if(_deactivatedAttrs is null)
+            {
+                _deactivatedAttrs = new RedBlackTree!size_t();
+            }
+            _deactivatedAttrs.insert(indices.filter!(i => i < attrCount));
+        }
+    }
+
+    /// Checks if attribute with specified index is active.
+    public bool isActive(size_t index) const pure nothrow @nogc @safe
+    {
+        return _deactivatedAttrs is null || index !in _deactivatedAttrs;
+    }
+
     private size_t _batchCount = 1;
     invariant(_batchCount != 0, "There should be at least 1 attribute in a batch.");
+
+    import std.container : RedBlackTree;
+    import std.typecons : scoped;
+
+    private RedBlackTree!size_t _deactivatedAttrs;
+
+    /// Converts index of an attribute into an index of that attribute in a range of active attributes.
+    private size_t calcActiveIndex(size_t index) const pure nothrow @nogc @safe
+    {
+        import std.range : iota, popFrontExactly;
+        import std.algorithm : filter, map;
+        
+        if(_deactivatedAttrs is null)
+        {
+            return index;
+        }
+        else
+        {
+            auto activeInds = iota(attrCount)
+                .packWith(&this)
+                .filter!(unpack!((i, l) => i !in l._deactivatedAttrs))
+                .map!(unpack!((i, l) => i));
+            popFrontExactly(activeInds, index);
+            return activeInds.front;
+        }
+    }
     
     /** 
      * Internally used instead of `AttribPointer`.

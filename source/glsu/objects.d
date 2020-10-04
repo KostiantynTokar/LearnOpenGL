@@ -277,7 +277,7 @@ unittest
  * Calls to `push` should be done accordingly to the offset of vertex attributes,
  * so that attributes with lesser offset should be pushed earlier.
  *
- * See_Also: `glsu.util.behaviors.vertexbufferlayoutbase.VertexBufferLayoutBase`, `VertexBufferLayoutFromPattern`.
+ * See_Also: `glsu.util.behaviors.VertexBufferLayoutBase`, `VertexBufferLayoutFromPattern`.
  */
 struct VertexBufferLayout
 {
@@ -310,33 +310,48 @@ public:
     }
 
     /** 
-     * Enables and sets all of the attributes represented by this object.
+     * Enables and sets all of the activated attributes represented by this object.
      */
     void bind() const nothrow @nogc
     {
         foreach(i; 0 .. _elements.length)
         {
-            calcAttrib(i).bind();
+            if(isActive(i))
+            {
+                calcAttrib(i).bind();
+            }
         }
     }
 
     /** 
-     * Disables all of the attributes represented by this object.
+     * Disables all of the activated attributes represented by this object.
      */
     void unbind() const nothrow @nogc
     {
         foreach(i; 0 .. _elements.length)
         {
-            calcAttrib(i).unbind();
+            if(isActive(i))
+            {
+                calcAttrib(i).unbind();
+            }
         }
     }
 
+    /// Total count of attributes in a layout.
+    size_t attrCount() const pure nothrow @nogc @safe
+    {
+        return _elements.length;
+    }
+
     /** 
-     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s.
+     *
+     * Provides a range over activated `AttribPointer`'s.
      */
     AttribPointer opIndex(size_t index) const pure nothrow @nogc
+    in(index < opDollar!0)
     {
-        return calcAttrib(index);
+        return calcAttrib(calcActiveIndex(index));
     }
     /// ditto
     auto opIndex() const pure nothrow @nogc
@@ -344,14 +359,16 @@ public:
         return this[0 .. $];
     }
     /// ditto
-    auto opIndex(size_t[2] slice) const pure nothrow @nogc
+    auto opIndex(size_t[2] slice) const pure nothrow @nogc @safe
+    in(slice[0] <= slice[1])
+    in(slice[1] <= opDollar!0)
     {
-        import std.range : iota, zip, repeat;
+        import std.range : iota;
         import std.algorithm : map;
            
         return iota(slice[0], slice[1])
             .packWith(&this)
-            .map!(unpack!((i, layout) => layout.calcAttrib(i)));
+            .map!(unpack!((i, layout) => layout.opIndex(i)));
     }
     /// ditto
     size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
@@ -361,7 +378,14 @@ public:
     /// ditto
     size_t opDollar(size_t dim : 0)() const pure nothrow @nogc @safe
     {
-        return _elements.length;
+        if(_deactivatedAttrs is null)
+        {
+            return _elements.length;
+        }
+        else
+        {
+            return _elements.length - _deactivatedAttrs.length;
+        }
     }
 
     invariant
@@ -543,6 +567,37 @@ unittest
 
     assert(layout1[].equal(layout3));
 }
+///
+unittest
+{
+    setupOpenGLContext();
+
+    VertexBufferLayout layout1;
+    layout1.push(3, GLType.glFloat);
+    layout1.push(2, GLType.glInt, true);
+    layout1.push!float(4);
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof +
+                                                                                            2 * int.sizeof)
+    ];
+    
+    import std.algorithm : equal;
+    import std.range : chain;
+
+    layout1.deactivate(1);
+    assert(layout1[].equal(chain(layout2[0 .. 1], layout2[2 .. 3])));
+    assert(layout1[0] == layout2[0]);
+    assert(layout1[$ - 1] == layout2[2]);
+    layout1.deactivate(0);
+    assert(layout1[].equal(layout2[2 .. 3]));
+    assert(layout1[0] == layout2[2]);
+
+    layout1.activateAll();
+    assert(layout1[].equal(layout2));
+}
 
 public import glsu.util.udas : VertexAttrib;
 
@@ -570,7 +625,7 @@ public import glsu.util.udas : VertexAttrib;
  *
  * 6. pointer --- size of attributes and batchCount.
  *
- * See_Also: `glsu.util.behaviors.vertexbufferlayoutbase.VertexBufferLayoutBase`, `VertexBufferLayout`.
+ * See_Also: `glsu.util.behaviors.VertexBufferLayoutBase`, `VertexBufferLayout`.
  */
 struct VertexBufferLayoutFromPattern(T)
 if(is(T == struct) || is(T == class))
@@ -579,46 +634,70 @@ public:
     mixin VertexBufferLayoutBase!();
 
     /** 
-     * Enables and sets all of the attributes represented by this object.
+     * Enables and sets all of the activated attributes represented by this object.
      */
     void bind() const nothrow @nogc
     {
-        static foreach (i; 0 .. attrsCount)
+        static foreach(i; 0 .. attrCount)
         {
-            calcAttrib!i().bind();
+            if(isActive(i))
+            {
+                calcAttrib!i().bind();
+            }
         }
     }
 
     /** 
-     * Disables all of the attributes represented by this object.
+     * Disables all of the activated attributes represented by this object.
      */
     void unbind() const nothrow @nogc
     {
-        static foreach (i; 0 .. attrsCount)
+        static foreach(i; 0 .. attrCount)
         {
-            calcAttrib!i().unbind();
+            if(isActive(i))
+            {
+                calcAttrib!i().unbind();
+            }
         }
     }
 
+    /// Total count of attributes in a layout.
+    enum attrCount = attrs.length;
+
     /** 
-     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s,
+     * Indexing interface to interpret `VertexBufferLayout` as range of `AttribPointer`'s.
+     *
+     * Provides a range over activated `AttribPointer`'s.
      */
-    AttribPointer opIndex(size_t index) const pure nothrow @nogc
+    AttribPointer opIndex(size_t index) const pure nothrow @nogc @safe
+    in(index < opDollar!0)
     {
-        return this[][index];
+        immutable activeIndex = calcActiveIndex(index);
+        static foreach (i; 0 .. attrCount)
+        {
+            if(i == activeIndex)
+            {
+                return calcAttrib!i();
+            }
+        }
+        assert(0);
     }
     /// ditto
     auto opIndex() const pure nothrow @nogc @safe
     {
-        import std.range : only;
-        import std.meta : staticMap;
-
-        return only(staticMap!(calcAttrib, staticIota!(size_t, attrsCount)));
+        return this[0 .. $];
     }
     /// ditto
-    auto opIndex(size_t[2] slice) const pure nothrow @nogc
+    auto opIndex(size_t[2] slice) const pure nothrow @nogc @safe
+    in(slice[0] <= slice[1])
+    in(slice[1] <= opDollar!0)
     {
-        return this[][slice[0] .. slice[1]];
+        import std.range : iota;
+        import std.algorithm : map;
+        
+        return iota(slice[0], slice[1])
+            .packWith(&this)
+            .map!(unpack!((i, layout) => layout.opIndex(i)));
     }
     /// ditto
     size_t[2] opSlice(size_t dim : 0)(size_t start, size_t end) const pure nothrow @nogc @safe
@@ -628,12 +707,19 @@ public:
     /// ditto
     size_t opDollar(size_t dim : 0)() const pure nothrow @nogc @safe
     {
-        return _elements.length;
+        if(_deactivatedAttrs is null)
+        {
+            return _elements.length;
+        }
+        else
+        {
+            return _elements.length - _deactivatedAttrs.length;
+        }
     }
 
     invariant
     {
-        static foreach(i; 0 .. attrsCount)
+        static foreach(i; 0 .. attrCount)
         {{
             immutable attr = calcAttrib!i;
             assert(&attr);
@@ -664,14 +750,12 @@ private:
     enum compSymbolsByOffset(alias s1, alias s2) = s1.offsetof < s2.offsetof;
     alias sortedByOffsetMarkedSymbols = staticSort!(compSymbolsByOffset, markedSymbols);
 
-    enum attrsCount = attrs.length;
-
     enum getElement(size_t index) = LayoutElement(sizeAttributeParam!index,
                                                   valueOfGLType!(typeAttributeParam!index),
                                                   sortedAttrs[index].normalized,
                                                   paddingOfElement!index);
 
-    alias _elements = staticMap!(getElement, staticIota!(size_t, attrsCount));
+    alias _elements = staticMap!(getElement, staticIota!(size_t, attrCount));
 
     template typeAndSizeOfAttribute(size_t index)
     {
@@ -739,7 +823,7 @@ private:
     {
         if(_batchCount == 1)
         {
-            return sizeOfAllPaddedAttributesBefore!attrsCount;
+            return sizeOfAllPaddedAttributesBefore!attrCount;
         }
         else
         {
@@ -872,6 +956,48 @@ unittest
     ];
 
     assert(layout1[].equal(layout3));
+}
+///
+unittest
+{
+    setupOpenGLContext();
+
+    import gfm.math : vec4f;
+
+    struct Pattern
+    {
+        @VertexAttrib(0)
+        float[3] position;
+
+        @VertexAttrib(1, true)
+        int[2] textureCoords;
+
+        @VertexAttrib(2)
+        vec4f attrib2;
+    }
+
+    VertexBufferLayoutFromPattern!Pattern layout1;
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 0),
+        AttribPointer(1, 2, GLType.glInt,   true,  (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof),
+        AttribPointer(2, 4, GLType.glFloat, false, (3 + 4) * float.sizeof + 2 * int.sizeof, 3 * float.sizeof +
+                                                                                            2 * int.sizeof)
+    ];
+    
+    import std.algorithm : equal;
+    import std.range : chain;
+
+    layout1.deactivate(1);
+    assert(layout1[].equal(chain(layout2[0 .. 1], layout2[2 .. 3])));
+    assert(layout1[0] == layout2[0]);
+    assert(layout1[$ - 1] == layout2[2]);
+    layout1.deactivate(0);
+    assert(layout1[].equal(layout2[2 .. 3]));
+    assert(layout1[0] == layout2[2]);
+
+    layout1.activateAll();
+    assert(layout1[].equal(layout2));
 }
 
 /** 
