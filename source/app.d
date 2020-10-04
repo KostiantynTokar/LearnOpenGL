@@ -32,7 +32,7 @@ void main()
         return;
     }
 
-    basic(window);
+    lighting(window);
 }
 
 void basic(GLFWwindow* window)
@@ -218,6 +218,194 @@ void basic(GLFWwindow* window)
             auto model = mat4f.translation(pos);
             model *= mat4f.rotation(currentFrameTime * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
             shaderProgram.setUniform("model", model);
+            VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
+        }
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+}
+
+void lighting(GLFWwindow* window)
+{
+    static bool firstMouse = true;
+    static float mouseLastX;
+    static float mouseLastY;
+    static Camera camera;
+    camera = Camera(vec3f(1.25f, 0.0f, 3.0f), -PI_2 - radians(15.0f));
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int newWidth,
+            int newHeight) {
+        glViewport(0, 0, newWidth, newHeight);
+    };
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+
+    GLFWcursorposfun cursorPosCallback = (GLFWwindow* window, double x, double y) {
+        if (firstMouse)
+        {
+            mouseLastX = x;
+            mouseLastY = y;
+            firstMouse = false;
+        }
+
+        float xoffset = x - mouseLastX;
+        float yoffset = mouseLastY - y; // reversed since y-coordinates go from bottom to top
+        mouseLastX = x;
+        mouseLastY = y;
+
+        float sensitivity = 0.25f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        camera.rotate(radians(xoffset), radians(yoffset));
+    };
+    glfwSetCursorPosCallback(window, cursorPosCallback);
+
+    void processInput(GLFWwindow* window, float deltaTime)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(window, true);
+        }
+
+        immutable float cameraSpeed = 2.5f * deltaTime;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            // camera.moveFront(cameraSpeed);
+            auto front = camera.front;
+            camera.move(cameraSpeed * vec3f(front.x, 0.0f, front.z).normalized);
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            // camera.moveFront(-cameraSpeed);
+            auto front = camera.front;
+            camera.move(-cameraSpeed * vec3f(front.x, 0.0f, front.z).normalized);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            camera.moveRight(-cameraSpeed);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            camera.moveRight(cameraSpeed);
+        }
+    }
+
+    struct Vertex
+    {
+        @VertexAttrib(0)
+        vec3f pos;
+
+        @VertexAttrib(1)
+        vec2f texCoord;
+    }
+
+    Vertex[] vertices = [
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) )
+    ];
+
+    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    scope(exit) VAO.destroy();
+
+    auto lightSourceSP = ShaderProgram.create!("lighting/shader.vert", "lighting/lightSource.frag");
+    scope(exit) lightSourceSP.destroy();
+    auto lightingSP = ShaderProgram.create!("lighting/shader.vert", "lighting/lighting.frag");
+    scope(exit) lightingSP.destroy();
+
+    auto lightColor = vec3f(1.0f, 1.0f, 1.0f);
+
+    lightSourceSP.bind();
+    lightSourceSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
+
+    lightingSP.bind();
+    lightingSP.setUniform("objectColor", 1.0f, 0.5f, 0.31f);
+    lightingSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
+
+    auto lightPos = vec3f(1.2f, 1.0f, -1.0f);
+
+    glEnable(GL_DEPTH_TEST);
+
+    float deltaTime = 0.0f;
+    float lastFrameTime = 0.0f;
+
+    while (!glfwWindowShouldClose(window))
+    {
+        float currentFrameTime = glfwGetTime();
+        deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
+        processInput(window, deltaTime);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        auto view = camera.getView();
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
+
+        {
+            auto model = mat4f.translation(lightPos);
+            model.scale(vec3f(0.2f));
+
+            lightSourceSP.bind();
+            lightSourceSP.setUniform("model", model);
+            lightSourceSP.setUniform("view", view);
+            lightSourceSP.setUniform("projection", projection);
+
+            VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
+        }
+
+        {
+            auto model = mat4f.identity;
+
+            lightingSP.bind();
+            lightingSP.setUniform("model", model);
+            lightingSP.setUniform("view", view);
+            lightingSP.setUniform("projection", projection);
+
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
 
