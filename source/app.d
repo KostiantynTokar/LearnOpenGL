@@ -12,21 +12,6 @@ import gfm.math;
 import imagefmt;
 import glsu;
 
-int width = 800;
-int height = 600;
-
-bool firstMouse = true;
-float mouseLastX;
-float mouseLastY;
-float FoV = 45.0f;
-
-Camera camera;
-
-static this()
-{
-    camera = Camera(vec3f(0.0f, 0.0f, 3.0f));
-}
-
 void main()
 {
     GLFW.activate(3, 3);
@@ -47,12 +32,23 @@ void main()
         return;
     }
 
+    basic(window);
+}
+
+void basic(GLFWwindow* window)
+{
+    static bool firstMouse = true;
+    static float mouseLastX;
+    static float mouseLastY;
+    static float FoV = 45.0f;
+
+    static Camera camera;
+    camera = Camera(vec3f(0.0f, 0.0f, 3.0f));
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     GLFWframebuffersizefun framebufferSizeCallback = (GLFWwindow* window, int newWidth,
             int newHeight) {
-        width = newWidth;
-        height = newHeight;
         glViewport(0, 0, newWidth, newHeight);
     };
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
@@ -158,7 +154,7 @@ void main()
     auto texture2 = Texture.create("resources\\awesomeface.png");
     scope(exit) texture2.destroy();
 
-    auto shaderProgram = ShaderProgram.create!("shader.vert", "shader.frag");
+    auto shaderProgram = ShaderProgram.create!("basic/shader.vert", "basic/shader.frag");
     scope(exit) shaderProgram.destroy();
 
     float deltaTime = 0.0f;
@@ -208,6 +204,8 @@ void main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         auto view = camera.getView();
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
 
         shaderProgram.bind();
@@ -226,5 +224,4 @@ void main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
 }
