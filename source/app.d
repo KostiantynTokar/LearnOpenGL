@@ -356,10 +356,8 @@ void lighting(GLFWwindow* window)
 
     auto lightColor = vec3f(1.0f, 1.0f, 1.0f);
 
-    lightSourceSP.bind();
     lightSourceSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
 
-    lightingSP.bind();
     lightingSP.setUniform("objectColor", 1.0f, 0.5f, 0.31f);
     lightingSP.setUniform("lightColor", lightColor.x, lightColor.y, lightColor.z);
 
@@ -390,22 +388,22 @@ void lighting(GLFWwindow* window)
             auto model = mat4f.translation(lightPos);
             model.scale(vec3f(0.2f));
 
-            lightSourceSP.bind();
             lightSourceSP.setUniform("model", model);
             lightSourceSP.setUniform("view", view);
             lightSourceSP.setUniform("projection", projection);
 
+            lightSourceSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
 
         {
             auto model = mat4f.identity;
 
-            lightingSP.bind();
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
 
+            lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
 

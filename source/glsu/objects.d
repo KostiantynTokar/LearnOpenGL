@@ -1422,6 +1422,7 @@ struct ShaderProgram
         }
         enum funcName = "glUniform" ~ to!string(Ts.length) ~ suffix;
 
+        mixin(ScopedBind!this);
         mixin(funcName ~ "(location, values);");
     }
 
@@ -1452,6 +1453,7 @@ struct ShaderProgram
         }
         enum funcName = "glUniformMatrix" ~ suffix ~ "fv";
 
+        mixin(ScopedBind!this);
         mixin(funcName ~ "(location, cast(int) values.length, GL_TRUE, values[0].ptr);");
     }
 
@@ -1464,6 +1466,7 @@ struct ShaderProgram
     in(textures.length <= 32, "It's possible to bind only 32 textures")
     in(isValid)
     {
+        mixin(ScopedBind!this);
         foreach (i, textureNamePair; textures)
         {
             textureNamePair[0].bind(cast(uint) i);
