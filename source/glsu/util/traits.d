@@ -38,22 +38,10 @@ template isGLSLStructType(T)
 {
     static if(is(T == struct))
     {
-        import std.meta : allSatisfy, templateOr;
+        import std.meta : allSatisfy;
         import std.traits : Fields;
-        import std.algorithm : all;
 
-        alias fields = Fields!T;
-        bool[fields.length] f(Us...)()
-        {
-            bool[fields.length] res;
-            static foreach(i; 0 .. Us.length)
-            {
-                res[i] = isGLSLBasicType!(Us[i]) || isGLSLBasicArrayType!(Us[i])
-                      || isGLSLStructArrayType!(Us[i]) || isGLSLStructType!(Us[i]);
-            }
-            return res;
-        }
-        enum isGLSLStructType = all(f!fields()[]);
+        enum isGLSLStructType = allSatisfy!(isGLSLType, Fields!T);
     }
     else
     {
