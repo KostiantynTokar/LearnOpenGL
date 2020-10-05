@@ -126,6 +126,91 @@ bool isIntegral(GLType type) pure nothrow @nogc @safe
  */
 enum isVertexBufferLayout(T) = is(ForeachType!T == AttribPointer);
 
+/// Checks if `T` is a basic scalar GLSL type, i.e. `bool`, `int`, `uint` or `float`.
+enum isGLSLBasicScalarType(T) = is(T == bool) || is(T == int) || is(T == uint) || is(T == float);
+
+/** 
+ * Checks if `T` is a basic vector GLSL type, i.e. `bvecn`, `ivecn`, `uvecn` or `vecn`, n = 2, 3 or 4.
+ *
+ * Here `gfm.math.Vector!(U, N)` with appropriate U and N correspond to GLSL analogue.
+ */
+template isGLSLBasicVectorType(T)
+{
+    import gfm.math : Vector;
+    enum isGLSLBasicVectorType = is(T == Vector!(U, N), U, int N)
+                                 && 1 < N && N < 5 && isGLSLBasicScalarType!U;
+}
+
+/// Checks if `T` is a basic scalar or vector GLSL type.
+enum isGLSLBasicType(T) = isGLSLBasicScalarType!T || isGLSLBasicVectorType!T;
+
+/// Checks if `T` is an array of basic GLSL type values.
+enum isGLSLBasicArrayType(T) = from!"std.traits".isArray!T && isGLSLBasicType!(typeof(T.init[0]));
+
+/// Checks if `T` is a struct that contains only GLSL basic types,
+/// basic array types or another struct with such property.
+template isGLSLStructType(T)
+{
+    static if(is(T == struct))
+    {
+        import std.meta : allSatisfy, templateOr;
+        import std.traits : Fields;
+        import std.algorithm : all;
+
+        alias fields = Fields!T;
+        bool[fields.length] f(Us...)()
+        {
+            bool[fields.length] res;
+            static foreach(i; 0 .. Us.length)
+            {
+                res[i] = isGLSLBasicType!(Us[i]) || isGLSLBasicArrayType!(Us[i])
+                      || isGLSLStructArrayType!(Us[i]) || isGLSLStructType!(Us[i]);
+            }
+            return res;
+        }
+        enum isGLSLStructType = all(f!fields()[]);
+    }
+    else
+    {
+        enum isGLSLStructType = false;
+    }
+}
+
+/// Checks if `T` is an array of GLSL structs.
+enum isGLSLStructArrayType(T) = from!"std.traits".isArray!T && isGLSLStructType!(typeof(T.init[0]));
+
+/// Checks if `T` is an array of GLSL type values.
+enum isGLSLArrayType(T) = isGLSLBasicArrayType!T || isGLSLStructArrayType!T;
+
+/// Checks if `T` is a GLSL type.
+enum isGLSLType(T) = isGLSLBasicType!T || isGLSLStructType!T || isGLSLArrayType!T;
+///
+unittest
+{
+    import gfm.math : vec2i, vec3f;
+
+    struct A
+    {
+        float f;
+        vec2i v;
+        int i;
+        bool[] bb;
+    }
+    struct B
+    {
+        vec3f v;
+        A a;
+        A[] aa;
+    }
+    struct C
+    {
+        B b;
+        string s;
+    }
+    static assert(isGLSLType!(B[42]));
+    static assert(!isGLSLType!C);
+}
+
 /** 
  * Repeatedly calls `glGetError`, clearing all GL error flags.
  */
