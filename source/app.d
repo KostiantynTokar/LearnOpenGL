@@ -299,51 +299,51 @@ void lighting(GLFWwindow* window)
         vec3f pos;
 
         @VertexAttrib(1)
-        vec2f texCoord;
+        vec3f normal;
     }
 
     Vertex[] vertices = [
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
 
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
 
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
 
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
 
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
 
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec2f(0.0f, 1.0f) )
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) )
     ];
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
@@ -355,13 +355,13 @@ void lighting(GLFWwindow* window)
     scope(exit) lightingSP.destroy();
 
     auto lightColor = vec3f(1.0f, 1.0f, 1.0f);
+    auto lightPos = vec3f(1.2f, 0.5f, -1.0f);
 
     lightSourceSP.setUniform("lightColor", lightColor);
 
     lightingSP.setUniform("objectColor", 1.0f, 0.5f, 0.31f);
     lightingSP.setUniform("lightColor", lightColor);
-
-    auto lightPos = vec3f(1.2f, 1.0f, -1.0f);
+    lightingSP.setUniform("lightPos", lightPos);
 
     glEnable(GL_DEPTH_TEST);
 
