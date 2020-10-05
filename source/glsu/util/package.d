@@ -242,10 +242,29 @@ static:
      */
     from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
     {
-        import bindbc.glfw : glfwCreateWindow;
+        import bindbc.glfw : glfwCreateWindow, glfwGetPrimaryMonitor, glfwGetVideoMode;
         import std.string : toStringz;
 
         return glfwCreateWindow(width, height, label.toStringz, null, null);
+    }
+
+    /** 
+     * Create Window. GLFW should be active.
+     * Params:
+     *   width = Width of the window in pixels.
+     *   height = Height of the window in pixels.
+     *   label = Label of the window.
+     * Returns: Handle of newly created window or null if window was not created.
+     */
+    from!"bindbc.glfw".GLFWwindow* createFullScreenWindow(string label) nothrow
+    {
+        import bindbc.glfw : glfwCreateWindow, glfwGetPrimaryMonitor, glfwGetVideoMode;
+        import std.string : toStringz;
+
+        auto monitor = glfwGetPrimaryMonitor();
+        auto mode = glfwGetVideoMode(monitor);
+
+        return glfwCreateWindow(mode.width, mode.height, label.toStringz, monitor, null);
     }
 
 private:

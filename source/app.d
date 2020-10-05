@@ -18,7 +18,7 @@ void main()
     scope (exit)
         GLFW.deactivate();
 
-    GLFWwindow* window = GLFW.createWindow(800, 600, "LearnOpenGL");
+    GLFWwindow* window = GLFW.createFullScreenWindow("LearnOpenGL");
     if (window == null)
     {
         stderr.writeln("Failed to create GLFW window");
@@ -375,7 +375,7 @@ void lighting(GLFWwindow* window)
         auto lightColor = vec3f(abs(sin(currentFrameTime))
                               , abs(sin(2.0f * currentFrameTime))
                               , abs(sin(3.0 *currentFrameTime)));
-        auto lightPos = mat3f.rotateY(currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
+        auto lightPos = mat3f.rotateY(2.0f * currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
 
         auto view = camera.getView();
         int width, height;
