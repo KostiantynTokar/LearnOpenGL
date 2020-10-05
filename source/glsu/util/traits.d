@@ -1,3 +1,4 @@
+/// GLSU-specific traits.
 module glsu.util.traits;
 
 import glsu.util : from;
