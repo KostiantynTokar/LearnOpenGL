@@ -349,12 +349,15 @@ void lighting(GLFWwindow* window)
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
-    auto lightSourceSP = ShaderProgram.create!("lighting/shader.vert", "lighting/lightSource.frag");
+    auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
     scope(exit) lightSourceSP.destroy();
-    auto lightingSP = ShaderProgram.create!("lighting/shader.vert", "lighting/lighting.frag");
+    auto lightingSP = ShaderProgram.create!("lighting/lighting.vert", "lighting/lighting.frag");
     scope(exit) lightingSP.destroy();
 
-    lightingSP.setUniform("objectColor", 1.0f, 0.5f, 0.31f);
+    lightingSP.setUniform("material.ambient", 1.0f, 0.5f, 0.31f);
+    lightingSP.setUniform("material.diffuse", 1.0f, 0.5f, 0.31f);
+    lightingSP.setUniform("material.specular", 0.5f, 0.5f, 0.5f);
+    lightingSP.setUniform("material.shininess", 32.0f);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -372,9 +375,9 @@ void lighting(GLFWwindow* window)
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto lightColor = vec3f(abs(sin(currentFrameTime))
-                              , abs(sin(2.0f * currentFrameTime))
-                              , abs(sin(3.0 *currentFrameTime)));
+        auto lightColor = 0.5f * vec3f(abs(sin(currentFrameTime))
+                                     , abs(sin(2.0f * currentFrameTime))
+                                     , abs(sin(3.0f * currentFrameTime)));
         auto lightPos = mat3f.rotateY(2.0f * currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
 
         auto view = camera.getView();
@@ -401,8 +404,10 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
-            lightingSP.setUniform("lightPos", lightPos);
-            lightingSP.setUniform("lightColor", lightColor);
+            lightingSP.setUniform("light.position", (view * vec4f(lightPos, 1.0f)).xyz);
+            lightingSP.setUniform("light.ambient", 0.1f * lightColor);
+            lightingSP.setUniform("light.diffuse", lightColor);
+            lightingSP.setUniform("light.specular", 1.0f, 1.0f, 1.0f);
 
             lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
