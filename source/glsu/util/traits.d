@@ -18,7 +18,7 @@ enum isGLSLBasicScalarType(T) = is(T == bool) || is(T == int) || is(T == uint) |
 /** 
  * Checks if `T` is a basic vector GLSL type, i.e. `bvecn`, `ivecn`, `uvecn` or `vecn`, n = 2, 3 or 4.
  *
- * Here `gfm.math.Vector!(U, N)` with appropriate U and N correspond to GLSL analogue.
+ * Here `gfm.math.Vector!(U, N)` with appropriate U and N corresponds to GLSL analogue.
  */
 template isGLSLBasicVectorType(T)
 {
@@ -27,8 +27,20 @@ template isGLSLBasicVectorType(T)
                                  && 1 < N && N < 5 && isGLSLBasicScalarType!U;
 }
 
+/** 
+ * Checks if `T` is a basic vector GLSL type, i.e. `bvecn`, `ivecn`, `uvecn` or `vecn`, n = 2, 3 or 4.
+ *
+ * Here `gfm.math.Matrix!(U, R, C)` with appropriate U, R and C corresponds to GLSL analogue.
+ */
+template isGLSLBasicMatrixType(T)
+{
+    import gfm.math : Matrix;
+    enum isGLSLBasicMatrixType = is(T == Matrix!(U, R, C), U, int R, int C)
+                                 && 1 < R && R < 5 && 1 < C && C < 5 &&  is(U == float);
+}
+
 /// Checks if `T` is a basic scalar or vector GLSL type.
-enum isGLSLBasicType(T) = isGLSLBasicScalarType!T || isGLSLBasicVectorType!T;
+enum isGLSLBasicType(T) = isGLSLBasicScalarType!T || isGLSLBasicVectorType!T || isGLSLBasicMatrixType!T;
 
 /// Checks if `T` is an array of basic GLSL type values.
 enum isGLSLBasicArrayType(T) = from!"std.traits".isArray!T && isGLSLBasicType!(typeof(T.init[0]));
@@ -37,7 +49,7 @@ enum isGLSLBasicArrayType(T) = from!"std.traits".isArray!T && isGLSLBasicType!(t
 /// basic array types or another struct with such property.
 template isGLSLStructType(T)
 {
-    static if(is(T == struct))
+    static if(is(T == struct) && !isGLSLBasicVectorType!T && !isGLSLBasicMatrixType!T)
     {
         import std.meta : allSatisfy;
         import std.traits : Fields;
@@ -61,7 +73,7 @@ enum isGLSLType(T) = isGLSLBasicType!T || isGLSLStructType!T || isGLSLArrayType!
 ///
 unittest
 {
-    import gfm.math : vec2i, vec3f;
+    import gfm.math : vec2i, vec3f, mat3f, Matrix;
 
     struct A
     {
@@ -69,6 +81,7 @@ unittest
         vec2i v;
         int i;
         bool[] bb;
+        mat3f[] mm;
     }
     struct B
     {
@@ -83,4 +96,6 @@ unittest
     }
     static assert(isGLSLType!(B[42]));
     static assert(!isGLSLType!C);
+    static assert(!isGLSLType!(Matrix!(int, 3, 3)));
+    static assert(!isGLSLStructType!vec2i);
 }
