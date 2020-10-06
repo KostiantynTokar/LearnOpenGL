@@ -302,6 +302,22 @@ void lighting(GLFWwindow* window)
         vec3f normal;
     }
 
+    struct Material
+    {
+        vec3f ambient;
+        vec3f diffuse;
+        vec3f specular;
+        float shininess;
+    }
+
+    struct Light
+    {
+        vec3f position;
+        vec3f ambient;
+        vec3f diffuse;
+        vec3f specular;
+    }
+
     Vertex[] vertices = [
         Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
         Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
@@ -354,10 +370,8 @@ void lighting(GLFWwindow* window)
     auto lightingSP = ShaderProgram.create!("lighting/lighting.vert", "lighting/lighting.frag");
     scope(exit) lightingSP.destroy();
 
-    lightingSP.setUniform("material.ambient", 1.0f, 0.5f, 0.31f);
-    lightingSP.setUniform("material.diffuse", 1.0f, 0.5f, 0.31f);
-    lightingSP.setUniform("material.specular", 0.5f, 0.5f, 0.5f);
-    lightingSP.setUniform("material.shininess", 32.0f);
+    auto material = Material(vec3f(1.0f, 0.5f, 0.31f), vec3f(1.0f, 0.5f, 0.31f), vec3f(0.5f, 0.5f, 0.5f), 32.0f);
+    lightingSP.setUniform("material", material);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -375,15 +389,17 @@ void lighting(GLFWwindow* window)
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto lightColor = 0.5f * vec3f(abs(sin(currentFrameTime))
-                                     , abs(sin(2.0f * currentFrameTime))
-                                     , abs(sin(3.0f * currentFrameTime)));
-        auto lightPos = mat3f.rotateY(2.0f * currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
-
         auto view = camera.getView();
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
+
+        auto lightColor = 0.5f * vec3f(abs(sin(currentFrameTime))
+                                     , abs(sin(2.0f * currentFrameTime))
+                                     , abs(sin(3.0f * currentFrameTime)));
+        auto lightPos = mat3f.rotateY(2.0f * currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
+        auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
+        auto light = Light(viewLightPos, 0.1f * lightColor, lightColor, vec3f(1.0f, 1.0f, 1.0f));
 
         {
             auto model = mat4f.translation(lightPos);
@@ -404,10 +420,7 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
-            lightingSP.setUniform("light.position", (view * vec4f(lightPos, 1.0f)).xyz);
-            lightingSP.setUniform("light.ambient", 0.1f * lightColor);
-            lightingSP.setUniform("light.diffuse", lightColor);
-            lightingSP.setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+            lightingSP.setUniform("light", light);
 
             lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);

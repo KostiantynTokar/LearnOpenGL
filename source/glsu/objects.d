@@ -1395,11 +1395,11 @@ struct ShaderProgram
      * Params:
      *   name = Name of the uniform variable in shader source.
      *   values = Data to transfer to GPU memory for the `ShaderProgram`.
+     * See_Also: `glsu.util.traits.isGLSLBasicScalarType`.
      */
     void setUniform(Ts...)(string name, Ts values) nothrow 
-            if (0 < Ts.length && Ts.length < 5
-                && from!"std.traits".allSameType!Ts && (is(Ts[0] == bool)
-                || is(Ts[0] == int) || is(Ts[0] == uint) || is(Ts[0] == float)))
+    if (0 < Ts.length && Ts.length < 5
+        && from!"std.traits".allSameType!Ts && isGLSLBasicScalarType!(Ts[0]))
     in(isValid)
     {
         import std.conv : to;
@@ -1433,9 +1433,10 @@ struct ShaderProgram
      * Params:
      *   name = Name of the uniform variable in shader source.
      *   values = Vector or Vectors to transfer to GPU memory for the `ShaderProgram`.
+     * See_Also: `glsu.util.traits.isGLSLBasicVectorType`.
      */
     void setUniform(T, int N)(string name, Vector!(T, N)[] values...) nothrow
-    if(0 < N && N < 5 && (is(T == bool) || is(T == int) || is(T == uint) || is(T == float)))
+    if(isGLSLBasicVectorType!(Vector!(T, N)))
     in(isValid)
     in(values.length <= int.max)
     {
@@ -1468,9 +1469,10 @@ struct ShaderProgram
      * Params:
      *   name = Name of the uniform variable in shader source.
      *   values = Matrix or matrices to transfer to GPU memory for the `ShaderProgram`.
+     * See_Also: `glsu.util.traits.isGLSLBasicMatrixType`.
      */
     void setUniform(int R, int C)(string name, Matrix!(float, R, C)[] values...) nothrow
-    if (2 <= R && R <= 4 && 2 <= C && C <= 4)
+    if(isGLSLBasicMatrixType!(Matrix!(float, R, C)))
     in(isValid)
     in(values.length <= int.max)
     {
@@ -1491,6 +1493,24 @@ struct ShaderProgram
 
         mixin(ScopedBind!this);
         mixin(funcName ~ "(location, cast(int) values.length, GL_TRUE, values[0].ptr);");
+    }
+
+    /** 
+     * Sets uniform struct value.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     *   value = GLSL struct to transfer to GPU memory for the `ShaderProgram`.
+     * See_Also: `glsu.util.traits.isGLSLStructType`.
+     */
+    void setUniform(T)(string name, T value) nothrow
+    if(isGLSLStructType!T)
+    {
+        import std.traits : FieldNameTuple;
+
+        static foreach(field; FieldNameTuple!T)
+        {
+            setUniform(name ~ "." ~ field, __traits(getMember, value, field));
+        }
     }
 
     /** 
