@@ -1534,7 +1534,6 @@ struct ShaderProgram
      *   textures = pairs texture-name to set for the `ShaderProgram`.
      */
     void setTextures(from!"std.typecons".Tuple!(Texture, string)[] textures...) nothrow
-    in(textures.length <= 32, "It's possible to bind only 32 textures")
     in(isValid)
     {
         mixin(ScopedBind!this);
@@ -1914,7 +1913,15 @@ struct Texture
      * Binds the texture to specified texture unit.
      */
     void setActive(uint unit = 0) const nothrow @nogc
-    in(unit <= 32, "It's possible to bind only 32 textures")
+    in
+    {
+        import std.conv : to;
+        import glad.gl.enums : GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+
+        int maxUnits;
+        glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxUnits);
+        assert(unit < maxUnits, "Maximum number of texture units is exceeded.");
+    }
     in(isValid)
     {
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
@@ -1926,7 +1933,7 @@ struct Texture
     /** 
      * Binds the texture to specified by sampler texture unit.
      */
-    void setActive(T, GLSLSamplerType type)(Sampler!(T, type) sampler)
+    void setActive(T, GLSLSamplerType type)(Sampler!(T, type) sampler) const nothrow @nogc
     {
         setActive(sampler.value);
     }
