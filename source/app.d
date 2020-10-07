@@ -208,7 +208,6 @@ void basic(GLFWwindow* window)
         glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(FoV), to!float(width) / height, 0.1f, 100.0f);
 
-        shaderProgram.bind();
         shaderProgram.setTextures(tuple(texture1, "texture1"), tuple(texture2, "texture2"));
         shaderProgram.setUniform("view", view);
         shaderProgram.setUniform("projection", projection);
@@ -218,6 +217,7 @@ void basic(GLFWwindow* window)
             auto model = mat4f.translation(pos);
             model *= mat4f.rotation(currentFrameTime * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
             shaderProgram.setUniform("model", model);
+            shaderProgram.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
 
@@ -428,8 +428,8 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("projection", projection);
             lightingSP.setUniform("light", light);
 
-            diffuseMap.bind(0);
-            specularMap.bind(1);
+            diffuseMap.setActive(material.diffuse);
+            specularMap.setActive(material.specular);
             lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }

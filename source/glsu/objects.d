@@ -1540,7 +1540,7 @@ struct ShaderProgram
         mixin(ScopedBind!this);
         foreach (i, textureNamePair; textures)
         {
-            textureNamePair[0].bind(cast(uint) i);
+            textureNamePair[0].setActive(cast(uint) i);
             setUniform(textureNamePair[1], cast(int) i);
         }
     }
@@ -1807,7 +1807,7 @@ struct Texture
             break;
         }
 
-        bind();
+        mixin(ScopedBind!this);
         glTexParameteri(GL_TEXTURE_2D, glCoord, wrap);
     }
 
@@ -1822,6 +1822,7 @@ struct Texture
     void setBorderColor(float[4] color) nothrow @nogc
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR;
+        mixin(ScopedBind!this);
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color.ptr);
     }
 
@@ -1878,7 +1879,7 @@ struct Texture
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER;
 
-        bind();
+        mixin(ScopedBind!this);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     }
 
@@ -1896,7 +1897,7 @@ struct Texture
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER;
 
-        bind();
+        mixin(ScopedBind!this);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     }
 
@@ -1910,16 +1911,46 @@ struct Texture
     }
 
     /** 
-     * Binds the object, affecting state of OpenGL.
+     * Binds the texture to specified texture unit.
      */
-    void bind(uint index = 0) const nothrow @nogc
-    in(index <= 32, "It's possible to bind only 32 textures")
+    void setActive(uint unit = 0) const nothrow @nogc
+    in(unit <= 32, "It's possible to bind only 32 textures")
     in(isValid)
     {
         import glad.gl.enums : GL_TEXTURE0, GL_TEXTURE_2D;
 
-        glActiveTexture(GL_TEXTURE0 + index);
+        glActiveTexture(GL_TEXTURE0 + unit);
+        bind();
+    }
+
+    /** 
+     * Binds the texture to specified by sampler texture unit.
+     */
+    void setActive(T, GLSLSamplerType type)(Sampler!(T, type) sampler)
+    {
+        setActive(sampler.value);
+    }
+
+    /** 
+     * Binds the object, affecting state of OpenGL.
+     */
+    void bind() const nothrow @nogc
+    in(isValid)
+    {
+        import glad.gl.enums : GL_TEXTURE_2D;
+
         glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    /** 
+     * Unbinds the object, affecting state of OpenGL, if debug=glChecks.
+     */
+    void unbind() const nothrow @nogc
+    in(isValid)
+    {
+        import glad.gl.enums : GL_TEXTURE_2D;
+
+        debug(glChecks) glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     /** 
@@ -1992,11 +2023,12 @@ private:
 
         uint texture;
         glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        auto res = Texture(texture);
+        mixin(ScopedBind!res);
         glTexImage2D(GL_TEXTURE_2D, 0, cast(int) internalFormat, image.w, image.h, 0,
                      format, type, image.buf8.ptr);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        return Texture(texture);
+        return res;
     }
 }
