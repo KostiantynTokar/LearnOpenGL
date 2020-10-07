@@ -7,6 +7,7 @@
  */
 module glsu.enums;
 
+import std.meta : AliasSeq;
 import glad.gl.enums;
 
 /// Type of `BufferObject`.
@@ -99,3 +100,39 @@ enum GLError
      */
     outOfMemory = GL_OUT_OF_MEMORY
 }
+
+/** 
+ * Types of GLSL sampler.
+ *
+ * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Sampler_(GLSL), Sampler (GLSL)).
+ */
+enum GLSLSamplerType
+{
+    sampler1D,
+    sampler2D,
+    sampler3D,
+    samplerCube,
+    sampler2DRect,
+    sampler1DArray,
+    sampler2DArray,
+    samplerCubeArray,
+    samplerBuffer,
+    sampler2DMS,
+    sampler2DMSArray,
+}
+
+/// Basic scalar GLSL types.
+alias GLSLBasicScalarTypes = AliasSeq!(bool, int, uint, float);
+
+/// Basic types of GLSL matrices.
+alias GLSLMatrixBasicTypes = AliasSeq!(float);
+
+/** 
+ * Type of image representation.
+ *
+ * See_Also:
+ *   $(LINK2 https://www.khronos.org/opengl/wiki/Image_Format, Image Format),
+ *   $(LINK2 https://www.khronos.org/opengl/wiki/Sampler_(GLSL), Sampler (GLSL)),
+ *   $(LINK2 https://www.khronos.org/opengl/wiki/Image_Load_Store, Image Load Store).
+ */
+alias ImageFormatBasicTypes = AliasSeq!(float, int, uint);

@@ -1663,6 +1663,47 @@ private:
     }
 }
 
+/** 
+ * Represents GLSL sampler.
+ *
+ * There are convinience aliases available for each `GLSLSamplerType` enum member and for T = float, int, uint.
+ * See examples below.
+ *
+ * See_Also: $(LINK2 https://www.khronos.org/opengl/wiki/Sampler_(GLSL), Sampler (GLSL)), `glsu.enums.GLSLSamplerType`.
+ */
+struct Sampler(T, GLSLSamplerType type)
+if(isImageFormatBasicType!T)
+{
+    int value;
+}
+///
+unittest
+{
+    static assert((is(Sampler!(int,   GLSLSamplerType.sampler1D) == Sampler1D!int)));
+    static assert((is(Sampler!(int,   GLSLSamplerType.sampler1D) == Sampler1Di)));
+    static assert((is(Sampler!(uint,  GLSLSamplerType.sampler1D) == Sampler1Du)));
+    static assert((is(Sampler!(float, GLSLSamplerType.sampler1D) == Sampler1Df)));
+}
+
+private mixin template SamplerAliasFor(GLSLSamplerType type)
+{
+    import std.uni : toUpper;
+    
+    enum typeStr = from!"std.conv".to!string(type);
+    enum capTypeStr = toUpper(typeStr[0 .. 1]) ~ typeStr[1 .. $];
+    mixin("alias " ~ capTypeStr ~ "(T)"
+          ~ " = Sampler!(T, " ~ __traits(identifier, GLSLSamplerType) ~ "." ~ typeStr ~ ");");
+    static foreach(base; ["float", "int", "uint"])
+    {
+        mixin("alias " ~ capTypeStr ~ base[0] ~ " = " ~ capTypeStr ~ "!(" ~ base ~ ");");
+    }
+}
+
+static foreach(type; from!"std.traits".EnumMembers!GLSLSamplerType)
+{
+    mixin SamplerAliasFor!type;
+}
+
 /// 2D texture.
 struct Texture
 {

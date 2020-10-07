@@ -65,6 +65,17 @@ unittest
     }
 }
 
+/// Checks if Ts contains T.
+enum belongs(T, Ts...) = from!"std.meta".staticIndexOf!(T, Ts) != -1;
+///
+unittest
+{
+    alias Ts = from!"std.meta".AliasSeq!(int, uint, float);
+    static assert(belongs!(int, Ts));
+    static assert(!belongs!(double, Ts));
+    static assert(belongs!(wchar, char, wchar, dchar));
+}
+
 /// Description of GLError.
 string errorDescription(GLError e)
 {
