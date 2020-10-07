@@ -1496,6 +1496,21 @@ struct ShaderProgram
     }
 
     /** 
+     * Sets uniform sampler value.
+     * Params:
+     *   name = Name of the uniform variable in shader source.
+     *   value = GLSL sampler to transfer to GPU memory for the `ShaderProgram`.
+     * See_Also: `glsu.object.Sampler`.
+     */
+    void setUniform(T)(string name, T value)
+    if(isGLSLSamplerType!T)
+    {
+        immutable location = getUniformLocation(name);
+        mixin(ScopedBind!this);
+        glUniform1i(location, value.value);
+    }
+
+    /** 
      * Sets uniform struct value.
      * Params:
      *   name = Name of the uniform variable in shader source.

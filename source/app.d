@@ -300,13 +300,15 @@ void lighting(GLFWwindow* window)
 
         @VertexAttrib(1)
         vec3f normal;
+
+        @VertexAttrib(2)
+        vec2f texCoords;
     }
 
     struct Material
     {
-        vec3f ambient;
-        vec3f diffuse;
-        vec3f specular;
+        Sampler2Df diffuse;
+        Sampler2Df specular;
         float shininess;
     }
 
@@ -319,47 +321,47 @@ void lighting(GLFWwindow* window)
     }
 
     Vertex[] vertices = [
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 0.0f) ),
 
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 0.0f) ),
 
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
 
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
 
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
 
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f) )
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
+        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 0.0f) )
     ];
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
@@ -370,7 +372,11 @@ void lighting(GLFWwindow* window)
     auto lightingSP = ShaderProgram.create!("lighting/lighting.vert", "lighting/lighting.frag");
     scope(exit) lightingSP.destroy();
 
-    auto material = Material(vec3f(1.0f, 0.5f, 0.31f), vec3f(1.0f, 0.5f, 0.31f), vec3f(0.5f, 0.5f, 0.5f), 32.0f);
+    auto diffuseMap = Texture.create("resources\\container2.png");
+    scope(exit) diffuseMap.destroy();
+    auto specularMap = Texture.create("resources\\container2_specular.png");
+    scope(exit) specularMap.destroy();
+    auto material = Material(Sampler2Df(0), Sampler2Df(1), 32.0f);
     lightingSP.setUniform("material", material);
 
     glEnable(GL_DEPTH_TEST);
@@ -394,9 +400,9 @@ void lighting(GLFWwindow* window)
         glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
 
-        auto lightColor = 0.5f * vec3f(abs(sin(currentFrameTime))
-                                     , abs(sin(2.0f * currentFrameTime))
-                                     , abs(sin(3.0f * currentFrameTime)));
+        auto lightColor = vec3f(abs(sin(currentFrameTime)),
+                                abs(sin(2.0f * currentFrameTime)),
+                                abs(sin(3.0f * currentFrameTime)));
         auto lightPos = mat3f.rotateY(2.0f * currentFrameTime) * vec3f(1.2f, 0.5f, -1.0f);
         auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
         auto light = Light(viewLightPos, 0.1f * lightColor, lightColor, vec3f(1.0f, 1.0f, 1.0f));
@@ -422,6 +428,8 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("projection", projection);
             lightingSP.setUniform("light", light);
 
+            diffuseMap.bind(0);
+            specularMap.bind(1);
             lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
