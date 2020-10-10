@@ -243,6 +243,7 @@ static:
      * Returns: Handle of newly created window or null if window was not created.
      */
     from!"bindbc.glfw".GLFWwindow* createWindow(int width, int height, string label) nothrow
+    in(isActive)
     {
         import bindbc.glfw : glfwCreateWindow, glfwGetPrimaryMonitor, glfwGetVideoMode;
         import std.string : toStringz;
@@ -259,6 +260,7 @@ static:
      * Returns: Handle of newly created window or null if window was not created.
      */
     from!"bindbc.glfw".GLFWwindow* createFullScreenWindow(string label) nothrow
+    in(isActive)
     {
         import bindbc.glfw : glfwCreateWindow, glfwGetPrimaryMonitor, glfwGetVideoMode;
         import std.string : toStringz;
@@ -270,12 +272,13 @@ static:
     }
 
     /** 
-     * Main loop that refreshes frames on specified window.
+     * Main loop that refreshes frames on specified window. GLFW should be active.
      * Params:
      *   window = Window that frameFunc would operate on.
      *   frameFunc = Callable that takes (GLFWwindow* window, double deltaTime), where deltaTime is time since previous frame.
      */
     void mainLoop(Func)(from!"bindbc.glfw".GLFWwindow* window, Func frameFunc)
+    in(isActive)
     {
         import bindbc.glfw : glfwWindowShouldClose, glfwGetTime, glfwSwapBuffers, glfwPollEvents;
 
