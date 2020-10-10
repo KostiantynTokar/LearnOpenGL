@@ -269,6 +269,31 @@ static:
         return glfwCreateWindow(mode.width, mode.height, label.toStringz, monitor, null);
     }
 
+    /** 
+     * Main loop that refreshes frames on specified window.
+     * Params:
+     *   window = Window that frameFunc would operate on.
+     *   frameFunc = Callable that takes (GLFWwindow* window, double deltaTime), where deltaTime is time since previous frame.
+     */
+    void mainLoop(Func)(from!"bindbc.glfw".GLFWwindow* window, Func frameFunc)
+    {
+        import bindbc.glfw : glfwWindowShouldClose, glfwGetTime, glfwSwapBuffers, glfwPollEvents;
+
+        double lastFrameTime = glfwGetTime();
+
+        while (!glfwWindowShouldClose(window))
+        {
+            immutable currentFrameTime = glfwGetTime();
+            immutable deltaTime = currentFrameTime - lastFrameTime;
+            lastFrameTime = currentFrameTime;
+
+            frameFunc(window, deltaTime);
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+    }
+
 private:
     bool _active = false;
     uint _major;

@@ -389,15 +389,8 @@ void lighting(GLFWwindow* window)
 
     glEnable(GL_DEPTH_TEST);
 
-    float deltaTime = 0.0f;
-    float lastFrameTime = 0.0f;
-
-    while (!glfwWindowShouldClose(window))
+    void frameFunc(GLFWwindow* window, double deltaTime) nothrow
     {
-        float currentFrameTime = glfwGetTime();
-        deltaTime = currentFrameTime - lastFrameTime;
-        lastFrameTime = currentFrameTime;
-
         processInput(window, deltaTime);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -409,7 +402,7 @@ void lighting(GLFWwindow* window)
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
 
         auto lightColor = vec3f(1.0f);
-        auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * currentFrameTime)), 0.0f, 0.0f);
+        auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * glfwGetTime())), 0.0f, 0.0f);
         auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
         auto pointLight = PointLight(viewLightPos,
                                      0.1f * lightColor,
@@ -443,8 +436,7 @@ void lighting(GLFWwindow* window)
             lightingSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
         }
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
     }
+
+    GLFW.mainLoop(window, &frameFunc);
 }
