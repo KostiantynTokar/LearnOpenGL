@@ -12,6 +12,7 @@
 		"dependencies\\source"
 	],
 	"dependencies": {
+		"unit-threaded": "~>1.0.11",
 		"std_benchmark": "~>0.3.3",
 		"gfm": "~>8.0.3",
 		"imagefmt": "~>2.1.0",
