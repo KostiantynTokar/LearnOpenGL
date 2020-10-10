@@ -169,11 +169,9 @@ private:
      *   angle = Value to wrap.
      * Returns: Value in interval [-PI, PI).
      */
-    static float constrainAngle(float angle) nothrow @nogc @safe
+    static float constrainAngle(float angle) pure nothrow @nogc @safe
     {
-        import std.math : fmod;
-        
-        angle = fmod(angle + PI, 2 * PI);
+        angle = (angle + PI) % (2 * PI);
         if (angle < 0)
         {
             angle += 2 * PI;
