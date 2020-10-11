@@ -77,7 +77,7 @@ unittest
 }
 
 /// Description of GLError.
-string errorDescription(GLError e)
+string errorDescription(GLError e) pure nothrow @nogc @safe
 {
     final switch(e)
     {
