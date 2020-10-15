@@ -41,7 +41,7 @@
 		}
 	],
 	"dflags": [
-		"-mscrtlib=ucrt"
+		"-mscrtlib=ucrt", "-preview=in", "-preview=dip1000"
 	],
 	"libs": [
 		"opengl32"

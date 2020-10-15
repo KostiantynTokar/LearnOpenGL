@@ -405,7 +405,7 @@ private:
     /** 
      * Size of vertex attribute in bytes.
      */
-    static size_t sizeOfAttribute(in ref LayoutElement elem) pure nothrow @nogc @safe
+    static size_t sizeOfAttribute(in LayoutElement elem) pure nothrow @nogc @safe
     {
         return elem.size * elem.type.sizeOfGLType;
     }
@@ -418,7 +418,7 @@ private:
     /** 
      * Size of vertex attribute in bytes (with padding).
      */
-    static size_t sizeOfPaddedAttribute(in ref LayoutElement elem) pure nothrow @nogc @safe
+    static size_t sizeOfPaddedAttribute(in LayoutElement elem) pure nothrow @nogc @safe
     {
         return elem.padding + sizeOfAttribute(elem);
     }
@@ -431,7 +431,7 @@ private:
     /** 
      * Size of attribute batch in bytes.
      */
-    size_t sizeOfBatch(in ref LayoutElement elem) const pure nothrow @nogc @safe
+    size_t sizeOfBatch(in LayoutElement elem) const pure nothrow @nogc @safe
     {
         if(_batchCount == 1)
         {
@@ -2011,7 +2011,7 @@ private:
      *   format = May be one of following: `GL_RED`, `GL_RG`, `GL_RGB`, `GL_RGBA`.
      * Returns: Ready to use `Texture` object.
      */
-    static Texture createImpl(in ref from!"imagefmt".IFImage image, uint internalFormat, uint format)
+    static Texture createImpl(in from!"imagefmt".IFImage image, uint internalFormat, uint format)
     {
         import glad.gl.enums : GL_TEXTURE_2D, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT;
 
