@@ -38,6 +38,19 @@
 				"imagefmt": "~>2.1.0",
 				"bindbc-glfw": "~>0.10.0"
 			}
+		},
+		{
+			"name": "stringalloc",
+			"sourcePaths": [
+				"source/stringalloc"
+			],
+			"importPaths": [
+				"source"
+			],
+			"dependencies": {
+				"automem": "~>0.6.4",
+				"emsi_containers": "~>0.8.0"
+			}
 		}
 	],
 	"dflags": [
