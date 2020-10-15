@@ -26,6 +26,9 @@
 	"subPackages": [
 		{
 			"name": "glsu",
+			"sourcePaths": [
+				"glsu"
+			],
 			"importPaths": [
 				"glsu"
 			],
