@@ -12,6 +12,8 @@
 		"dependencies\\source"
 	],
 	"dependencies": {
+		"automem": "~>0.6.4",
+		"emsi_containers": "~>0.8.0",
 		"unit-threaded": "~>1.0.11",
 		"std_benchmark": "~>0.3.3",
 		"gfm": "~>8.0.3",
