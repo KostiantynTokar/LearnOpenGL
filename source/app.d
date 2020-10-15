@@ -9,7 +9,6 @@ import bindbc.glfw;
 import glad.gl.enums;
 import glad.gl.loader;
 import gfm.math;
-import imagefmt;
 import glsu;
 
 void main()
