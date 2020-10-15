@@ -4,12 +4,12 @@
         "windows"
 	],
 	"sourcePaths": [
-		"source",
-		"dependencies\\source"
+		"source/app",
+		"dependencies/source"
 	],
 	"importPaths": [
-		"source",
-		"dependencies\\source"
+		"source/app",
+		"dependencies/source"
 	],
 	"dependencies": {
 		"automem": "~>0.6.4",
@@ -27,10 +27,11 @@
 		{
 			"name": "glsu",
 			"sourcePaths": [
-				"glsu"
+				"source/glsu"
 			],
 			"importPaths": [
-				"glsu"
+				"source",
+				"dependencies/source"
 			],
 			"dependencies": {
 				"gfm": "~>8.0.3",
@@ -55,22 +56,22 @@
 			"buildOptions": ["debugMode", "debugInfo"],
 			"dflags-dmd": ["-debug=glChecks"],
 			"dflags-ldc": ["--d-debug=glChecks"],
-			"libs": ["dependencies\\x64-Debug\\glfw3"]
+			"libs": ["dependencies/x64-Debug/glfw3"]
 		},
 		"release": {
 			"buildOptions": ["releaseMode", "optimize", "inline"],
-			"libs": ["dependencies\\x64-Release\\glfw3"]
+			"libs": ["dependencies/x64-Release/glfw3"]
 		},
 		"unittest": {
 			"buildOptions": ["unittests", "debugMode", "debugInfo"],
 			"dflags-dmd": ["-debug=glChecks"],
 			"dflags-ldc": ["--d-debug=glChecks"],
-			"libs": ["dependencies\\x64-Debug\\glfw3"]
+			"libs": ["dependencies/x64-Debug/glfw3"]
 		},
 		"unittest-opt": 
 		{
 			"buildOptions": ["unittests", "optimize", "inline"],
-			"libs": ["dependencies\\x64-Release\\glfw3"]
+			"libs": ["dependencies/x64-Release/glfw3"]
 		},
 		"docs": {
 			"buildOptions": ["syntaxOnly"],
