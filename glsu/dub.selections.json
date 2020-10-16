@@ -1,0 +1,16 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"automem": "0.6.4",
+		"bindbc-glfw": "0.10.1",
+		"bindbc-loader": "0.3.2",
+		"emsi_containers": "0.8.0",
+		"gfm": "8.0.4",
+		"imagefmt": "2.1.1",
+		"intel-intrinsics": "1.3.3",
+		"learn-opengl": "~master",
+		"stdx-allocator": "2.77.5",
+		"test_allocator": "0.3.2",
+		"unit-threaded": "1.0.11"
+	}
+}

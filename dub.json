@@ -4,92 +4,64 @@
         "windows"
 	],
 	"sourcePaths": [
-		"source/app",
-		"dependencies/source"
+		"source"
 	],
 	"importPaths": [
-		"source/app",
-		"dependencies/source"
+		"source"
 	],
 	"dependencies": {
-		"automem": "~>0.6.4",
-		"emsi_containers": "~>0.8.0",
+		"learn-opengl:glsu": "*",
+		"learn-opengl:stringalloc": "*",
+        "automem": "~>0.6.4",
+        "emsi_containers": "~>0.8.0",
 		"unit-threaded": "~>1.0.11",
 		"std_benchmark": "~>0.3.3",
 		"gfm": "~>8.0.3",
-		"bindbc-glfw": "~>0.10.0",
-		"learn-opengl:glsu": "*"
+		"bindbc-glfw": "~>0.10.0"
 	},
+	"subPackages": [
+		"glsu",
+		"stringalloc"
+	],
 	"subConfigurations": {
 		"bindbc-glfw": "static"
 	},
-	"subPackages": [
-		{
-			"name": "glsu",
-			"sourcePaths": [
-				"source/glsu"
-			],
-			"importPaths": [
-				"source",
-				"dependencies/source"
-			],
-			"dependencies": {
-				"gfm": "~>8.0.3",
-				"imagefmt": "~>2.1.0",
-				"bindbc-glfw": "~>0.10.0"
-			}
-		},
-		{
-			"name": "stringalloc",
-			"sourcePaths": [
-				"source/stringalloc"
-			],
-			"importPaths": [
-				"source"
-			],
-			"dependencies": {
-				"automem": "~>0.6.4",
-				"emsi_containers": "~>0.8.0"
-			}
-		}
-	],
-	"dflags": [
-		"-mscrtlib=ucrt", "-preview=in", "-preview=dip1000"
-	],
+	"dflags": ["-preview=in", "-preview=dip1000"],
+	"dflags-windows": ["-mscrtlib=ucrt"],
 	"libs": [
 		"opengl32"
 	],
 	"toolchainRequirements": {
 		"dmd": "no",
 		"gdc": "no",
-		"ldc": ">=1.22.0"
+		"ldc": ">=1.24.0-beta1"
 	},
 	"buildTypes": {
 		"debug": {
 			"buildOptions": ["debugMode", "debugInfo"],
-			"dflags-dmd": ["-debug=glChecks"],
-			"dflags-ldc": ["--d-debug=glChecks"],
-			"libs": ["dependencies/x64-Debug/glfw3"]
+            "debugVersions": ["glChecks"],
+			"libs-windows": ["dependencies/x64-Debug/glfw3"]
 		},
 		"release": {
 			"buildOptions": ["releaseMode", "optimize", "inline"],
-			"libs": ["dependencies/x64-Release/glfw3"]
+			"libs-windows": ["dependencies/x64-Release/glfw3"]
 		},
 		"unittest": {
 			"buildOptions": ["unittests", "debugMode", "debugInfo"],
-			"dflags-dmd": ["-debug=glChecks"],
-			"dflags-ldc": ["--d-debug=glChecks"],
-			"libs": ["dependencies/x64-Debug/glfw3"]
+            "debugVersions": ["glChecks"],
+			"libs-windows": ["dependencies/x64-Debug/glfw3"]
 		},
 		"unittest-opt": 
 		{
 			"buildOptions": ["unittests", "optimize", "inline"],
-			"libs": ["dependencies/x64-Release/glfw3"]
-		},
-		"docs": {
-			"buildOptions": ["syntaxOnly"],
-			"dflags": ["-c", "-Dddocs", "-op"]
+			"libs-windows": ["dependencies/x64-Release/glfw3"]
 		}
 	},
-	"-ddoxFilterArgs": ["--min-protection=Private", "--ex=glad"]
+	"configurations": [
+		{
+			"name": "application",
+			"targetType": "executable"
+		}
+	],
+	"-ddoxFilterArgs": ["--min-protection=Private"]
 }
