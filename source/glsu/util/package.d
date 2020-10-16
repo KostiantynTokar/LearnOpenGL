@@ -252,10 +252,8 @@ static:
     }
 
     /** 
-     * Create Window. GLFW should be active.
+     * Create fullscreen window. GLFW should be active.
      * Params:
-     *   width = Width of the window in pixels.
-     *   height = Height of the window in pixels.
      *   label = Label of the window.
      * Returns: Handle of newly created window or null if window was not created.
      */

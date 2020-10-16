@@ -25,6 +25,28 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu.html">glsu</a>
 					</div>
 			<ul class="tree-view">
+				<li class="tree-view collapsed">
+					<div class="package ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
 				<li>
 					<div class="module ">
 						<a href="../../glsu/abstractions.html">abstractions</a>
@@ -48,11 +70,6 @@ $('#symbolSearchPane').show();</script>
 				<li>
 					<div class="module selected">
 						<a href="../../glsu/objects.html">objects</a>
-					</div>
-				</li>
-				<li>
-					<div class="module ">
-						<a href="../../glsu/util.html">util</a>
 					</div>
 				</li>
 			</ul>
@@ -122,7 +139,7 @@ $('#symbolSearchPane').show();</script>
 							<a href="../../glsu/objects/Texture.bind.html" class="public">
 								<code>bind</code>
 							</a>
-							<span class="tableEntryAnnotation">(index)</span>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td>Binds the object, affecting state of OpenGL.
 </td>
@@ -169,6 +186,26 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/Texture.setActive.html" class="public">
+								<code>setActive</code>
+							</a>
+							<span class="tableEntryAnnotation">(unit)</span>
+						</td>
+						<td>Binds the texture to specified texture unit.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../glsu/objects/Texture.setActive.html" class="public">
+								<code>setActive</code>
+							</a>
+							<span class="tableEntryAnnotation">(sampler)</span>
+						</td>
+						<td>Binds the texture to specified by sampler texture unit.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/Texture.setBorderColor.html" class="public">
 								<code>setBorderColor</code>
 							</a>
@@ -209,10 +246,20 @@ $('#symbolSearchPane').show();</script>
 					</tr>
 					<tr>
 						<td>
+							<a href="../../glsu/objects/Texture.unbind.html" class="public">
+								<code>unbind</code>
+							</a>
+							<span class="tableEntryAnnotation">()</span>
+						</td>
+						<td>Unbinds the object, affecting state of OpenGL, if debug=glChecks.
+</td>
+					</tr>
+					<tr>
+						<td>
 							<a href="../../glsu/objects/Texture.createImpl.html" class="private">
 								<code>createImpl</code>
 							</a>
-							<span class="tableEntryAnnotation">(image, internalFormat, format)</span>
+							<span class="tableEntryAnnotation">()</span>
 						</td>
 						<td>Implementation of <code class="lang-d"><a href="../../glsu/objects/Texture.create.html"><span class="pln">create</span></a></code>.
 </td>

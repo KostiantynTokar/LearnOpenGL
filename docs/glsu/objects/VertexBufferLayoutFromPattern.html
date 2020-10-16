@@ -25,6 +25,28 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu.html">glsu</a>
 					</div>
 			<ul class="tree-view">
+				<li class="tree-view collapsed">
+					<div class="package ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
 				<li>
 					<div class="module ">
 						<a href="../../glsu/abstractions.html">abstractions</a>
@@ -50,11 +72,6 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
-				<li>
-					<div class="module ">
-						<a href="../../glsu/util.html">util</a>
-					</div>
-				</li>
 			</ul>
 				</li>
 			</ul>
@@ -77,15 +94,15 @@ $('#symbolSearchPane').show();</script>
 </p>
 
 <p> <code class="lang-d"><span class="pln">T</span></code> should be a struct or a class.
- It can represent an <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code> by specifying a field by UDA <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.html"><span class="typ">VertexAttrib</span></a></code>.
+ It can represent an <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code> by specifying a field by UDA <code class="lang-d"><a href="../../glsu/util/udas/VertexAttrib.html" title="glsu.util.udas.VertexAttrib"><span class="typ">VertexAttrib</span></a></code>.
  That field should be a static array or has a type <code class="lang-d"><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math<wbr/></span><span class="pun">.</span><span class="pln">vector<wbr/></span><span class="pun">.</span><span class="typ">Vector</span></code>.
- <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.html"><span class="typ">VertexAttrib</span></a></code>s' indices should start from 0 and ascend by 1, but can be specified not in order.
+ <code class="lang-d"><a href="../../glsu/util/udas/VertexAttrib.html" title="glsu.util.udas.VertexAttrib"><span class="typ">VertexAttrib</span></a></code>s' indices should start from 0 and ascend by 1, but can be specified not in order.
 </p>
 
 <p> Parameters of the attribute determined by:
 </p>
 
-<p> 1. index --- <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.index.html"><span class="typ">VertexAttrib<wbr/></span><span class="pun">.</span><span class="pln">index</span></a></code> value;
+<p> 1. index --- <code class="lang-d"><a href="../../glsu/util/udas/VertexAttrib.index.html" title="glsu.util.udas.VertexAttrib.index"><span class="typ">VertexAttrib<wbr/></span><span class="pun">.</span><span class="pln">index</span></a></code> value;
 </p>
 
 <p> 2. size --- length of static array or Vector;
@@ -94,7 +111,7 @@ $('#symbolSearchPane').show();</script>
 <p> 3. type --- type of elements of static array or Vector;
 </p>
 
-<p> 4. normalized --- <code class="lang-d"><a href="../../glsu/objects/VertexAttrib.normalized.html"><span class="typ">VertexAttrib<wbr/></span><span class="pun">.</span><span class="pln">normalized</span></a></code> value;
+<p> 4. normalized --- <code class="lang-d"><a href="../../glsu/util/udas/VertexAttrib.normalized.html" title="glsu.util.udas.VertexAttrib.normalized"><span class="typ">VertexAttrib<wbr/></span><span class="pun">.</span><span class="pln">normalized</span></a></code> value;
 </p>
 
 <p> 5. stride --- size of attributes and batchCount;
@@ -102,26 +119,8 @@ $('#symbolSearchPane').show();</script>
 
 <p> 6. pointer --- size of attributes and batchCount.
 </p>
-
-<p> Extends <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code>.
-</p>
 </section>
 
-			<section><h2>Fields</h2>
-				<table>
-					<col class="caption"/>
-					<tr>
-						<th>Name</th><th>Type</th><th>Description</th>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayoutFromPattern._base.html" class="public"><code>_base</code></a>
-						</td>
-						<td class="typecol"><code class="prettyprint lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code></td><td>Extended object.
-</td>
-					</tr>
-				</table>
-			</section>
 			<section><h2>Methods</h2>
 				<table>
 					<col class="caption"/>
@@ -135,7 +134,7 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td>Enables and sets all of the attributes represented by this object.
+						<td>Enables and sets all of the activated attributes represented by this object.
 </td>
 					</tr>
 					<tr>
@@ -175,7 +174,7 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
 </td>
 					</tr>
 					<tr>
@@ -185,7 +184,7 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(index)</span>
 						</td>
-						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
 </td>
 					</tr>
 					<tr>
@@ -195,7 +194,7 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">(start, end)</span>
 						</td>
-						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+						<td>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
 </td>
 					</tr>
 					<tr>
@@ -215,7 +214,7 @@ $('#symbolSearchPane').show();</script>
 							</a>
 							<span class="tableEntryAnnotation">()</span>
 						</td>
-						<td>Disables all of the attributes represented by this object.
+						<td>Disables all of the activated attributes represented by this object.
 </td>
 					</tr>
 				</table>
@@ -238,14 +237,6 @@ $('#symbolSearchPane').show();</script>
 						<td>
 							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.attrs.html" class="public">
 								<code>attrs</code>
-							</a>
-						</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>
-							<a href="../../glsu/objects/VertexBufferLayoutFromPattern.LayoutElement.html" class="public">
-								<code>LayoutElement</code>
 							</a>
 						</td>
 						<td></td>
@@ -302,7 +293,7 @@ $('#symbolSearchPane').show();</script>
 				</table>
 			</section>
 			<section><h2>See Also</h2>
-<p><code class="lang-d"><a href="../../glsu/objects/VertexBufferLayoutBase.html"><span class="typ">VertexBufferLayoutBase</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
+<p><code class="lang-d"><a href="../../glsu/util/behaviors/VertexBufferLayoutBase.html" title="glsu.util.behaviors.VertexBufferLayoutBase"><span class="typ">VertexBufferLayoutBase</span></a></code>, <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code>.
 </p>
 </section>
 <section><h2>Example</h2>
@@ -313,13 +304,13 @@ $('#symbolSearchPane').show();</script>
 
 </span><span class="kwd">struct </span><span class="typ">Pattern
 </span><span class="pun">{
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">0</span><span class="pun">)
     </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">position</span><span class="pun">;
 
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">) </span><span class="com">// Possible to specify attributes not in order.
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">2</span><span class="pun">) </span><span class="com">// Possible to specify attributes not in order.
     </span><span class="pln">vec4f attrib2</span><span class="pun">;
 
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
     </span><span class="typ">int</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">textureCoords</span><span class="pun">;
 
     </span><span class="com">// @VertexAttrib(42) // Error, indices should ascend by 1.
@@ -367,16 +358,16 @@ $('#symbolSearchPane').show();</script>
 </span><span class="pun">{
     </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">4</span><span class="pun">] </span><span class="pln">padding0</span><span class="pun">;
 
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">0</span><span class="pun">)
     </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">attr0</span><span class="pun">;
 
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">)
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">1</span><span class="pun">)
     </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">attr1</span><span class="pun">;
 
     </span><span class="com">// Here padding2 is not necessary since int.alignof == 4 and field automatically padded by compiler.
     </span><span class="typ">byte</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">padding2</span><span class="pun">;
 
-    @<a href="../../glsu/objects/VertexAttrib.html"></span><span class="typ">VertexAttrib</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
     </span><span class="typ">int</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">attr2</span><span class="pun">;
 }
 
@@ -404,6 +395,48 @@ $('#symbolSearchPane').show();</script>
 ];
 
 </span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout3</span><span class="pun">));
+</span></code></pre>
+</section>
+<section><h2>Example</h2>
+
+<pre class="code"><code class="lang-d"><span class="pln">setupOpenGLContext</span><span class="pun">();
+
+</span><span class="kwd">import </span><span class="pln">gfm<wbr/></span><span class="pun">.</span><span class="pln">math </span><span class="pun">: </span><span class="pln">vec4f</span><span class="pun">;
+
+</span><span class="kwd">struct </span><span class="typ">Pattern
+</span><span class="pun">{
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">0</span><span class="pun">)
+    </span><span class="typ">float</span><span class="pun">[</span><span class="lit">3</span><span class="pun">] </span><span class="pln">position</span><span class="pun">;
+
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="kwd">true</span><span class="pun">)
+    </span><span class="typ">int</span><span class="pun">[</span><span class="lit">2</span><span class="pun">] </span><span class="pln">textureCoords</span><span class="pun">;
+
+    @</span><span class="typ">VertexAttrib</span><span class="pun">(</span><span class="lit">2</span><span class="pun">)
+    </span><span class="pln">vec4f attrib2</span><span class="pun">;
+}
+
+</span><span class="typ">VertexBufferLayoutFromPattern</span><span class="pun">!</span><span class="typ">Pattern </span><span class="pln">layout1</span><span class="pun">;
+
+</span><span class="kwd">auto </span><span class="pln">layout2 </span><span class="pun">= [
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">0</span><span class="pun">, </span><span class="lit">3</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, (</span><span class="lit">3 </span><span class="pun">+ </span><span class="lit">4</span><span class="pun">) * </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">0</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">1</span><span class="pun">, </span><span class="lit">2</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glInt</span><span class="pun">,   </span><span class="kwd">true</span><span class="pun">,  (</span><span class="lit">3 </span><span class="pun">+ </span><span class="lit">4</span><span class="pun">) * </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">),
+    <a href="../../glsu/objects/AttribPointer.html"></span><span class="typ">AttribPointer</span></a><span class="pun">(</span><span class="lit">2</span><span class="pun">, </span><span class="lit">4</span><span class="pun">, </span><span class="typ">GLType<wbr/></span><span class="pun">.</span><span class="pln">glFloat</span><span class="pun">, </span><span class="kwd">false</span><span class="pun">, (</span><span class="lit">3 </span><span class="pun">+ </span><span class="lit">4</span><span class="pun">) * </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+ </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">, </span><span class="lit">3 </span><span class="pun">* </span><span class="typ">float<wbr/></span><span class="pun">.</span><span class="pln">sizeof </span><span class="pun">+
+                                                                                        </span><span class="lit">2 </span><span class="pun">* </span><span class="typ">int<wbr/></span><span class="pun">.</span><span class="pln">sizeof</span><span class="pun">)
+];
+
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm </span><span class="pun">: </span><span class="pln">equal</span><span class="pun">;
+</span><span class="kwd">import </span><span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">range </span><span class="pun">: </span><span class="pln">chain</span><span class="pun">;
+
+</span><span class="pln">layout1<wbr/></span><span class="pun">.</span><span class="pln">deactivate</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">chain</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">0 </span><span class="pun">.. </span><span class="lit">1</span><span class="pun">], </span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">2 </span><span class="pun">.. </span><span class="lit">3</span><span class="pun">])));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[$ - </span><span class="lit">1</span><span class="pun">] == </span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">2</span><span class="pun">]);
+</span><span class="pln">layout1<wbr/></span><span class="pun">.</span><span class="pln">deactivate</span><span class="pun">(</span><span class="lit">0</span><span class="pun">);
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">2 </span><span class="pun">.. </span><span class="lit">3</span><span class="pun">]));
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="pln">layout2</span><span class="pun">[</span><span class="lit">2</span><span class="pun">]);
+
+</span><span class="pln">layout1<wbr/></span><span class="pun">.</span><span class="pln">activateAll</span><span class="pun">();
+</span><span class="kwd">assert</span><span class="pun">(</span><span class="pln">layout1</span><span class="pun">[]<wbr/>.</span><span class="pln">equal</span><span class="pun">(</span><span class="pln">layout2</span><span class="pun">));
 </span></code></pre>
 </section>
 

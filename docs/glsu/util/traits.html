@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Module glsu.util.traits</title>
+		<link rel="stylesheet" type="text/css" href="../../styles/ddox.css"/>
+		<link rel="stylesheet" href="../../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module selected">
+						<a href="../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/abstractions.html">abstractions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/exceptions.html">exceptions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/objects.html">objects</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Module glsu.util.traits</h1><p>GLSU-specific traits.
+</p>
+			<section></section>
+			<section>
+				<h2>Manifest constants</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLArrayType" class="public" href="../../glsu/util/traits/isGLSLArrayType.html">
+								<code>isGLSLArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of GLSL type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicArrayType" class="public" href="../../glsu/util/traits/isGLSLBasicArrayType.html">
+								<code>isGLSLBasicArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of basic GLSL type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicMatrixType" class="public" href="../../glsu/util/traits/isGLSLBasicMatrixType.html">
+								<code>isGLSLBasicMatrixType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic vector GLSL type, i.e. <code class="lang-d"><span class="pln">bvecn</span></code>, <code class="lang-d"><span class="pln">ivecn</span></code>, <code class="lang-d"><span class="pln">uvecn</span></code> or <code class="lang-d"><span class="pln">vecn</span></code>, n = 2, 3 or 4.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicNonOpaqueArrayType" class="public" href="../../glsu/util/traits/isGLSLBasicNonOpaqueArrayType.html">
+								<code>isGLSLBasicNonOpaqueArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of basic GLSL non-opaque type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicNonOpaqueType" class="public" href="../../glsu/util/traits/isGLSLBasicNonOpaqueType.html">
+								<code>isGLSLBasicNonOpaqueType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic scalar, vector, or matrix GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicOpaqueArrayType" class="public" href="../../glsu/util/traits/isGLSLBasicOpaqueArrayType.html">
+								<code>isGLSLBasicOpaqueArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of basic GLSL opaque type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicOpaqueType" class="public" href="../../glsu/util/traits/isGLSLBasicOpaqueType.html">
+								<code>isGLSLBasicOpaqueType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic opaque GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicScalarType" class="public" href="../../glsu/util/traits/isGLSLBasicScalarType.html">
+								<code>isGLSLBasicScalarType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic scalar GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicType" class="public" href="../../glsu/util/traits/isGLSLBasicType.html">
+								<code>isGLSLBasicType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic scalar, vector, matrix or opaque GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLBasicVectorType" class="public" href="../../glsu/util/traits/isGLSLBasicVectorType.html">
+								<code>isGLSLBasicVectorType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic vector GLSL type, i.e. <code class="lang-d"><span class="pln">bvecn</span></code>, <code class="lang-d"><span class="pln">ivecn</span></code>, <code class="lang-d"><span class="pln">uvecn</span></code> or <code class="lang-d"><span class="pln">vecn</span></code>, n = 2, 3 or 4.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLMatrixBasicType" class="public" href="../../glsu/util/traits/isGLSLMatrixBasicType.html">
+								<code>isGLSLMatrixBasicType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a basic type of GLSL matrix.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLNonOpaqueArrayType" class="public" href="../../glsu/util/traits/isGLSLNonOpaqueArrayType.html">
+								<code>isGLSLNonOpaqueArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of non-opaque GLSL type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLNonOpaqueStructArrayType" class="public" href="../../glsu/util/traits/isGLSLNonOpaqueStructArrayType.html">
+								<code>isGLSLNonOpaqueStructArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of non-opaque GLSL structs.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLNonOpaqueStructType" class="public" href="../../glsu/util/traits/isGLSLNonOpaqueStructType.html">
+								<code>isGLSLNonOpaqueStructType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a struct that contains only GLSL non-opaque basic types,
+non-opaque basic array types or another struct with such property.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLNonOpaqueType" class="public" href="../../glsu/util/traits/isGLSLNonOpaqueType.html">
+								<code>isGLSLNonOpaqueType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a non-opaque GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLOpaqueArrayType" class="public" href="../../glsu/util/traits/isGLSLOpaqueArrayType.html">
+								<code>isGLSLOpaqueArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of GLSL type values.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLOpaqueStructArrayType" class="public" href="../../glsu/util/traits/isGLSLOpaqueStructArrayType.html">
+								<code>isGLSLOpaqueStructArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of opaque GLSL structs.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLOpaqueStructType" class="public" href="../../glsu/util/traits/isGLSLOpaqueStructType.html">
+								<code>isGLSLOpaqueStructType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a struct that contains only GLSL basic types,
+basic array types or another struct with such property
+and at least one of these types is opaque.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLOpaqueType" class="public" href="../../glsu/util/traits/isGLSLOpaqueType.html">
+								<code>isGLSLOpaqueType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an opaque GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLSamplerType" class="public" href="../../glsu/util/traits/isGLSLSamplerType.html">
+								<code>isGLSLSamplerType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a sampler type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLStructArrayType" class="public" href="../../glsu/util/traits/isGLSLStructArrayType.html">
+								<code>isGLSLStructArrayType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is an array of GLSL structs.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLStructType" class="public" href="../../glsu/util/traits/isGLSLStructType.html">
+								<code>isGLSLStructType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a struct that contains only GLSL basic types,
+basic array types or another struct with such property.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLType" class="public" href="../../glsu/util/traits/isGLSLType.html">
+								<code>isGLSLType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if <code class="lang-d"><span class="pln">T</span></code> is a GLSL type.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isImageFormatBasicType" class="public" href="../../glsu/util/traits/isImageFormatBasicType.html">
+								<code>isImageFormatBasicType</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Checks if type is one of basic types of image representation.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isVertexBufferLayout" class="public" href="../../glsu/util/traits/isVertexBufferLayout.html">
+								<code>isVertexBufferLayout</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td>Trait to determine vertex buffer layouts.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a id="isGLSLStructTypeImpl" class="private" href="../../glsu/util/traits/isGLSLStructTypeImpl.html">
+								<code>isGLSLStructTypeImpl</code>
+							</a>
+						</td>
+						<td>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</section>
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

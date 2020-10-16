@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Template VertexBufferLayoutBase</title>
+		<link rel="stylesheet" type="text/css" href="../../../styles/ddox.css"/>
+		<link rel="stylesheet" href="../../../prettify/prettify.css" type="text/css"/>
+		<script type="text/javascript" src="../../../scripts/jquery.js">/**/</script><script type="text/javascript" src="../../../scripts/ddox.js">/**/</script>
+	</head>
+	<body onload="setupDdox();">
+		<nav id="main-nav">
+			<noscript>
+				<p style="color: red">The search functionality needs JavaScript enabled</p>
+			</noscript>
+			<div id="symbolSearchPane" style="display: none">
+				<form action="#" method="GET">
+					<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(40);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+				</form>
+				<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../../../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../../../";
+$('#symbolSearchPane').show();</script>
+			</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../../glsu.html">glsu</a>
+					</div>
+			<ul class="tree-view">
+				<li class="tree-view ">
+					<div class="package ">
+						<a href="../../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module selected">
+						<a href="../../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/abstractions.html">abstractions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/enums.html">enums</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/exceptions.html">exceptions</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/gl_funcs.html">gl_funcs</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../../glsu/objects.html">objects</a>
+					</div>
+				</li>
+			</ul>
+				</li>
+			</ul>
+		</nav>
+		<div id="main-contents">
+			<h1>Template VertexBufferLayoutBase</h1><p>Basic functionality for vertex buffer layout objects.
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="kwd">template</span> <span class="pln">VertexBufferLayoutBase</span>
+			;
+					</div>
+				</code>
+			</div>
+			<section></section>
+
+			<section><h2>Contained Variables</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Type</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase._batchCount.html">_batchCount</a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="pln">size_t</span></code></td><td></td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase._deactivatedAttrs.html">_deactivatedAttrs</a>
+						</td>
+						<td class="typecol"><code class="prettyprint lang-d"><span class="typ">RedBlackTree</span>!size_t</code></td><td></td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Contained Functions</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.activate.html">activate</a>
+						</td>
+						<td>Activates attributes with specified indices.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.activateAll.html">activateAll</a>
+						</td>
+						<td>Activates all attributes of the layout.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.batchCount.html">batchCount</a>
+						</td>
+						<td>Count of attributes in a batch. Should be either 1 or equal to number of vertices in a buffer.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.calcActiveIndex.html">calcActiveIndex</a>
+						</td>
+						<td>Converts index of an attribute into an index of that attribute in a range of active attributes.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.deactivate.html">deactivate</a>
+						</td>
+						<td>Deactivates attributes with specified indices.
+</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.isActive.html">isActive</a>
+						</td>
+						<td>Checks if attribute with specified index is active.
+</td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>Contained Structs</h2>
+				<table>
+					<col class="caption"/>
+					<tr>
+						<th>Name</th><th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a href="../../../glsu/util/behaviors/VertexBufferLayoutBase.LayoutElement.html">LayoutElement</a>
+						</td>
+						<td>Internally used instead of <code class="lang-d"><span class="typ">AttribPointer</span></code>.
+</td>
+					</tr>
+				</table>
+			</section>
+			<section><h2>See Also</h2>
+<p><code class="lang-d"><a href="../../../glsu/objects/VertexBufferLayout.html" title="glsu.objects.VertexBufferLayout"><span class="typ">VertexBufferLayout</span></a></code>, <code class="lang-d"><a href="../../../glsu/objects/VertexBufferLayoutFromPattern.html" title="glsu.objects.VertexBufferLayoutFromPattern"><span class="typ">VertexBufferLayoutFromPattern</span></a></code>.
+</p>
+</section>
+
+			<footer>
+				<table class="license-info">
+					<tr>
+						<th>Authors</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>Copyright</th>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<th>License</th>
+						<td>
+							
+						</td>
+					</tr>
+				</table>
+				<p class="faint">Generated using the DDOX documentation generator</p>
+			</footer>
+		</div>
+	</body>
+</html>

@@ -25,6 +25,28 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu.html">glsu</a>
 					</div>
 			<ul class="tree-view">
+				<li class="tree-view collapsed">
+					<div class="package ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
 				<li>
 					<div class="module ">
 						<a href="../../glsu/abstractions.html">abstractions</a>
@@ -50,11 +72,6 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
-				<li>
-					<div class="module ">
-						<a href="../../glsu/util.html">util</a>
-					</div>
-				</li>
 			</ul>
 				</li>
 			</ul>
@@ -73,6 +90,21 @@ $('#symbolSearchPane').show();</script>
 							Function <code>ShaderProgram.setUniform</code>
 						</a>
 					</li>
+					<li>
+						<a href="#2">
+							Function <code>ShaderProgram.setUniform</code>
+						</a>
+					</li>
+					<li>
+						<a href="#3">
+							Function <code>ShaderProgram.setUniform</code>
+						</a>
+					</li>
+					<li>
+						<a href="#4">
+							Function <code>ShaderProgram.setUniform</code>
+						</a>
+					</li>
 				</ul>
 			</nav><h2 id="0">Function ShaderProgram.setUniform</h2><p>Sets a uniform variable or vector.
 </p>
@@ -88,7 +120,7 @@ $('#symbolSearchPane').show();</script>
 			<br/>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow</span>
 			<br/>
-			<span class="kwd">if</span> <span class="pun">(</span><span class="lit">0 </span><span class="pun">&lt; </span><span class="typ">Ts<wbr/></span><span class="pun">.</span><span class="pln">length </span><span class="pun">&amp;&amp; (</span><span class="typ">Ts<wbr/></span><span class="pun">.</span><span class="pln">length </span><span class="pun">&lt; </span><span class="lit">5</span><span class="pun">) &amp;&amp; </span><span class="pln">from</span><span class="pun">!</span><span class="str">"std.traits"<wbr/></span><span class="pun">.</span><span class="pln">allSameType</span><span class="pun">!</span><span class="typ">Ts </span><span class="pun">&amp;&amp; (</span><span class="kwd">is</span><span class="pun">(</span><span class="typ">Ts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="typ">bool</span><span class="pun">) || </span><span class="kwd">is</span><span class="pun">(</span><span class="typ">Ts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="typ">int</span><span class="pun">) || </span><span class="kwd">is</span><span class="pun">(</span><span class="typ">Ts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="typ">uint</span><span class="pun">) || </span><span class="kwd">is</span><span class="pun">(</span><span class="typ">Ts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">] == </span><span class="typ">float</span><span class="pun">))</span><span class="pun">);</span>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="lit">0 </span><span class="pun">&lt; </span><span class="typ">Ts<wbr/></span><span class="pun">.</span><span class="pln">length </span><span class="pun">&amp;&amp; (</span><span class="typ">Ts<wbr/></span><span class="pun">.</span><span class="pln">length </span><span class="pun">&lt; </span><span class="lit">5</span><span class="pun">) &amp;&amp; </span><span class="pln">from</span><span class="pun">!</span><span class="str">"std.traits"<wbr/></span><span class="pun">.</span><span class="pln">allSameType</span><span class="pun">!</span><span class="typ">Ts </span><span class="pun">&amp;&amp; </span><span class="pln">isGLSLBasicScalarType</span><span class="pun">!(</span><span class="typ">Ts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">])</span><span class="pun">);</span>
 					</div>
 				</code>
 			</div>
@@ -107,14 +139,40 @@ $('#symbolSearchPane').show();</script>
 <tr><td id="values">values</td><td> Data to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
 </table>
 </section>
-<h2 id="1">Function ShaderProgram.setUniform</h2><p>Sets uniform matrix or uniform array of matrices.
+<section><h3>See Also</h3>
+<p><code class="lang-d"><a href="../../glsu/util/traits/isGLSLBasicScalarType.html" title="glsu.util.traits.isGLSLBasicScalarType"><span class="pln">isGLSLBasicScalarType</span></a></code>.
+</p>
+</section>
+<h2 id="1">Function ShaderProgram.setUniform</h2><p>Sets uniform vector or uniform array of vectors.
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			{null} <span class="pln">setUniform</span>(T, <span class="typ">int</span> N)<span class="pun">(</span><span class="pun">)</span>
+			<br/>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isGLSLBasicVectorType</span><span class="pun">!(</span><span class="typ">Vector</span><span class="pun">!(</span><span class="pln">T</span><span class="pun">, </span><span class="pln">N</span><span class="pun">))</span><span class="pun">);</span>
+					</div>
+				</code>
+			</div>
+			
+			<section><h3>Parameters</h3>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
+<tr><td id="values">values</td><td> Vector or Vectors to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
+</table>
+</section>
+<section><h3>See Also</h3>
+<p><code class="lang-d"><a href="../../glsu/util/traits/isGLSLBasicVectorType.html" title="glsu.util.traits.isGLSLBasicVectorType"><span class="pln">isGLSLBasicVectorType</span></a></code>.
+</p>
+</section>
+<h2 id="2">Function ShaderProgram.setUniform</h2><p>Sets uniform matrix or uniform array of matrices.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
 					<div class="single-prototype">
 			{null} <span class="pln">setUniform</span>(<span class="typ">int</span> R, <span class="typ">int</span> C)<span class="pun">(</span><span class="pun">)</span>
 			<br/>
-			<span class="kwd">if</span> <span class="pun">(</span><span class="lit">2 </span><span class="pun">&lt;= </span><span class="pln">R </span><span class="pun">&amp;&amp; (</span><span class="pln">R </span><span class="pun">&lt;= </span><span class="lit">4</span><span class="pun">) &amp;&amp; (</span><span class="lit">2 </span><span class="pun">&lt;= </span><span class="pln">C</span><span class="pun">) &amp;&amp; (</span><span class="pln">C </span><span class="pun">&lt;= </span><span class="lit">4</span><span class="pun">)</span><span class="pun">);</span>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isGLSLBasicMatrixType</span><span class="pun">!(</span><span class="typ">Matrix</span><span class="pun">!(</span><span class="typ">float</span><span class="pun">, </span><span class="pln">R</span><span class="pun">, </span><span class="pln">C</span><span class="pun">))</span><span class="pun">);</span>
 					</div>
 				</code>
 			</div>
@@ -124,6 +182,68 @@ $('#symbolSearchPane').show();</script>
 <tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
 <tr><td id="values">values</td><td> Matrix or matrices to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
 </table>
+</section>
+<section><h3>See Also</h3>
+<p><code class="lang-d"><a href="../../glsu/util/traits/isGLSLBasicMatrixType.html" title="glsu.util.traits.isGLSLBasicMatrixType"><span class="pln">isGLSLBasicMatrixType</span></a></code>.
+</p>
+</section>
+<h2 id="3">Function ShaderProgram.setUniform</h2><p>Sets uniform sampler value.
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="typ">void</span> <span class="pln">setUniform</span>(T)
+			<span class="pun">(</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">string</span> <span class="pln">name</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="pln">T</span> <span class="pln">value</span>
+			<br/>
+			<span class="pun">)</span>
+			<br/>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isGLSLSamplerType</span><span class="pun">!</span><span class="pln">T</span><span class="pun">);</span>
+					</div>
+				</code>
+			</div>
+			
+			<section><h3>Parameters</h3>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
+<tr><td id="value">value</td><td> GLSL sampler to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
+</table>
+</section>
+<section><h3>See Also</h3>
+<p><code class="lang-d"><span class="pln">glsu<wbr/></span><span class="pun">.</span><span class="pln">object<wbr/></span><span class="pun">.</span><span class="typ">Sampler</span></code>.
+</p>
+</section>
+<h2 id="4">Function ShaderProgram.setUniform</h2><p>Sets uniform struct value.
+</p>
+			<div class="prototype">
+				<code class="lang-d">
+					<div class="single-prototype">
+			<span class="typ">void</span> <span class="pln">setUniform</span>(T)
+			<span class="pun">(</span>
+			<br/>
+			&nbsp;&nbsp;<span class="typ">string</span> <span class="pln">name</span><span class="pun">,</span>
+			<br/>
+			&nbsp;&nbsp;<span class="pln">T</span> <span class="pln">value</span>
+			<br/>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">nothrow</span>
+			<br/>
+			<span class="kwd">if</span> <span class="pun">(</span><span class="pln">isGLSLStructType</span><span class="pun">!</span><span class="pln">T</span><span class="pun">);</span>
+					</div>
+				</code>
+			</div>
+			
+			<section><h3>Parameters</h3>
+<table><col class="caption"><tr><th>Name</th><th>Description</th></tr>
+<tr><td id="name">name</td><td> Name of the uniform variable in shader source.</td></tr>
+<tr><td id="value">value</td><td> GLSL struct to transfer to GPU memory for the <code class="lang-d"><a href="../../glsu/objects/ShaderProgram.html"><span class="typ">ShaderProgram</span></a></code>.</td></tr>
+</table>
+</section>
+<section><h3>See Also</h3>
+<p><code class="lang-d"><a href="../../glsu/util/traits/isGLSLStructType.html" title="glsu.util.traits.isGLSLStructType"><span class="pln">isGLSLStructType</span></a></code>.
+</p>
 </section>
 
 			<footer>

@@ -84,5 +84,5 @@
             "postBuildCommands-windows": ["del source\\glsu\\app.d"]
 		}
 	],
-	"-ddoxFilterArgs": ["--min-protection=Private"]
+	"-ddoxFilterArgs": ["--min-protection=Private", "--ex=glad"]
 }

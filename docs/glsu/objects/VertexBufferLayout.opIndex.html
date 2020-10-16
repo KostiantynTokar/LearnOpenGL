@@ -25,6 +25,28 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu.html">glsu</a>
 					</div>
 			<ul class="tree-view">
+				<li class="tree-view collapsed">
+					<div class="package ">
+						<a href="../../glsu/util.html">util</a>
+					</div>
+			<ul class="tree-view">
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/behaviors.html">behaviors</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/traits.html">traits</a>
+					</div>
+				</li>
+				<li>
+					<div class="module ">
+						<a href="../../glsu/util/udas.html">udas</a>
+					</div>
+				</li>
+			</ul>
+				</li>
 				<li>
 					<div class="module ">
 						<a href="../../glsu/abstractions.html">abstractions</a>
@@ -50,17 +72,12 @@ $('#symbolSearchPane').show();</script>
 						<a href="../../glsu/objects.html">objects</a>
 					</div>
 				</li>
-				<li>
-					<div class="module ">
-						<a href="../../glsu/util.html">util</a>
-					</div>
-				</li>
 			</ul>
 				</li>
 			</ul>
 		</nav>
 		<div id="main-contents">
-			<h1>Function VertexBufferLayout.opIndex</h1><p>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s,
+			<h1>Function VertexBufferLayout.opIndex</h1><p>Indexing interface to interpret <code class="lang-d"><a href="../../glsu/objects/VertexBufferLayout.html"><span class="typ">VertexBufferLayout</span></a></code> as range of <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
 </p>
 			<div class="prototype">
 				<code class="lang-d">
@@ -73,7 +90,7 @@ $('#symbolSearchPane').show();</script>
 			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc const</span><span class="pun">;</span>
 			<br/>
 			<br/>
-			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.util.unpack!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2).unpack,std.range.ZipShortest!(1,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result,std.range.Take!(std.range.Repeat!(const(glsu.objects.VertexBufferLayout)*).Repeat).Take).ZipShortest) <span class="pln">opIndex</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.util.unpack!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2).unpack,std.range.ZipShortest!(1,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result,std.range.Take!(std.range.Repeat!(const(glsu.objects.VertexBufferLayout)*).Repeat).Take).ZipShortest) <span class="pln">opIndex</span><span class="pun">(</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">return pure nothrow @nogc @safe const</span><span class="pun">;</span>
 			<br/>
 			<br/>
 			<span class="pln">std<wbr/></span><span class="pun">.</span><span class="pln">algorithm<wbr/></span><span class="pun">.</span><span class="pln">iteration<wbr/></span><span class="pun">.</span><span class="typ">MapResult</span>!(glsu.util.unpack!(glsu.objects.VertexBufferLayout.opIndex(ulong[2]).__lambda2).unpack,std.range.ZipShortest!(1,std.range.iota!(ulong,ulong).iota(ulong,ulong).Result,std.range.Take!(std.range.Repeat!(const(glsu.objects.VertexBufferLayout)*).Repeat).Take).ZipShortest) <span class="pln">opIndex</span>
@@ -81,11 +98,14 @@ $('#symbolSearchPane').show();</script>
 			<br/>
 			&nbsp;&nbsp;<span class="typ">ulong</span><span class="pun">[</span><span class="lit">2</span><span class="pun">]</span> <span class="pln">slice</span>
 			<br/>
-			<span class="pun">)</span><span class="pln"> </span><span class="kwd">pure nothrow @nogc @safe const</span><span class="pun">;</span>
+			<span class="pun">)</span><span class="pln"> </span><span class="kwd">return pure nothrow @nogc @safe const</span><span class="pun">;</span>
 					</div>
 				</code>
 			</div>
-			
+			<section><p>Provides a range over activated <code class="lang-d"><a href="../../glsu/objects/AttribPointer.html"><span class="typ">AttribPointer</span></a></code>'s.
+</p>
+</section>
+
 			
 			<footer>
 				<table class="license-info">
