@@ -4,63 +4,84 @@
         "windows"
 	],
 	"sourcePaths": [
-		"source"
+		"source/glsu"
 	],
 	"importPaths": [
-		"source"
+		"source/glsu"
 	],
 	"dependencies": {
-		"learn-opengl:glsu": "*",
 		"learn-opengl:stringalloc": "*",
-        "automem": "~>0.6.4",
-        "emsi_containers": "~>0.8.0",
-		"unit-threaded": "~>1.0.11",
-		"std_benchmark": "~>0.3.3",
+        "imagefmt": "~>2.1.0",
 		"gfm": "~>8.0.3",
 		"bindbc-glfw": "~>0.10.0"
 	},
 	"subPackages": [
-		"glsu",
 		"stringalloc"
 	],
 	"subConfigurations": {
 		"bindbc-glfw": "static"
 	},
 	"dflags": ["-preview=in", "-preview=dip1000"],
-	"dflags-windows": ["-mscrtlib=ucrt"],
-	"libs": [
-		"opengl32"
-	],
 	"toolchainRequirements": {
 		"dmd": "no",
 		"gdc": "no",
 		"ldc": ">=1.24.0-beta1"
 	},
 	"buildTypes": {
-		"debug": {
+		"debug-app": {
 			"buildOptions": ["debugMode", "debugInfo"],
             "debugVersions": ["glChecks"],
-			"libs-windows": ["dependencies/x64-Debug/glfw3"]
+			"dflags-windows": ["-mscrtlib=ucrt"],
+			"libs-windows": ["opengl32", "dependencies/x64-Debug/glfw3"]
 		},
-		"release": {
+		"debug-lib": {
+			"buildOptions": ["debugMode", "debugInfo"],
+            "debugVersions": ["glChecks"]
+		},
+		"release-app": {
 			"buildOptions": ["releaseMode", "optimize", "inline"],
-			"libs-windows": ["dependencies/x64-Release/glfw3"]
+			"dflags-windows": ["-mscrtlib=ucrt"],
+			"libs-windows": ["opengl32", "dependencies/x64-Release/glfw3"]
+		},
+		"release-lib": {
+			"buildOptions": ["releaseMode", "optimize", "inline"]
 		},
 		"unittest": {
 			"buildOptions": ["unittests", "debugMode", "debugInfo"],
             "debugVersions": ["glChecks"],
-			"libs-windows": ["dependencies/x64-Debug/glfw3"]
+			"dflags-windows": ["-mscrtlib=ucrt"],
+			"libs-windows": ["opengl32", "dependencies/x64-Debug/glfw3"]
 		},
 		"unittest-opt": 
 		{
 			"buildOptions": ["unittests", "optimize", "inline"],
-			"libs-windows": ["dependencies/x64-Release/glfw3"]
+			"dflags-windows": ["-mscrtlib=ucrt"],
+			"libs-windows": ["opengl32", "dependencies/x64-Release/glfw3"]
 		}
 	},
 	"configurations": [
 		{
 			"name": "application",
-			"targetType": "executable"
+			"targetType": "executable",
+			"sourcePaths": ["source/app"],
+			"importPaths": ["source/app"],
+			"dependencies": {
+				"unit-threaded": "~>1.0.11",
+				"std_benchmark": "~>0.3.3"
+			}
+		},
+		{
+			"name": "library",
+			"targetType": "library",
+			"targetName": "glsu"
+		},
+		{
+			"name": "unittest-lib-only",
+			"targetType": "executable",
+			"targetName": "glsu-unittest",
+            "mainSourceFile": "source/glsu/app.d",
+            "preGenerateCommands-windows": ["echo void main(){} > source\\glsu\\app.d"],
+            "postBuildCommands-windows": ["del source\\glsu\\app.d"]
 		}
 	],
 	"-ddoxFilterArgs": ["--min-protection=Private"]

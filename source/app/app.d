@@ -6,8 +6,8 @@ import std.range;
 import std.algorithm;
 import std.typecons;
 import bindbc.glfw;
-import glsu.glad.gl.enums;
-import glsu.glad.gl.loader;
+import glad.gl.enums;
+import glad.gl.loader;
 import gfm.math;
 import glsu;
 
