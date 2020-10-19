@@ -10,6 +10,7 @@
 		"source/glsu"
 	],
 	"dependencies": {
+		"automem": "~>0.6.4",
 		"learn-opengl:stringalloc": "*",
         "imagefmt": "~>2.1.0",
 		"gfm": "~>8.0.3",

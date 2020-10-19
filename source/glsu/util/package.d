@@ -13,6 +13,9 @@ public import glsu.util.traits;
 
 import std.traits : isIntegral, ForeachType;
 
+// FIXME - inserting this import into a function local scope leads to a linker error.
+import automem : StringM;
+
 import glsu.enums : GLType, GLError;
 
 /// Determine GL enum value that corresponds to D type.
@@ -149,36 +152,37 @@ void clearGLErrors() nothrow @nogc
  *   line = Line number of caller.
  */
 void assertNoGLErrors(string message = "",
-                   string file = __FILE__,
-                   size_t line = __LINE__) nothrow
+                      string file = __FILE__,
+                      size_t line = __LINE__) nothrow @nogc
 {
     import glad.gl.funcs : glGetError;
     
     import std.stdio : stderr, writeln;
-    
-    bool flag = false;
+    import std.conv : toChars, LetterCase;
+    import std.range : padLeft;
+
     auto e = glGetError();
 
-    try
+    if(e)
     {
-        if(e)
-        {
-            stderr.writeln("ERROR::GL::CALL");
-            stderr.writeln("\t", message);
-            stderr.writefln!"\tat %s:%s"(file, line);
-            flag = true;
-        }
+        StringM errorMessage = "ERROR::GL::CALL\n\t";
+        errorMessage ~= message;
+        errorMessage ~= "\n\tat ";
+        errorMessage ~= file;
+        errorMessage ~= ':';
+        errorMessage ~= toChars(line);
+        errorMessage ~= '\n';
         for(; e != 0; e = glGetError())
         {
-            stderr.writefln!"\tError %#X: %s"(e, errorDescription(cast(GLError) e));
+            errorMessage ~= "\tError 0x";
+            errorMessage ~= toChars!(16, char, LetterCase.upper)(e).padLeft('0', 8);
+            errorMessage ~= ": ";
+            errorMessage ~= errorDescription(cast(GLError) e);
         }
-    }
-    catch (Exception e)
-    {
-        assert(0, "Exeption was thrown while writing error message.");
+        // FIXME: memory of errorMessage[] is corrupted before printing.
+        assert(0, errorMessage[]);
     }
 
-    assert(!flag);
 }
 
 /// Wraps some functionality of GLFW
