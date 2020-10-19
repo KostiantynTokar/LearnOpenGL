@@ -50,6 +50,7 @@ debug(glChecks)
     import std.traits : Parameters, ReturnType, fullyQualifiedName;
     import std.array : join;
     import std.range : iota, only, enumerate;
+    import std.conv : to;
     import std.algorithm.iteration : map;
     import std.meta : allSatisfy;
 
@@ -100,23 +101,6 @@ debug(glChecks)
         assert(genArgList(1) == "arg0");
         assert(genArgList(2) == "arg0, arg1");
     }
-
-    /** 
-     * Generates string for mixin that gives string representations of args from genArgList.
-     * Params:
-     *   n = Number of arguments.
-     */
-    private auto genArgToStringList(uint n)
-    {
-        return iota(0, n).map!"\"arg\" ~ to!string(a) ~ \".to!string()\"".join(" ~ \", \" ~ ");
-    }
-    ///
-    unittest
-    {
-        assert(genArgToStringList(0) == "");
-        assert(genArgToStringList(1) == "arg0.to!string()");
-        assert(genArgToStringList(2) == "arg0.to!string() ~ \", \" ~ arg1.to!string()");
-    }
     
     /** 
      * Defines a wrapper of a function from module `glad.gl.funcs` with the same name.
@@ -141,13 +125,12 @@ debug(glChecks)
         enum additionalParams = "string file = __FILE__, size_t line = __LINE__";
         enum extendedParams = params ~ (params.length == 0 ? "" : ", ") ~ additionalParams;
         enum args = genArgList(Params.length);
-        enum argsToString = genArgToStringList(Params.length);
         enum ret = Ret.stringof;
 
 
         enum signature = "__gshared extern(System) " ~ ret ~ " " ~ name ~ "(" ~ extendedParams ~ ") nothrow @nogc";
         
-        enum bodyImport = "\timport std.conv : to;";
+        enum bodyImport = "\timport nogc.conv : text;";
         enum bodyBegin = "\tclearGLErrors();";
         static if(is(Ret == void))
         {
@@ -160,15 +143,16 @@ debug(glChecks)
             enum bodyRet = "\n\treturn returnValue;";
         }
 
-        enum hackBodyMessage = "string logMessage = \"Executing \" ~ \"" ~ name ~ `" ~ "("` ~
-                               (Params.length == 0? "" : " ~ ") ~ argsToString ~ ` ~ ")";`;
-        enum hackBodyCheck = "assertNoGLErrors(logMessage, file, line);";
-
-        enum hackBody = "{\n" ~
-                            "\t\t" ~ hackBodyMessage ~ "\n" ~
-                            "\t\t" ~ hackBodyCheck ~ "\n" ~
-                        "\t}";
-        enum bodyEnd = "\tdebugHack(" ~ hackBody ~ ");";
+        static if(Params.length == 0)
+        {
+            enum logMessage = `"Executing ` ~ name ~ `()"`;
+        }
+        else
+        {
+            enum logMessage = `text("Executing ` ~ name ~
+                            `(", ` ~ iota(Params.length).map!`"arg" ~ a.to!string`.join(`, ", ", `) ~ `, ')')[]`;
+        }
+        enum bodyEnd = "\tassertNoGLErrors(" ~ logMessage ~ ", file, line);";
 
         enum body = "{\n" ~ 
                         bodyImport ~ "\n" ~
@@ -179,7 +163,6 @@ debug(glChecks)
                     "}";
 
         enum generatedFunc = signature ~ "\n" ~ body;
-
         mixin(generatedFunc);
     }
 
