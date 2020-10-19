@@ -21,7 +21,12 @@
 	"subConfigurations": {
 		"bindbc-glfw": "static"
 	},
-	"dflags": ["-preview=in", "-preview=dip1000"],
+	"dflags": [
+		"-preview=in",
+		"-preview=dip25",
+		"-preview=dip1000",
+		"-preview=dip1008"
+	],
 	"toolchainRequirements": {
 		"dmd": "no",
 		"gdc": "no",
