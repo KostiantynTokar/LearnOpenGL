@@ -160,6 +160,8 @@ void assertNoGLErrors(string message = "",
     import std.stdio : stderr, writeln;
     import std.conv : toChars, LetterCase;
     import std.range : padLeft;
+    import std.experimental.allocator.mallocator : Mallocator;
+    import std.experimental.allocator : makeArray;
 
     auto e = glGetError();
 
@@ -179,8 +181,8 @@ void assertNoGLErrors(string message = "",
             errorMessage ~= ": ";
             errorMessage ~= errorDescription(cast(GLError) e);
         }
-        // FIXME: memory of errorMessage[] is corrupted before printing.
-        assert(0, errorMessage[]);
+        immutable buf = Mallocator.instance.makeArray!(immutable char)(errorMessage[]);
+        assert(0, buf);
     }
 
 }
