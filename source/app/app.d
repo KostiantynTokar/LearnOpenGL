@@ -17,7 +17,14 @@ void main()
     scope (exit)
         GLFW.deactivate();
 
-    GLFWwindow* window = GLFW.createFullScreenWindow("LearnOpenGL");
+    debug
+    {
+        GLFWwindow* window = GLFW.createWindow(1600, 900, "LearnOpenGL");
+    }
+    else
+    {
+        GLFWwindow* window = GLFW.createFullScreenWindow("LearnOpenGL");
+    }
     if (window == null)
     {
         stderr.writeln("Failed to create GLFW window");
