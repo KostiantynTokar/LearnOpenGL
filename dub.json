@@ -30,11 +30,11 @@
 		"gdc": "no",
 		"ldc": ">=1.24.0-beta1"
 	},
+	"dflags-windows": ["-mscrtlib=ucrt"],
 	"buildTypes": {
 		"debug-app": {
 			"buildOptions": ["debugMode", "debugInfo"],
             "debugVersions": ["glChecks"],
-			"dflags-windows": ["-mscrtlib=ucrt"],
 			"libs-windows": ["opengl32", "dependencies/x64-Debug/glfw3"]
 		},
 		"debug-lib": {
@@ -43,7 +43,6 @@
 		},
 		"release-app": {
 			"buildOptions": ["releaseMode", "optimize", "inline"],
-			"dflags-windows": ["-mscrtlib=ucrt"],
 			"libs-windows": ["opengl32", "dependencies/x64-Release/glfw3"]
 		},
 		"release-lib": {
@@ -52,13 +51,11 @@
 		"unittest": {
 			"buildOptions": ["unittests", "debugMode", "debugInfo"],
             "debugVersions": ["glChecks"],
-			"dflags-windows": ["-mscrtlib=ucrt"],
 			"libs-windows": ["opengl32", "dependencies/x64-Debug/glfw3"]
 		},
 		"unittest-opt": 
 		{
 			"buildOptions": ["unittests", "optimize", "inline"],
-			"dflags-windows": ["-mscrtlib=ucrt"],
 			"libs-windows": ["opengl32", "dependencies/x64-Release/glfw3"]
 		}
 	},
@@ -66,8 +63,9 @@
 		{
 			"name": "application",
 			"targetType": "executable",
-			"sourcePaths": ["source/app"],
-			"importPaths": ["source/app"],
+			"sourcePaths": ["source"],
+			"importPaths": ["source"],
+			"mainSourceFile": "source/app/app.d",
 			"dependencies": {
 				"unit-threaded": "~>1.0.11",
 				"std_benchmark": "~>0.3.3"
@@ -76,15 +74,9 @@
 		{
 			"name": "library",
 			"targetType": "library",
-			"targetName": "glsu"
-		},
-		{
-			"name": "unittest-lib-only",
-			"targetType": "executable",
-			"targetName": "glsu-unittest",
-            "mainSourceFile": "source/glsu/app.d",
-            "preGenerateCommands-windows": ["echo void main(){} > source\\glsu\\app.d"],
-            "postBuildCommands-windows": ["del source\\glsu\\app.d"]
+			"targetName": "glsu",
+			"sourcePaths": ["source/glsu"],
+			"importPaths": ["source/glsu"]
 		}
 	],
 	"-ddoxFilterArgs": ["--min-protection=Private", "--ex=glad"]
