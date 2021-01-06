@@ -127,6 +127,9 @@ alias GLSLBasicScalarTypes = AliasSeq!(bool, int, uint, float);
 /// Basic types of GLSL matrices.
 alias GLSLMatrixBasicTypes = AliasSeq!(float);
 
+/// Array of variables of this types can be stored in `glsu.objects.ElementBufferArray`.
+alias EBOIndexTypes = AliasSeq!(ubyte, ushort, uint);
+
 /** 
  * Type of image representation.
  *

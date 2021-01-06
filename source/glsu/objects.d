@@ -27,7 +27,7 @@ struct BufferObejct(BufferType type)
      *   usage = Describes how the `VertexBufferObject` would be used.
      */
     this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
-            if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
+            if (type == BufferType.array || isEBOIndexType!T)
     {
         glGenBuffers(1, &_id);
         setData(buffer, usage);
@@ -40,7 +40,7 @@ struct BufferObejct(BufferType type)
      *   usage = Describes how the `VertexBufferObject` would be used.
      */
     void setData(T)(const T[] buffer, DataUsage usage) nothrow @nogc
-            if (type == BufferType.array || is(T == ubyte) || is(T == ushort) || is(T == uint))
+            if (type == BufferType.array || isEBOIndexType!T)
     in(isValid && buffer.length <= int.max)
     {
         mixin(ScopedBind!this);

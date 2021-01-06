@@ -14,6 +14,9 @@ import glsu.enums;
  */
 enum isVertexBufferLayout(T) = is(from!"std.traits".ForeachType!T == from!"glsu.objects".AttribPointer);
 
+/// Checks if `T` is a type that can be used in `glsu.objects.ElementBufferArray`.
+enum isEBOIndexType(T) = belongs!(T, EBOIndexTypes);
+
 /** 
  * Checks if type is one of basic types of image representation.
  *
