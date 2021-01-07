@@ -13,3 +13,4 @@ public import glsu.gl_funcs;
 public import glsu.enums;
 public import glsu.objects;
 public import glsu.abstractions;
+public import glsu.shapes;

@@ -334,49 +334,9 @@ void lighting(GLFWwindow* window)
         Attenuation attenuation;
     }
 
-    Vertex[] vertices = [
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f,  0.0f, -1.0f), vec2f(1.0f, 0.0f) ),
-
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f,  0.0f,  1.0f), vec2f(0.0f, 0.0f) ),
-
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f(-1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 1.0f,  0.0f,  0.0f), vec2f(0.0f, 0.0f) ),
-
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f, -0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f, -0.5f,  0.5f),  vec3f( 0.0f, -1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 0.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f( 0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(1.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f, -0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 1.0f) ),
-        Vertex( vec3f(-0.5f,  0.5f,  0.5f),  vec3f( 0.0f,  1.0f,  0.0f), vec2f(0.0f, 0.0f) )
-    ];
+    auto vertices = zip(cube!float[], cubeNormals!float[], octagonTextureCoordinates!float[])
+        .map!(t => Vertex(t[0], t[1], t[2]))
+        .staticArray!36;
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
