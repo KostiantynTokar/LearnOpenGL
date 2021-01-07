@@ -308,6 +308,7 @@ public:
     {
         push(size, valueOfGLType!T, normalized, padding);
     }
+    // TODO: push padding after attribute.
 
     /** 
      * Enables and sets all of the activated attributes represented by this object.
@@ -798,9 +799,6 @@ private:
     /// Size of vertex attribute in bytes (with padding).
     enum sizeOfPaddedAttribute(size_t index) = _elements[index].padding + sizeOfAttribute!index;
 
-    /// Sum of sizes in bytes of all attributes (with paddings) with indices less then `index`.
-    enum sizeOfAllPaddedAttributesBefore(size_t index) = [staticMap!(sizeOfPaddedAttribute, staticIota!(size_t, index))].sum(size_t.init);
-
     /** 
      * Size of attribute batch in bytes.
      */
@@ -823,7 +821,7 @@ private:
     {
         if(_batchCount == 1)
         {
-            return sizeOfAllPaddedAttributesBefore!attrCount;
+            return T.sizeof;
         }
         else
         {
@@ -997,6 +995,47 @@ unittest
     assert(layout1[0] == layout2[2]);
 
     layout1.activateAll();
+    assert(layout1[].equal(layout2));
+}
+
+unittest
+{
+    // Test when vertex has hidden pointer.
+
+    import gfm.math : vec2f, vec3f;
+    
+    struct Vertex
+    {
+        @VertexAttrib(0)
+        vec3f pos;
+
+        @VertexAttrib(1)
+        vec3f normal;
+
+        @VertexAttrib(2)
+        vec2f texCoords;
+
+        void toString(W)(ref W w) const
+        {
+            import std.range : put;
+            import std.format : formattedWrite;
+            put(w, "Vertex(");
+            w.formattedWrite!"[%(%4.1s, %)]"(pos.v[]);
+            w.formattedWrite!"[%(%2.0s, %)]"(normal.v[]);
+            w.formattedWrite!"[%(%1.0s, %)]"(texCoords.v[]);
+            put(w, ")");
+        }
+    }
+
+    VertexBufferLayoutFromPattern!Vertex layout1;
+
+    auto layout2 = [
+        AttribPointer(0, 3, GLType.glFloat, false, Vertex.sizeof, Vertex.pos.offsetof),
+        AttribPointer(1, 3, GLType.glFloat, false, Vertex.sizeof, Vertex.normal.offsetof),
+        AttribPointer(2, 2, GLType.glFloat, false, Vertex.sizeof, Vertex.texCoords.offsetof)
+    ];
+
+    import std.algorithm : equal;
     assert(layout1[].equal(layout2));
 }
 
