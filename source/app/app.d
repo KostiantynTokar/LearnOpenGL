@@ -238,8 +238,7 @@ void lighting(GLFWwindow* window)
     static float mouseLastX;
     static float mouseLastY;
     static Camera camera;
-    // camera = Camera(vec3f(1.25f, 0.0f, 3.0f), -PI_2 - radians(22.5f));
-    camera = Camera(vec3f(0.0f, 0.0f, 0.6f), -PI_2, PI_2);
+    camera = Camera(vec3f(1.25f, 0.0f, 3.0f), -PI_2 - radians(22.5f));
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -351,6 +350,18 @@ void lighting(GLFWwindow* window)
         Attenuation attenuation;
     }
 
+    struct SpotLight
+    {
+        vec3f position;
+        vec3f direction;
+        float cosInnerCutOff;
+        float cosOuterCutOff;
+        vec3f ambient;
+        vec3f diffuse;
+        vec3f specular;
+        Attenuation attenuation;
+    }
+
     auto vertices = zip(cube!float[], cubeNormals!float[], octagonTextureCoordinates!float[])
         .map!(t => Vertex(t[0], t[1], t[2]))
         .staticArray!36;
@@ -384,14 +395,14 @@ void lighting(GLFWwindow* window)
         glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
 
-        auto lightColor = vec3f(1.0f);
-        auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
-        // Note 0.0f as w-coordinate, it is because this vec represents direction.
-        auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
-        auto directionalLight = DirectionalLight(viewLightDir,
-                                                 0.1f * lightColor,
-                                                 lightColor,
-                                                 vec3f(1.0f, 1.0f, 1.0f));
+        // auto lightColor = vec3f(1.0f);
+        // auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
+        // // Note 0.0f as w-coordinate, it is because this vec represents direction.
+        // auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+        // auto directionalLight = DirectionalLight(viewLightDir,
+        //                                          0.1f * lightColor,
+        //                                          lightColor,
+        //                                          vec3f(1.0f, 1.0f, 1.0f));
 
         // auto lightColor = vec3f(1.0f);
         // auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * glfwGetTime())), 0.0f, 0.0f);
@@ -401,6 +412,21 @@ void lighting(GLFWwindow* window)
         //                              lightColor,
         //                              vec3f(1.0f, 1.0f, 1.0f),
         //                              Attenuation(1.0f, 0.09f, 0.032f));
+
+        auto lightColor = vec3f(1.0f);
+        auto lightPos = camera.position;
+        auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
+        auto lightDir = camera.front;
+        // Note 0.0f as w-coordinate, it is because this vec represents direction.
+        auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+        auto spotLight = SpotLight(viewLightPos,
+                                   viewLightDir,
+                                   cos(15.0f.radians),
+                                   cos(20.0f.radians),
+                                   0.1f * lightColor,
+                                   lightColor,
+                                   vec3f(1.0f, 1.0f, 1.0f),
+                                   Attenuation(1.0f, 0.09f, 0.032f));
 
         // point light source rendering
         // {
@@ -422,7 +448,7 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
-            lightingSP.setUniform("directionalLight", directionalLight);
+            lightingSP.setUniform("spotLight", spotLight);
 
             diffuseMap.setActive(material.diffuse);
             specularMap.setActive(material.specular);
