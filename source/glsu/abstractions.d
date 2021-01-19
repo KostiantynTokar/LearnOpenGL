@@ -115,6 +115,12 @@ struct Camera
         _position += offset * up;
     }
 
+    /// Change position of the camera in world up direction.
+    void moveWorldUp(float offset) pure nothrow @nogc @safe
+    {
+        _position += offset * worldUp;
+    }
+
     /// Rotates using Euler angles in radians.
     void rotate(float yawOffset, float pitchOffset) nothrow @nogc @safe
     {
