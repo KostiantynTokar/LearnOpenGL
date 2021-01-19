@@ -238,7 +238,8 @@ void lighting(GLFWwindow* window)
     static float mouseLastX;
     static float mouseLastY;
     static Camera camera;
-    camera = Camera(vec3f(1.25f, 0.0f, 3.0f), -PI_2 - radians(22.5f));
+    // camera = Camera(vec3f(1.25f, 0.0f, 3.0f), -PI_2 - radians(22.5f));
+    camera = Camera(vec3f(0.0f, 0.0f, 0.6f), -PI_2, PI_2);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -297,6 +298,14 @@ void lighting(GLFWwindow* window)
         {
             camera.moveRight(cameraSpeed);
         }
+        if(glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+        {
+            camera.moveWorldUp(cameraSpeed);
+        }
+        if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+        {
+            camera.moveWorldUp(-cameraSpeed);
+        }
     }
 
     struct Vertex
@@ -316,6 +325,14 @@ void lighting(GLFWwindow* window)
         Sampler2Df diffuse;
         Sampler2Df specular;
         float shininess;
+    }
+
+    struct DirectionalLight
+    {
+        vec3f direction;
+        vec3f ambient;
+        vec3f diffuse;
+        vec3f specular;
     }
 
     struct Attenuation
@@ -341,8 +358,8 @@ void lighting(GLFWwindow* window)
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
-    auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
-    scope(exit) lightSourceSP.destroy();
+    // auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
+    // scope(exit) lightSourceSP.destroy();
     auto lightingSP = ShaderProgram.create!("lighting/lighting.vert", "lighting/lighting.frag");
     scope(exit) lightingSP.destroy();
 
@@ -368,26 +385,36 @@ void lighting(GLFWwindow* window)
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
 
         auto lightColor = vec3f(1.0f);
-        auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * glfwGetTime())), 0.0f, 0.0f);
-        auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
-        auto pointLight = PointLight(viewLightPos,
-                                     0.1f * lightColor,
-                                     lightColor,
-                                     vec3f(1.0f, 1.0f, 1.0f),
-                                     Attenuation(1.0f, 0.09f, 0.032f));
+        auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
+        // Note 0.0f as w-coordinate, it is because this vec represents direction.
+        auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+        auto directionalLight = DirectionalLight(viewLightDir,
+                                                 0.1f * lightColor,
+                                                 lightColor,
+                                                 vec3f(1.0f, 1.0f, 1.0f));
 
-        {
-            auto model = mat4f.translation(lightPos);
-            model.scale(vec3f(0.2f));
+        // auto lightColor = vec3f(1.0f);
+        // auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * glfwGetTime())), 0.0f, 0.0f);
+        // auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
+        // auto pointLight = PointLight(viewLightPos,
+        //                              0.1f * lightColor,
+        //                              lightColor,
+        //                              vec3f(1.0f, 1.0f, 1.0f),
+        //                              Attenuation(1.0f, 0.09f, 0.032f));
 
-            lightSourceSP.setUniform("model", model);
-            lightSourceSP.setUniform("view", view);
-            lightSourceSP.setUniform("projection", projection);
-            lightSourceSP.setUniform("lightColor", lightColor);
+        // point light source rendering
+        // {
+        //     auto model = mat4f.translation(lightPos);
+        //     model.scale(vec3f(0.2f));
 
-            lightSourceSP.bind();
-            VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
-        }
+        //     lightSourceSP.setUniform("model", model);
+        //     lightSourceSP.setUniform("view", view);
+        //     lightSourceSP.setUniform("projection", projection);
+        //     lightSourceSP.setUniform("lightColor", lightColor);
+
+        //     lightSourceSP.bind();
+        //     VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
+        // }
 
         {
             auto model = mat4f.identity;
@@ -395,7 +422,7 @@ void lighting(GLFWwindow* window)
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
-            lightingSP.setUniform("pointLight", pointLight);
+            lightingSP.setUniform("directionalLight", directionalLight);
 
             diffuseMap.setActive(material.diffuse);
             specularMap.setActive(material.specular);
