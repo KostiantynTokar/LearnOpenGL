@@ -1,7 +1,7 @@
 #version 330 core
 
 layout(location = 0) in vec3 vPos;
-layout(location = 1) in vec3 vNormal;
+layout(location = 1) in vec3 vNormal; // Assumes normalized.
 layout(location = 2) in vec2 vTexCoords;
 
 out vec3 fNormal;
@@ -19,6 +19,6 @@ void main()
 
     gl_Position = projection * fragPos4;
     fragPos = vec3(fragPos4);
-    fNormal = transpose(inverse(mat3(modelView))) * vNormal;
+    fNormal = normalize(transpose(inverse(mat3(modelView))) * vNormal);
     fTexCoords = vTexCoords;
 }

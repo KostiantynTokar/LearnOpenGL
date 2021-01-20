@@ -365,12 +365,24 @@ void lighting(GLFWwindow* window)
     auto vertices = zip(cube!float[], cubeNormals!float[], octagonTextureCoordinates!float[])
         .map!(t => Vertex(t[0], t[1], t[2]))
         .staticArray!36;
+    vec3f[] cubePositions = [
+        vec3f( 0.0f,  0.0f,  0.0f), 
+        vec3f( 2.0f,  5.0f, -15.0f), 
+        vec3f(-1.5f, -2.2f, -2.5f),  
+        vec3f(-3.8f, -2.0f, -12.3f),  
+        vec3f( 2.4f, -0.4f, -3.5f),  
+        vec3f(-1.7f,  3.0f, -7.5f),  
+        vec3f( 1.3f, -2.0f, -2.5f),  
+        vec3f( 1.5f,  2.0f, -2.5f), 
+        vec3f( 1.5f,  0.2f, -1.5f), 
+        vec3f(-1.3f,  1.0f, -1.5f)
+    ];
 
     auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
-    // auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
-    // scope(exit) lightSourceSP.destroy();
+    auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
+    scope(exit) lightSourceSP.destroy();
     auto lightingSP = ShaderProgram.create!("lighting/lighting.vert", "lighting/lighting.frag");
     scope(exit) lightingSP.destroy();
 
@@ -385,6 +397,8 @@ void lighting(GLFWwindow* window)
 
     void frameFunc(GLFWwindow* window, double deltaTime) nothrow
     {
+        immutable currentFrameTime = glfwGetTime();
+
         processInput(window, deltaTime);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -395,59 +409,88 @@ void lighting(GLFWwindow* window)
         glfwGetFramebufferSize(window, &width, &height);
         auto projection = mat4f.perspective(radians(45.0f), to!float(width) / height, 0.1f, 100.0f);
 
-        // auto lightColor = vec3f(1.0f);
-        // auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
-        // // Note 0.0f as w-coordinate, it is because this vec represents direction.
-        // auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
-        // auto directionalLight = DirectionalLight(viewLightDir,
-        //                                          0.1f * lightColor,
-        //                                          lightColor,
-        //                                          vec3f(1.0f, 1.0f, 1.0f));
-
-        // auto lightColor = vec3f(1.0f);
-        // auto lightPos = vec3f(1.2f + 10 * abs(sin(0.5 * glfwGetTime())), 0.0f, 0.0f);
-        // auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
-        // auto pointLight = PointLight(viewLightPos,
-        //                              0.1f * lightColor,
-        //                              lightColor,
-        //                              vec3f(1.0f, 1.0f, 1.0f),
-        //                              Attenuation(1.0f, 0.09f, 0.032f));
-
-        auto lightColor = vec3f(1.0f);
-        auto lightPos = camera.position;
-        auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
-        auto lightDir = camera.front;
-        // Note 0.0f as w-coordinate, it is because this vec represents direction.
-        auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
-        auto spotLight = SpotLight(viewLightPos,
-                                   viewLightDir,
-                                   cos(15.0f.radians),
-                                   cos(20.0f.radians),
-                                   0.1f * lightColor,
-                                   lightColor,
-                                   vec3f(1.0f, 1.0f, 1.0f),
-                                   Attenuation(1.0f, 0.09f, 0.032f));
-
-        // point light source rendering
-        // {
-        //     auto model = mat4f.translation(lightPos);
-        //     model.scale(vec3f(0.2f));
-
-        //     lightSourceSP.setUniform("model", model);
-        //     lightSourceSP.setUniform("view", view);
-        //     lightSourceSP.setUniform("projection", projection);
-        //     lightSourceSP.setUniform("lightColor", lightColor);
-
-        //     lightSourceSP.bind();
-        //     VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
-        // }
-
+        auto directionalLight = ()
         {
-            auto model = mat4f.identity;
+            auto lightColor = vec3f(0.5f);
+            auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
+            // Note 0.0f as w-coordinate, it is because this vec represents direction.
+            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+            return DirectionalLight(viewLightDir,
+                                    0.1f * lightColor,
+                                    lightColor,
+                                    vec3f(1.0f, 1.0f, 1.0f));
+        }();
 
+        auto pointLightPoss =
+            [
+                vec3f( 0.7f,  0.2f,  2.0f),
+                vec3f( 1.3f, -1.3f, -4.0f),
+                vec3f( 0.0f,  0.0f, -3.0f),
+            ];
+        auto pointLights = ()
+        {
+            auto lightColors =
+            [
+                vec3f(1.0f, 0.0f, 0.0f),
+                vec3f(0.0f, 1.0f, 0.0f),
+                vec3f(0.0f, 0.0f, 1.0f),
+            ];
+            return pointLightPoss.map!(v => (view * vec4f(v, 1.0f)).xyz)
+                                 .zip(lightColors)
+                                 .map!(t => PointLight(t[0],
+                                                       0.1f * t[1],
+                                                       t[1],
+                                                       vec3f(1.0f),
+                                                       Attenuation(1.0f, 0.09f, 0.032f)))
+                                 .array;
+        }();
+
+        auto spotLight = ()
+        {
+            auto lightColor = vec3f(0.75f);
+            auto lightPos = camera.position;
+            auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
+            auto lightDir = camera.front;
+            // Note 0.0f as w-coordinate, it is because this vec represents direction.
+            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+            return SpotLight(viewLightPos,
+                             viewLightDir,
+                             cos(15.0f.radians),
+                             cos(20.0f.radians),
+                             0.1f * lightColor,
+                             lightColor,
+                             vec3f(1.0f, 1.0f, 1.0f),
+                             Attenuation(1.0f, 0.09f, 0.032f));
+        }();
+
+        // Point light sources rendering.
+        foreach (pointLight, pos; zip(pointLights, pointLightPoss))
+        {
+            auto model = mat4f.translation(pos);
+            model.scale(vec3f(0.2f));
+
+            lightSourceSP.setUniform("model", model);
+            lightSourceSP.setUniform("view", view);
+            lightSourceSP.setUniform("projection", projection);
+            lightSourceSP.setUniform("lightColor", pointLight.diffuse);
+
+            lightSourceSP.bind();
+            VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
+        }
+
+        // Cubes rendering.
+        foreach (i, pos; cubePositions)
+        {
+            auto model = mat4f.translation(pos);
+            model *= mat4f.rotation(currentFrameTime * radians(20.0f * i), vec3f(1.0f, 0.3f, 0.5f));
             lightingSP.setUniform("model", model);
             lightingSP.setUniform("view", view);
             lightingSP.setUniform("projection", projection);
+            lightingSP.setUniform("directionalLight", directionalLight);
+            foreach (plInd, pointLight; pointLights)
+            {
+                lightingSP.setUniform("pointLights[" ~ plInd.to!string ~ "]", pointLight);
+            }
             lightingSP.setUniform("spotLight", spotLight);
 
             diffuseMap.setActive(material.diffuse);
