@@ -326,12 +326,18 @@ void lighting(GLFWwindow* window)
         float shininess;
     }
 
-    struct DirectionalLight
+    struct PhongLighting
     {
         vec3f direction;
         vec3f ambient;
         vec3f diffuse;
         vec3f specular;
+    }
+
+    struct DirectionalLight
+    {
+        vec3f direction;
+        PhongLighting components;
     }
 
     struct Attenuation
@@ -344,9 +350,7 @@ void lighting(GLFWwindow* window)
     struct PointLight
     {
         vec3f position;
-        vec3f ambient;
-        vec3f diffuse;
-        vec3f specular;
+        PhongLighting components;
         Attenuation attenuation;
     }
 
@@ -356,9 +360,7 @@ void lighting(GLFWwindow* window)
         vec3f direction;
         float cosInnerCutOff;
         float cosOuterCutOff;
-        vec3f ambient;
-        vec3f diffuse;
-        vec3f specular;
+        PhongLighting components;
         Attenuation attenuation;
     }
 
@@ -416,9 +418,9 @@ void lighting(GLFWwindow* window)
             // Note 0.0f as w-coordinate, it is because this vec represents direction.
             auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
             return DirectionalLight(viewLightDir,
-                                    0.1f * lightColor,
+                                    PhongLighting(0.1f * lightColor,
                                     lightColor,
-                                    vec3f(1.0f, 1.0f, 1.0f));
+                                                  vec3f(1.0f)));
         }();
 
         auto pointLightPoss =
@@ -438,9 +440,9 @@ void lighting(GLFWwindow* window)
             return pointLightPoss.map!(v => (view * vec4f(v, 1.0f)).xyz)
                                  .zip(lightColors)
                                  .map!(t => PointLight(t[0],
-                                                       0.1f * t[1],
+                                                       PhongLighting(0.1f * t[1],
                                                        t[1],
-                                                       vec3f(1.0f),
+                                                                     vec3f(1.0f)),
                                                        Attenuation(1.0f, 0.09f, 0.032f)))
                                  .array;
         }();
@@ -457,9 +459,9 @@ void lighting(GLFWwindow* window)
                              viewLightDir,
                              cos(15.0f.radians),
                              cos(20.0f.radians),
-                             0.1f * lightColor,
+                             PhongLighting(0.1f * lightColor,
                              lightColor,
-                             vec3f(1.0f, 1.0f, 1.0f),
+                                           vec3f(1.0f)),
                              Attenuation(1.0f, 0.09f, 0.032f));
         }();
 
@@ -472,7 +474,7 @@ void lighting(GLFWwindow* window)
             lightSourceSP.setUniform("model", model);
             lightSourceSP.setUniform("view", view);
             lightSourceSP.setUniform("projection", projection);
-            lightSourceSP.setUniform("lightColor", pointLight.diffuse);
+            lightSourceSP.setUniform("lightColor", pointLight.components.diffuse);
 
             lightSourceSP.bind();
             VAO.draw(RenderMode.triangles, 0, cast(int) vertices.length);
