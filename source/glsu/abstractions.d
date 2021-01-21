@@ -128,6 +128,34 @@ struct Camera
         updateVectors();
     }
 
+    /// Change yaw and pitch so that front points to `point`.
+    void lookAt(vec3f point) nothrow @nogc @safe
+    {
+        import std.math : atan2, hypot;
+
+        immutable diff = position - point;
+
+        immutable newYaw = atan2(diff.z, diff.x) - PI;
+        immutable newPitch = -atan2(diff.y, cast(float) hypot(diff.x, diff.z));
+
+        updateAngles(newYaw, newPitch);
+        updateVectors();
+    }
+    ///
+    unittest
+    {
+        import std.math : approxEqual;
+
+        auto camera = Camera(vec3f(0.5));
+
+        auto point = vec3f(0, 0, 1);
+        camera.lookAt(point);
+        assert(camera.front[].approxEqual((point - camera.position).normalized[]));
+
+        point = vec3f(1, 0, -1);
+        camera.lookAt(point);
+        assert(camera.front[].approxEqual((point - camera.position).normalized[]));
+    }
 
 private:
     vec3f _position;
@@ -137,7 +165,6 @@ private:
     vec3f _worldUp;
     float _yaw;
     float _pitch;
-    
 
     void updateAngles(float newYaw, float newPitch) nothrow @nogc @safe
     out(; -PI <= _yaw && _yaw < PI)
@@ -151,6 +178,9 @@ private:
     }
 
     void updateVectors() pure nothrow @nogc @safe
+    out(; _front.magnitude.approxEqual(1.0f))
+    out(; _right.magnitude.approxEqual(1.0f))
+    out(; _up.magnitude.approxEqual(1.0f))
     out(; dot(_front, _up).approxEqual(0.0f))
     out(; dot(_front, _right).approxEqual(0.0f))
     out(; dot(_right, _up).approxEqual(0.0f))
