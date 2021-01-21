@@ -328,7 +328,6 @@ void lighting(GLFWwindow* window)
 
     struct PhongLighting
     {
-        vec3f direction;
         vec3f ambient;
         vec3f diffuse;
         vec3f specular;

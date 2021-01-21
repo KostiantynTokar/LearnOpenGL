@@ -70,7 +70,7 @@ auto square2D(T)() pure nothrow @nogc @safe
  */
 auto square3D(T)() pure nothrow @nogc @safe
 {
-    import gmf.math : vec3;
+    import gfm.math : vec3;
     return quadrangle(vec3!T(-0.5,  0.5, 0),
                       vec3!T(-0.5, -0.5, 0),
                       vec3!T( 0.5, -0.5, 0),

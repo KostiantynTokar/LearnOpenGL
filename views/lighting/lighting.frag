@@ -84,7 +84,6 @@ void main()
 
 vec3 calcAmbientComponent(vec3 lightSourceAmbient, vec3 materialDiffuse)
 {
-    // return lightSourceAmbient * vec3(texture(material.diffuse, fTexCoords));
     return lightSourceAmbient * materialDiffuse;
 }
 
@@ -92,7 +91,6 @@ vec3 calcAmbientComponent(vec3 lightSourceAmbient, vec3 materialDiffuse)
 vec3 calcDiffuseComponent(vec3 lightSourceDiffuse, vec3 materialDiffuse, vec3 normal, vec3 lightDirToFragment)
 {
     float diffuseMult = max(dot(normal, -lightDirToFragment), 0.0);
-    // return lightSourceDiffuse * diffuseMult * vec3(texture(material.diffuse, fTexCoords));
     return lightSourceDiffuse * diffuseMult * materialDiffuse;
 }
 
@@ -101,7 +99,6 @@ vec3 calcSpecularComponent(vec3 lightSourceSpecular, vec3 materialSpecular, vec3
 {
     vec3 reflectDir = reflect(lightDirToFragment, normal);
     float specularMult = pow(max(dot(-viewerDirToFragment, reflectDir), 0.0), material.shininess);
-    // return lightSourceSpecular * specularMult * vec3(texture(material.specular, fTexCoords));
     return lightSourceSpecular * specularMult * materialSpecular;
 }
 
