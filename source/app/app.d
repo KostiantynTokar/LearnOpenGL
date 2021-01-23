@@ -415,10 +415,10 @@ void lighting(GLFWwindow* window)
             auto lightColor = vec3f(0.5f);
             auto lightDir = vec3f(0.0f, -1.0f, 0.0f);
             // Note 0.0f as w-coordinate, it is because this vec represents direction.
-            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz.normalized;
             return DirectionalLight(viewLightDir,
                                     PhongLighting(0.1f * lightColor,
-                                    lightColor,
+                                                  lightColor,
                                                   vec3f(1.0f)));
         }();
 
@@ -440,7 +440,7 @@ void lighting(GLFWwindow* window)
                                  .zip(lightColors)
                                  .map!(t => PointLight(t[0],
                                                        PhongLighting(0.1f * t[1],
-                                                       t[1],
+                                                                     t[1],
                                                                      vec3f(1.0f)),
                                                        Attenuation(1.0f, 0.09f, 0.032f)))
                                  .array;
@@ -453,13 +453,13 @@ void lighting(GLFWwindow* window)
             auto viewLightPos = (view * vec4f(lightPos, 1.0f)).xyz;
             auto lightDir = camera.front;
             // Note 0.0f as w-coordinate, it is because this vec represents direction.
-            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz;
+            auto viewLightDir = (view * vec4f(lightDir, 0.0f)).xyz.normalized;
             return SpotLight(viewLightPos,
                              viewLightDir,
                              cos(15.0f.radians),
                              cos(20.0f.radians),
                              PhongLighting(0.1f * lightColor,
-                             lightColor,
+                                           lightColor,
                                            vec3f(1.0f)),
                              Attenuation(1.0f, 0.09f, 0.032f));
         }();
