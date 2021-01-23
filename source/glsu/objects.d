@@ -241,9 +241,11 @@ unittest
          0.0f,  0.5f, 0.0f, 0.0f, 1.0f, // vertex 3
     ];
     auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    scope(exit) VBO.destroy();
     auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 5 * float.sizeof, 0);
     auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 5 * float.sizeof, 2 * float.sizeof);
-    auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    auto VAO = vertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    scope(exit) VAO.destroy();
     VAO.bind();
     // Now position and color of the vertex is accessible in vertex shader as
     // layout (location = 0) in vec2 position;
@@ -261,9 +263,11 @@ unittest
          1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // colors
     ];
     auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    scope(exit) VBO.destroy();
     auto positionAttrib = AttribPointer(0, 2, GLType.glFloat, false, 2 * float.sizeof, 0);
     auto colorAttrib = AttribPointer(1, 3, GLType.glFloat, false, 3 * float.sizeof, 3 * 2 * float.sizeof);
-    auto VAO = VertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    auto VAO = vertexArrayObject(VBO, [positionAttrib, colorAttrib]);
+    scope(exit) VAO.destroy();
     VAO.bind();
     // Now position and color of the vertex is accessible in vertex shader as
     // layout (location = 0) in vec2 position;
@@ -1040,95 +1044,82 @@ unittest
 }
 
 /** 
+ * Constructor that binds `VertexBufferObject` with a layout object.
+ * Params:
+ *   VBO = Buffer to bind with this VAO.
+ *   layout = Layout of the `VBO`.
+ *
+ * See_Also: `VertexArrayObject`, `VertexBufferObject`, `AttribPointer`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
+ */
+auto vertexArrayObject(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
+if(isVertexBufferLayout!Layout)
+{
+    import std.typecons : No;
+    return VertexArrayObject!(No.responsibleForVBO)(VBO, layout);
+}
+/**
+ * Creates `VertexBufferObject` and automatically determines its layout using `T` as pattern.
+ * Params:
+ *   buffer = Source for `VertexBufferObject`.
+ *   usage = Describes how the `VertexBufferObject` would be used.
+ *
+ * See_Also: `VertexArrayObject`, `VertexBufferLayoutFromPattern`.
+ */
+auto vertexArrayObject(T)(const T[] buffer, DataUsage usage) nothrow @nogc
+{
+    import std.typecons : Yes;
+    return VertexArrayObject!(Yes.responsibleForVBO)(buffer, usage);
+}
+///
+unittest
+{
+    setupOpenGLContext();
+
+    struct Vertex
+    {
+        @VertexAttrib(0)
+        float[2] position;
+
+        @VertexAttrib(1)
+        float[2] textureCoord;
+    }
+
+    float[] vertices = [
+        -0.5f, -0.5f, 0.0f, 0.0f,
+         0.5f, -0.5f, 1.0f, 0.0f,
+         0.0f,  0.5f, 0.5f, 1.0f,
+    ];
+    auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
+    scope(exit) VBO.destroy();
+
+    // Constructing with AttribPointer[].
+    AttribPointer[] layout1 = [
+        AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 0),
+        AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 2 * float.sizeof),
+    ];
+    auto VAO1 = vertexArrayObject(VBO, layout1);
+    scope(exit) VAO1.destroy();
+
+    // Constructing with VertexBufferLayout.
+    VertexBufferLayout layout2;
+    layout2.push!float(2);
+    layout2.push!float(2);
+    auto VAO2 = vertexArrayObject(VBO, layout2);
+    scope(exit) VAO2.destroy();
+
+    // Constructing with VertexBufferLayoutFromPattern.
+    VertexBufferLayoutFromPattern!Vertex layout3;
+    auto VAO3 = vertexArrayObject(VBO, layout3);
+    scope(exit) VAO3.destroy();
+}
+
+/** 
  * A Vertex Array Object (VAO) is an OpenGL Object that stores all of the state needed to supply vertex data.
  * It stores the format of the vertex data as well as the `BufferObject`'s.
  */
-struct VertexArrayObject
+private struct VertexArrayObject(from!"std.typecons".Flag!"responsibleForVBO" responsibleForVBO)
 {
     @disable this();
-
-    /** 
-     * Constructor that binds `VertexBufferObject` with a layout object.
-     * Params:
-     *   VBO = Buffer to bind with this VAO.
-     *   layout = Layout of the `VBO`.
-     *
-     * See_Also: `VertexBufferObject`, `AttribPointer`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
-     */
-    this(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
-        if(isVertexBufferLayout!Layout)
-    {
-        glGenVertexArrays(1, &_id);
-        mixin(ScopedBind!this);
-
-        VBO.bind();
-
-        static if(is(typeof((Layout l) => l.bind())))
-        {
-            layout.bind();
-        }
-        else
-        {
-            foreach (ref attr; layout)
-            {
-                attr.bind();
-            }
-        }
-    }
-    ///
-    unittest
-    {
-        setupOpenGLContext();
-
-        struct Vertex
-        {
-            @VertexAttrib(0)
-            float[2] position;
-
-            @VertexAttrib(1)
-            float[2] textureCoord;
-        }
-
-        float[] vertices = [
-            -0.5f, -0.5f, 0.0f, 0.0f,
-             0.5f, -0.5f, 1.0f, 0.0f,
-             0.0f,  0.5f, 0.5f, 1.0f,
-        ];
-        auto VBO = VertexBufferObject(vertices, DataUsage.staticDraw);
-
-
-        // Constructing with AttribPointer[].
-        AttribPointer[] layout1 = [
-            AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 0),
-            AttribPointer(0, 2, GLType.glFloat, false, 4 * float.sizeof, 2 * float.sizeof),
-        ];
-        auto VAO1 = VertexArrayObject(VBO, layout1);
-
-        // Constructing with VertexBufferLayout.
-        VertexBufferLayout layout2;
-        layout2.push!float(2);
-        layout2.push!float(2);
-        auto VAO2 = VertexArrayObject(VBO, layout2);
-
-        // Constructing with VertexBufferLayoutFromPattern.
-        VertexBufferLayoutFromPattern!Vertex layout3;
-        auto VAO3 = VertexArrayObject(VBO, layout3);
-    }
-
-    /** 
-     * Constructor that creates `VertexBufferObject` and automatically determines its layout using `T` as pattern.
-     * Params:
-     *   buffer = Source for `VertexBufferObject`.
-     *   usage = Describes how the `VertexBufferObject` would be used.
-     *
-     * See_Also: `VertexBufferLayoutFromPattern`.
-     */
-    this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
-    {
-        auto VBO = VertexBufferObject(buffer, usage);
-        VertexBufferLayoutFromPattern!T layout;
-        this(VBO, layout);
-    }
 
     /** 
      * OpenGL object id.
@@ -1149,10 +1140,10 @@ struct VertexArrayObject
      *
      * See_Also: `IndexedVertexArrayObject`
      */
-    IndexedVertexArrayObject bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
+    IndexedVertexArrayObject!responsibleForVBO bindElementBufferArray(ElementBufferArray EBO) const nothrow @nogc
     in(isValid)
     {
-        return IndexedVertexArrayObject(this, EBO);
+        return indexedVertexArrayObject(this, EBO);
     }
 
     /** 
@@ -1195,6 +1186,10 @@ struct VertexArrayObject
     {
         glDeleteVertexArrays(1, &_id);
         _id = 0;
+        static if(responsibleForVBO)
+        {
+            _VBO.destroy();
+        }
     }
 
     /** 
@@ -1207,6 +1202,66 @@ struct VertexArrayObject
 
 private:
     uint _id;
+    static if(responsibleForVBO)
+    {
+        VertexBufferObject _VBO;
+    }
+
+    static if(responsibleForVBO)
+    {
+        /** 
+        * Constructor that creates `VertexBufferObject` and automatically determines its layout using `T` as pattern.
+        * Params:
+        *   buffer = Source for `VertexBufferObject`.
+        *   usage = Describes how the `VertexBufferObject` would be used.
+        *
+        * See_Also: `VertexBufferLayoutFromPattern`.
+        */
+        this(T)(const T[] buffer, DataUsage usage) nothrow @nogc
+        {
+            glGenVertexArrays(1, &_id);
+            _VBO = VertexBufferObject(buffer, usage);
+            VertexBufferLayoutFromPattern!T layout;
+            bindVBOAndLayout(_VBO, layout);
+        }
+    }
+    else
+    {
+        /** 
+        * Constructor that binds `VertexBufferObject` with a layout object.
+        * Params:
+        *   VBO = Buffer to bind with this VAO.
+        *   layout = Layout of the `VBO`.
+        *
+        * See_Also: `VertexBufferObject`, `AttribPointer`, `VertexBufferLayout`, `VertexBufferLayoutFromPattern`.
+        */
+        this(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
+            if(isVertexBufferLayout!Layout)
+        {
+            glGenVertexArrays(1, &_id);
+            bindVBOAndLayout(VBO, layout);
+        }
+    }
+
+    /// Attaches `VBO` and `layout` to the VAO.
+    void bindVBOAndLayout(Layout)(VertexBufferObject VBO, Layout layout) nothrow @nogc
+    {
+        mixin(ScopedBind!this);
+
+        VBO.bind();
+
+        static if(is(typeof((Layout l) => l.bind())))
+        {
+            layout.bind();
+        }
+        else
+        {
+            foreach (ref attr; layout)
+            {
+                attr.bind();
+            }
+        }
+    }
 }
 ///
 unittest
@@ -1228,7 +1283,7 @@ unittest
         Vertex([ 0.0f,  0.5f], [0.0f, 0.0f, 1.0f]),
     ];
 
-    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    auto VAO = vertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
     void later()
@@ -1237,26 +1292,31 @@ unittest
     }
 }
 
+/**
+ * Creates `VertexArrayObject` with binded `ElementBufferObject`.
+ *
+ * See_Also: `IndexedVertexArrayObject`.
+ */
+auto indexedVertexArrayObject(VertexArrayObject!(from!"std.typecons".Yes.responsibleForVBO) VAO, ElementBufferArray EBO)
+{
+    import std.typecons : Yes;
+    return IndexedVertexArrayObject!(Yes.responsibleForVBO)(VAO, EBO);
+}
+/// ditto
+auto indexedVertexArrayObject(VertexArrayObject!(from!"std.typecons".No.responsibleForVBO) VAO, ElementBufferArray EBO)
+{
+    import std.typecons : No;
+    return IndexedVertexArrayObject!(No.responsibleForVBO)(VAO, EBO);
+}
+
 /** 
  * `VertexArrayObject` with binded `ElementBufferObject`.
  *
  * Used for indexing drawing.
  */
-struct IndexedVertexArrayObject
+struct IndexedVertexArrayObject(from!"std.typecons".Flag!"responsibleForVBO" responsibleForVBO)
 {
     @disable this();
-    
-    /** 
-     * Constructor that binds `ElementBufferArray` to `VertexArrayObject`.
-     */
-    this(VertexArrayObject VAO, ElementBufferArray EBO) nothrow @nogc
-    {
-        this.VAO = VAO;
-        _indexType = EBO.indexType;
-        _count = EBO.count;
-        mixin(ScopedBind!this);
-        EBO.bind();
-    }
 
     /** 
      * Draw call that uses vertices of `VertexBufferObject`, layout and `ElementBufferArray` bounded to this object.
@@ -1287,11 +1347,23 @@ struct IndexedVertexArrayObject
 
 private:
     /// Underlying `VertexArrayObject`.
-    VertexArrayObject VAO;
-    alias VAO this;
+    VertexArrayObject!responsibleForVBO _VAO;
+    alias _VAO this;
     
     GLType _indexType;
     int _count;
+
+    /** 
+     * Constructor that binds `ElementBufferArray` to `VertexArrayObject`.
+     */
+    this(VertexArrayObject!responsibleForVBO VAO, ElementBufferArray EBO) nothrow @nogc
+    {
+        this._VAO = VAO;
+        _indexType = EBO.indexType;
+        _count = EBO.count;
+        mixin(ScopedBind!this);
+        EBO.bind();
+    }
 }
 ///
 unittest
@@ -1319,14 +1391,17 @@ unittest
     ];
 
     auto EBO = ElementBufferArray(indices, DataUsage.staticDraw);
+    scope(exit) EBO.destroy();
 
-    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw).bindElementBufferArray(EBO);
+    auto VAO = vertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
+    auto indexedVAO = VAO.bindElementBufferArray(EBO);
+    scope(exit) indexedVAO.destroy();
 
     void later()
     {
-        VAO.drawElements(RenderMode.triangles, 3); // Draw only first triangle.
-        VAO.drawElements(RenderMode.triangles); // Draw all elements.
+        indexedVAO.drawElements(RenderMode.triangles, 3); // Draw only first triangle.
+        indexedVAO.drawElements(RenderMode.triangles); // Draw all elements.
     }
 }
 

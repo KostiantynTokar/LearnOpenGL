@@ -151,7 +151,7 @@ void basic(GLFWwindow* window)
         vec3f(-1.3f,  1.0f, -1.5f)
     ];
 
-    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    auto VAO = vertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
     auto texture1 = Texture.create("resources\\container.jpg");
@@ -379,7 +379,7 @@ void lighting(GLFWwindow* window)
         vec3f(-1.3f,  1.0f, -1.5f)
     ];
 
-    auto VAO = VertexArrayObject(vertices, DataUsage.staticDraw);
+    auto VAO = vertexArrayObject(vertices, DataUsage.staticDraw);
     scope(exit) VAO.destroy();
 
     auto lightSourceSP = ShaderProgram.create!("lighting/lightSource.vert", "lighting/lightSource.frag");
